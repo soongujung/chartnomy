@@ -2,6 +2,7 @@ package com.chartnomy.indicators.trending.index;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.chartnomy.indicators.axis.entity.QDateAxisDd;
 import com.chartnomy.indicators.kospi.entity.Kospi;
 import com.chartnomy.indicators.kospi.entity.QKospi;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -45,5 +46,10 @@ class QTrendingIndexRepositoryImplTest {
 	public void selectKospiRepository(){
 		List<Kospi> kospis = trendingIndexRepository.selectKospi();
 		System.out.println(kospis);
+	}
+
+	@Test
+	@DisplayName("일별 조회 with LEFT JOIN")
+	public void selectLeftJoin(){
 	}
 }
