@@ -1,23 +1,19 @@
 package com.chartnomy.indicators.trending.index;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import com.chartnomy.indicators.axis.entity.QDateAxisDd;
 import com.chartnomy.indicators.kospi.entity.Kospi;
 import com.chartnomy.indicators.kospi.entity.QKospi;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import javax.persistence.EntityManager;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-//@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 class QTrendingIndexRepositoryImplTest {
 

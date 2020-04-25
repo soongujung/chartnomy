@@ -1,10 +1,14 @@
-package com.chartnomy.indicators;
+package com.chartnomy.indicators.h2;
 
 import com.chartnomy.indicators.axis.entity.DateAxis;
+import com.chartnomy.indicators.axis.entity.QDateAxis;
 import com.chartnomy.indicators.kospi.entity.Kospi;
+import com.chartnomy.indicators.kospi.entity.QKospi;
+import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
@@ -66,6 +70,15 @@ public class LocalDateJpaTest {
 
 	@Test
 	public void test1(){
+		QDateAxis axis = QDateAxis.dateAxis;
+		QKospi kospi = QKospi.kospi;
 
+		List<Tuple> fetch = queryFactory.select(axis.date, kospi.price)
+			.from(kospi)
+			.join(axis)
+			.on(axis.date.eq(kospi.time))
+			.fetch();
+
+		fetch.stream().forEach(System.out::println);
 	}
 }
