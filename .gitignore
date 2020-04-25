@@ -7,6 +7,7 @@ build/
 /application.properties
 /src/main/resources/connection.properties
 /src/main/resources/connection-info.yml
+/src/test/resources/connection-info.yml
 
 ### STS ###
 .apt_generated
