@@ -14,8 +14,10 @@ public class QTrendingIndexRepository {
 	private final EntityManager em;
 	private final JPAQueryFactory queryFactory;
 
-	public QTrendingIndexRepository(EntityManager em, JPAQueryFactory queryFactory){
-		this.em = em;
-		this.queryFactory = queryFactory;
+//	public QTrendingIndexRepository(EntityManager em, JPAQueryFactory queryFactory){
+	public QTrendingIndexRepository(EntityManager em){
+			this.em = em;
+			this.queryFactory = new JPAQueryFactory(em);
+		}
 	}
-}
+//	public QTrendingIndexRepository(EntityManager em, JPAQueryFactory queryFactory){
