@@ -1,9 +1,9 @@
 package com.chartnomy.indicators.h2;
 
-import com.chartnomy.indicators.axis.entity.DateAxis;
-import com.chartnomy.indicators.axis.entity.QDateAxis;
-import com.chartnomy.indicators.kospi.entity.Kospi;
-import com.chartnomy.indicators.kospi.entity.QKospi;
+import com.chartnomy.indicators.domain.axis.entity.DateAxis;
+import com.chartnomy.indicators.domain.axis.entity.QDateAxis;
+import com.chartnomy.indicators.domain.kospi.entity.Kospi;
+import com.chartnomy.indicators.domain.kospi.entity.QKospi;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDate;
