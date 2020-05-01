@@ -1,5 +1,6 @@
 package com.chartnomy.indicators.domain.axis.entity;
 
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -13,16 +14,16 @@ import lombok.Setter;
 @Table(name = "DATE_AXIS_DD")
 public class DateAxisDd {
 	@Id
-	@Column(name = "v_date")
+	@Column(name = "yyyymmdd")
 //	@OneToMany(mappedBy = "date")
-	private String date;
+	private LocalDateTime date;
 
-	@Column(name = "v_yyyy")
+	@Column(name = "yyyy")
 	private String year;
 
-	@Column(name = "v_mm")
+	@Column(name = "mm")
 	private String month;
 
-	@Column(name = "v_dd")
+	@Column(name = "dd")
 	private String dayOfMonth;
 }

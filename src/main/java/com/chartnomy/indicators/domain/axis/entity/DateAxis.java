@@ -15,7 +15,6 @@ import lombok.Setter;
 public class DateAxis {
 	@Id
 	@Column(name = "v_date")
-//	@OneToMany(mappedBy = "date")
 	private LocalDate date;
 
 	@Column(name = "v_yyyy")

@@ -25,8 +25,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @ActiveProfiles("test")
-@Transactional
-@Commit
+//@Transactional
+//@Commit
 public class LocalDateJpaTest {
 
 	@Autowired
@@ -63,7 +63,7 @@ public class LocalDateJpaTest {
 		kospi.setStatCode("----");
 		kospi.setStatName("----");
 		kospi.setPrice("11111");
-		kospi.setTime(LocalDate.now());
+//		kospi.setTime(LocalDate.now());
 
 		entityManager.persist(kospi);
 	}

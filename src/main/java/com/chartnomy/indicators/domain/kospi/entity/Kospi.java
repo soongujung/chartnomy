@@ -1,6 +1,7 @@
 package com.chartnomy.indicators.domain.kospi.entity;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -15,7 +16,7 @@ import lombok.Setter;
 public class Kospi {
 	@Id
 	@Column(name = "TIME")
-	private LocalDate time;
+	private LocalDateTime time;
 
 //	@ManyToOne(fetch = FetchType.LAZY)
 //	@JoinColumn(name = "v_date")
