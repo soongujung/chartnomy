@@ -1,9 +1,12 @@
 package com.chartnomy.indicators.domain.axis.entity;
 
+import com.chartnomy.indicators.domain.kospi.entity.Kospi;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,8 +18,11 @@ import lombok.Setter;
 public class DateAxisDd {
 	@Id
 	@Column(name = "yyyymmdd")
-//	@OneToMany(mappedBy = "date")
 	private LocalDateTime date;
+
+	@ManyToOne
+	@JoinColumn(name = "TIME")
+	private Kospi kospi;
 
 	@Column(name = "yyyy")
 	private String year;
@@ -26,4 +32,6 @@ public class DateAxisDd {
 
 	@Column(name = "dd")
 	private String dayOfMonth;
+
+	public DateAxisDd(){}
 }

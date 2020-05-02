@@ -1,10 +1,13 @@
 package com.chartnomy.indicators.domain.kospi.entity;
 
-import java.time.LocalDate;
+import com.chartnomy.indicators.domain.axis.entity.DateAxisDd;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,9 +21,8 @@ public class Kospi {
 	@Column(name = "TIME")
 	private LocalDateTime time;
 
-//	@ManyToOne(fetch = FetchType.LAZY)
-//	@JoinColumn(name = "v_date")
-//	private DateAxisDd date;
+	@OneToMany(mappedBy = "kospi")
+	private List<DateAxisDd> dates = new ArrayList<>();
 
 	@Column(name = "STAT_NAME")
 	private String statName;
@@ -29,7 +31,7 @@ public class Kospi {
 	private String statCode;
 
 	@Column(name = "DATA_VALUE")
-	private String price;
+	private Double price;
 
 	@Column(name = "ITEM_CODE1")
 	private String itemCode1;
@@ -48,4 +50,6 @@ public class Kospi {
 
 	@Column(name = "ITEM_NAME3")
 	private String itemName3;
+
+	public void Kospi(){}
 }
