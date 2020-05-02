@@ -1,6 +1,8 @@
 package com.chartnomy.indicators.domain.axis.entity;
 
 import com.chartnomy.indicators.domain.kospi.entity.Kospi;
+import com.chartnomy.indicators.domain.loan.entity.LoanKr;
+import com.chartnomy.indicators.domain.loan.entity.LoanUs;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,8 +23,17 @@ public class DateAxisDd {
 	private LocalDateTime date;
 
 	@ManyToOne
-	@JoinColumn(name = "TIME")
+//	@JoinColumn(name = "TIME")
+	@JoinColumn(name = "TIME", insertable = false, updatable = false)
 	private Kospi kospi;
+
+	@ManyToOne
+	@JoinColumn(name = "TIME", insertable = false, updatable = false)
+	private LoanKr loanKr;
+
+	@ManyToOne
+	@JoinColumn(name = "TIME", insertable = false, updatable = false)
+	private LoanUs loanUs;
 
 	@Column(name = "yyyy")
 	private String year;
