@@ -4,6 +4,7 @@ import com.chartnomy.indicators.api.web.trending.index.dto.QTrendingDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingDto;
 import com.chartnomy.indicators.domain.axis.entity.DateAxisDd;
 import com.chartnomy.indicators.domain.axis.entity.QDateAxisDd;
+import com.chartnomy.indicators.domain.exchange.entity.QExchangeRateWonDollar;
 import com.chartnomy.indicators.domain.kospi.entity.Kospi;
 import com.chartnomy.indicators.domain.kospi.entity.QKospi;
 import com.chartnomy.indicators.domain.loan.entity.QLoanKr;
@@ -48,6 +49,7 @@ public class DateAxisDdTest {
 		QKospi kospi = QKospi.kospi;
 		QLoanKr loanKr = QLoanKr.loanKr;
 		QLoanUs loanUs = QLoanUs.loanUs;
+		QExchangeRateWonDollar exchangeRateWonDollar = QExchangeRateWonDollar.exchangeRateWonDollar;
 
 		List<TrendingDto> result =
 			queryFactory.select(
@@ -56,7 +58,8 @@ public class DateAxisDdTest {
 					dateAxisDd.date.as("date"),
 					kospi.price.as("kospiPrice"),
 					loanUs.price.as("loanUsPrice"),
-					loanKr.price.as("loanKrPrice")
+					loanKr.price.as("loanKrPrice"),
+					exchangeRateWonDollar.price.as("exchangeRateWonDollar")
 				)
 			)
 			.from(dateAxisDd)
@@ -66,13 +69,17 @@ public class DateAxisDdTest {
 				.on(dateAxisDd.date.eq(loanKr.time))
 			.leftJoin(loanUs)
 				.on(dateAxisDd.date.eq(loanUs.time))
+			.leftJoin(exchangeRateWonDollar)
+				.on(dateAxisDd.date.eq(exchangeRateWonDollar.time))
 			.fetch();
 
 		for(TrendingDto d : result){
 			System.out.println(d.getDate() +
 				"\n kospiPrice  :: " + d.getKospiPrice() +
 				"\n loanKrPrice :: " + d.getLoanKrPrice() +
-				"\n laonUsPrice :: " + d.getLoanUsPrice());
+				"\n laonUsPrice :: " + d.getLoanUsPrice() +
+				"\n exchangeRateWonDollar :: " + d.getExchangeWonDallor()
+				);
 
 		}
 	}

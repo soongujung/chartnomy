@@ -1,5 +1,6 @@
 package com.chartnomy.indicators.domain.axis.entity;
 
+import com.chartnomy.indicators.domain.exchange.entity.ExchangeRateWonDollar;
 import com.chartnomy.indicators.domain.kospi.entity.Kospi;
 import com.chartnomy.indicators.domain.loan.entity.LoanKr;
 import com.chartnomy.indicators.domain.loan.entity.LoanUs;
@@ -34,6 +35,10 @@ public class DateAxisDd {
 	@ManyToOne
 	@JoinColumn(name = "TIME", insertable = false, updatable = false)
 	private LoanUs loanUs;
+
+	@ManyToOne
+	@JoinColumn(name = "TIME", insertable = false, updatable = false)
+	private ExchangeRateWonDollar exchangeRateWonDollar;
 
 	@Column(name = "yyyy")
 	private String year;

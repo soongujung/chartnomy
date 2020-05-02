@@ -12,17 +12,19 @@ public class TrendingDto {
 	private Double 			kospiPrice;
 	private Double 			loanUsPrice;
 	private Double 			loanKrPrice;
+	private Double			exchangeWonDallor;
 
 	@QueryProjection
 	public TrendingDto(
 			String itemCode1, LocalDateTime date,
 //			Double kospiPrice
-			Double kospiPrice, Double loanUsPrice, Double loanKrPrice
+			Double kospiPrice, Double loanUsPrice, Double loanKrPrice, Double exchangeWonDallor
 		){
 		this.itemCode1 = itemCode1;
 		this.date = date;
 		this.kospiPrice = kospiPrice;
 		this.loanUsPrice = loanUsPrice;
 		this.loanKrPrice = loanKrPrice;
+		this.exchangeWonDallor = exchangeWonDallor;
 	}
 }
