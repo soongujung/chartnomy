@@ -12,7 +12,8 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
+#      ddl-auto: create
     properties:
       hibernate:
         #        show_sql: true     # system.out 으로 콘솔에 출력된다. (추천하지 않는 옵션이다.)
