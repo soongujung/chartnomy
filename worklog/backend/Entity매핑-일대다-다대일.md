@@ -17,9 +17,9 @@
 ```sql
 SELECT TIME, DATA_VALUE FROM KOSPI_DAY;
 ```
-데이터는 아래와 같이 생겼다. 95년 1월 3일 이후부터만 데이터가 존재한다.
-![이미자](./img/kospi_query_result.png)
-
+데이터는 아래와 같이 생겼다. 95년 1월 3일 이후부터만 데이터가 존재한다.  
+![이미자](./img/kospi_query_result.png)  
+  
 ## DateAxisDd
 날짜 축 데이터는 1970 년도 ~ 2040 년도 까지 일별로 생성했다.  
 ```sql
