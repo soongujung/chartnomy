@@ -30,11 +30,12 @@ SELECT * FROM DATE_AXIS_DD;
 - 2040 년도 12월 31일 까지   
 이어진다.  
   
-1970 년도~
-![이미자](./img/date_axis_query_result1.png)
-2040 년도~
-![이미자](./img/date_axis_query_result2.png)
-
+1970 년도~  
+![이미자](./img/date_axis_query_result1.png)  
+  
+2040 년도~  
+![이미자](./img/date_axis_query_result2.png)  
+  
 ## 샘플 데이터 sql 파일
 - 테이블 DDL 스크립트
     - application.yml 에서 spring.jpa.hibernate.ddl_auto 를 create 또는 update로 놓고 엔티티 클래스를 작성해 생성하자.
