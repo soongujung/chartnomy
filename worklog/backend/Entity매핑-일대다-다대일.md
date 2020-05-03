@@ -226,7 +226,7 @@ Kospi 입장에서는 DateAxisDd를 여러개 가질 수 있다.
 
 #### 테스트 코드
 ```java
-package com.chartnomy.indicators.h2.insert;
+package com.chartnomy.indicators.h2.rawquery;
 
 import com.chartnomy.indicators.api.web.trending.index.dto.QTrendingDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingDto;
