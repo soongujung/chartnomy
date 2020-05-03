@@ -10,6 +10,7 @@ import com.chartnomy.indicators.domain.kospi.entity.QKospi;
 import com.chartnomy.indicators.domain.loan.entity.QLoanKr;
 import com.chartnomy.indicators.domain.loan.entity.QLoanUs;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
@@ -71,17 +72,17 @@ public class SelectTrendingTest {
 				.on(dateAxisDd.date.eq(loanUs.time))
 			.leftJoin(exchangeRateWonDollar)
 				.on(dateAxisDd.date.eq(exchangeRateWonDollar.time))
+			.where(dateAxisDd.date.loe(LocalDateTime.now()))
 			.fetch();
 
-		for(TrendingDto d : result){
-			System.out.println(d.getDate() +
-				"\n kospiPrice  :: " + d.getKospiPrice() +
-				"\n loanKrPrice :: " + d.getLoanKrPrice() +
-				"\n laonUsPrice :: " + d.getLoanUsPrice() +
-				"\n exchangeRateWonDollar :: " + d.getExchangeWonDallor()
-				);
-
-		}
+//		for(TrendingDto d : result){
+//			System.out.println(d.getDate() +
+//				"\n kospiPrice  :: " + d.getKospiPrice() +
+//				"\n loanKrPrice :: " + d.getLoanKrPrice() +
+//				"\n laonUsPrice :: " + d.getLoanUsPrice() +
+//				"\n exchangeRateWonDollar :: " + d.getExchangeWonDallor()
+//				);
+//		}
 	}
 
 	@Test

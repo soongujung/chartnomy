@@ -4,7 +4,6 @@ import com.chartnomy.indicators.api.web.trending.index.dto.QTrendingDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingDto;
 import com.chartnomy.indicators.domain.axis.entity.QDateAxisDd;
 import com.chartnomy.indicators.domain.exchange.entity.QExchangeRateWonDollar;
-import com.chartnomy.indicators.domain.kospi.entity.Kospi;
 import com.chartnomy.indicators.domain.kospi.entity.QKospi;
 import com.chartnomy.indicators.domain.loan.entity.QLoanKr;
 import com.chartnomy.indicators.domain.loan.entity.QLoanUs;
@@ -45,16 +44,17 @@ public class QTrendingIndexRepositoryImpl implements QTrendingIndexRepository {
 				exchangeRateWonDollar.price.as("exchangeRateWonDollar")
 			)
 		)
-			.from(dateAxisDd)
-			.leftJoin(kospi)
+		.from(dateAxisDd)
+		.leftJoin(kospi)
 			.on(dateAxisDd.date.eq(kospi.time))
-			.leftJoin(loanKr)
+		.leftJoin(loanKr)
 			.on(dateAxisDd.date.eq(loanKr.time))
-			.leftJoin(loanUs)
+		.leftJoin(loanUs)
 			.on(dateAxisDd.date.eq(loanUs.time))
-			.leftJoin(exchangeRateWonDollar)
+		.leftJoin(exchangeRateWonDollar)
 			.on(dateAxisDd.date.eq(exchangeRateWonDollar.time))
-			.fetch();
+//		.where(dateAxisDd.date.loe(LocalDateTime.now()))
+		.fetch();
 		return result;
 	}
 }
