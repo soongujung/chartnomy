@@ -1,4 +1,4 @@
-package com.chartnomy.indicators.h2;
+package com.chartnomy.indicators.h2.etc;
 
 import com.chartnomy.indicators.domain.axis.entity.DateAxis;
 import com.chartnomy.indicators.domain.kospi.entity.Kospi;

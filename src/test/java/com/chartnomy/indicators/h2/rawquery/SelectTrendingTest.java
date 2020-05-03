@@ -1,4 +1,4 @@
-package com.chartnomy.indicators.h2.insert;
+package com.chartnomy.indicators.h2.rawquery;
 
 import com.chartnomy.indicators.api.web.trending.index.dto.QTrendingDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingDto;
@@ -22,7 +22,7 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 //@Transactional
 //@Commit
-public class DateAxisDdTest {
+public class SelectTrendingTest {
 
 	@Autowired
 	private EntityManager em;
