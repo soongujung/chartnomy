@@ -1,5 +1,6 @@
 package com.chartnomy.indicators.api.web.trending.index;
 
+import com.chartnomy.indicators.api.web.trending.index.dto.TrendingDto;
 import com.chartnomy.indicators.domain.kospi.entity.Kospi;
 import com.chartnomy.indicators.domain.kospi.entity.QKospi;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -40,12 +41,7 @@ class QTrendingIndexRepositoryImplTest {
 	@Test
 	@DisplayName("리포지터리 동작 여부 테스트 (repository)")
 	public void selectKospiRepository(){
-		List<Kospi> kospis = trendingIndexRepository.selectKospi();
-		System.out.println(kospis);
-	}
-
-	@Test
-	@DisplayName("일별 조회 with LEFT JOIN")
-	public void selectLeftJoin(){
+		List<TrendingDto> index = trendingIndexRepository.getDefaultTrendingResult();
+		System.out.println(index);
 	}
 }
