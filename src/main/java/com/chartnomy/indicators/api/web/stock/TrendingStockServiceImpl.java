@@ -10,9 +10,4 @@ import org.springframework.stereotype.Service;
 public class TrendingStockServiceImpl implements TrendingStockService{
 
 	private final QTrendingStockRepository qRepository;
-
-	@Override
-	public List<TrendingDto> getDefaultTrendingResult() {
-		return qRepository.getDefaultTrendingResult();
-	}
 }

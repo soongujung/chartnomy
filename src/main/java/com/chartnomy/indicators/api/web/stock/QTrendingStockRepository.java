@@ -24,37 +24,4 @@ public class QTrendingStockRepository {
 		this.em = em;
 		this.queryFactory = new JPAQueryFactory(em);
 	}
-
-
-	public List<TrendingDto> getDefaultTrendingResult() {
-		QDateAxisDd dateAxisDd = QDateAxisDd.dateAxisDd;
-		QKospi kospi = QKospi.kospi;
-		QLoanKr loanKr = QLoanKr.loanKr;
-		QLoanUs loanUs = QLoanUs.loanUs;
-		QExchangeRateWonDollar exchangeRateWonDollar = QExchangeRateWonDollar.exchangeRateWonDollar;
-
-		List<TrendingDto> result =
-			queryFactory.select(
-				new QTrendingDto(
-					kospi.itemCode1.as("itemCode1"),
-					dateAxisDd.date.as("date"),
-					kospi.price.as("kospiPrice"),
-					loanUs.price.as("loanUsPrice"),
-					loanKr.price.as("loanKrPrice"),
-					exchangeRateWonDollar.price.as("exchangeRateWonDollar")
-				)
-			)
-			.from(dateAxisDd)
-			.leftJoin(kospi)
-				.on(dateAxisDd.date.eq(kospi.time))
-			.leftJoin(loanKr)
-				.on(dateAxisDd.date.eq(loanKr.time))
-			.leftJoin(loanUs)
-				.on(dateAxisDd.date.eq(loanUs.time))
-			.leftJoin(exchangeRateWonDollar)
-				.on(dateAxisDd.date.eq(exchangeRateWonDollar.time))
-			.fetch();
-
-		return result;
-	}
 }

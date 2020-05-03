@@ -15,9 +15,4 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class TrendingStockController {
 
 	private final TrendingStockService trendingStockService;
-
-	@GetMapping("/api/web/stock/trending")
-	public List<TrendingDto> getDefaultTrendingResult(){
-		return trendingStockService.getDefaultTrendingResult();
-	}
 }
