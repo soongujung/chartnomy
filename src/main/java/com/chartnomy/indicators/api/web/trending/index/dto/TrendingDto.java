@@ -1,5 +1,7 @@
 package com.chartnomy.indicators.api.web.trending.index.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.querydsl.core.annotations.QueryProjection;
 import java.time.LocalDateTime;
 import lombok.Data;
@@ -7,8 +9,10 @@ import lombok.Data;
 @Data
 public class TrendingDto {
 
-	private String 			itemCode1;
+	@JsonFormat(shape = Shape.STRING, pattern = "yyyyMMdd", timezone = "Asia/Seoul")
 	private LocalDateTime 	date;
+
+	private String 			itemCode1;
 	private Double 			kospiPrice;
 	private Double 			loanUsPrice;
 	private Double 			loanKrPrice;
