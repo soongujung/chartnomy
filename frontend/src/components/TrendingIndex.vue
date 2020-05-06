@@ -26,14 +26,124 @@
         api.get('/web/stock/trending')
           .then(res=>{
             this.chartData = res.data;
-            this.renderChart();
-            // this.backupChart();
+            // this.renderChart();
+            this.backupChart();
           })
           .catch(err=>{
             console.log('err >>> ', err)
           })
       },
       renderChart(){
+        let chart = am4core.create(this.$refs.chartdiv, am4charts.XYChart);
+
+        chart.paddingRight = 20;
+
+        let data = [];
+        let visits = 10;
+
+        this.chartData.map(obj=>{
+          let str_date = obj.date;
+          let dt_date = this.$moment(str_date, 'YYYYMMDD').toDate();
+          obj.date = dt_date;
+          // console.log(obj);
+        });
+
+        chart.data = this.chartData;
+
+        let dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+        dateAxis.renderer.grid.template.location = 0;
+
+        // 단위 (원)
+        let valueAxisWon = new am4charts.ValueAxis();
+        chart.yAxes.push(valueAxisWon);
+        valueAxisWon.title.dy = -50;
+        valueAxisWon.title.paddingRight = 0;
+        valueAxisWon.title.paddingBottom = 400;
+        valueAxisWon.renderer.opposite = false;
+        valueAxisWon.title.fontWeight = 600;
+        valueAxisWon.title.fontSize = 14;
+        valueAxisWon.tooltip.disabled = false;
+        valueAxisWon.title.text = "원";
+        valueAxisWon.title.rotation = 0;
+        valueAxisWon.title.align = "top";
+        valueAxisWon.renderer.grid.template.strokeOpacity = 0;
+        valueAxisWon.renderer.grid.template.disabled = true;
+
+        // 환율(원/달러)
+        let valueAxisWonDollarExchange = new am4charts.ValueAxis();
+        chart.yAxes.push(valueAxisWonDollarExchange);
+
+        valueAxisWonDollarExchange.title.dy = -50;
+        valueAxisWonDollarExchange.title.paddingRight = 0;
+        valueAxisWonDollarExchange.title.paddingBottom = 400;
+        valueAxisWonDollarExchange.renderer.opposite = false;
+        valueAxisWonDollarExchange.title.fontWeight = 600;
+        valueAxisWonDollarExchange.title.fontSize = 14;
+        valueAxisWonDollarExchange.tooltip.disabled = false;
+        valueAxisWonDollarExchange.title.text = "환율 (원)";
+        valueAxisWonDollarExchange.title.rotation = 0;
+        valueAxisWonDollarExchange.title.align = "top";
+        valueAxisWonDollarExchange.renderer.grid.template.strokeOpacity = 0;
+        valueAxisWonDollarExchange.renderer.grid.template.disabled = true;
+
+        let valueAxisPercent = new am4charts.ValueAxis();
+        chart.yAxes.push(valueAxisPercent);
+
+        valueAxisPercent.title.dy = -50;
+        valueAxisPercent.title.paddingRight = 0;
+        valueAxisPercent.title.paddingBottom = 400;
+        valueAxisPercent.renderer.opposite = true;
+        valueAxisPercent.title.fontWeight = 600;
+        valueAxisPercent.title.fontSize = 14;
+        valueAxisPercent.tooltip.disabled = false;
+        valueAxisPercent.title.text = "%";
+        valueAxisPercent.title.rotation = 0;
+        valueAxisPercent.title.align = "top";
+        valueAxisPercent.renderer.grid.template.strokeOpacity = 0;
+        valueAxisPercent.renderer.grid.template.disabled = true;
+
+        let seriesLineKospi = this.createLineSeries(chart, valueAxisWon, "kospiPrice", "date", "#339af0", "kospi : {valueY.value} (원)", "KOSPI 지수");
+        let seriesLineExcangeRate = this.createLineSeries(chart, valueAxisWonDollarExchange, "exchangeWonDallor", "date", "#d9480f", "환율 : {valueY.value} (원)", "환율 (달러)");
+        let loanKrPrice = this.createLineSeries(chart, valueAxisPercent, "loanKrPrice", "date", "#51cf66", "정책 금리(한국) : {valueY.value} (%)", "정책 금리(한국)");
+        let loanUsPrice = this.createLineSeries(chart, valueAxisPercent, "loanUsPrice", "date", "#868e96", "정책 금리(미국) : {valueY.value} (%)", "정책 금리(미국)");
+
+        // let scrollbarX = new am4charts.XYChartScrollbar();
+        // scrollbarX.series.push(series_kospi);
+        // scrollbarX.series.push(series_loanKr);
+
+        // chart.scrollbarX = scrollbarX;
+
+        this.chart = chart;
+      },
+      createLineSeries(chart, valueAxis, valueColumn, dateColumn, color, tooltipText, legendName){
+        var seriesLine = new am4charts.LineSeries();
+        chart.series.push(seriesLine);
+
+        seriesLine.dataFields.valueY = valueColumn;
+        seriesLine.dataFields.dateX = dateColumn;
+        seriesLine.strokeWidth = 2;                     // 선의 굵기
+        seriesLine.minBulletDistance = 10;
+        seriesLine.stroke = am4core.color(color);       // 선의 색상
+        seriesLine.fill = am4core.color(color);         // 선의 내부
+        seriesLine.tensionX = 0.8;
+
+        seriesLine.tooltipText = tooltipText;
+        seriesLine.tooltip.pointerOrientation = "vertical";
+        seriesLine.tooltip.getFillFromObject = false;
+        seriesLine.tooltip.label.fill = am4core.color(color);           // 툴팁 내부 폰트 색상
+        seriesLine.tooltip.background.cornerRadius = 20;                // 툴팁 테두리 Radius
+        seriesLine.tooltip.background.fillOpacity = 0.8;                // 툴팁 투명도
+        seriesLine.tooltip.label.padding(12,12,12,12);
+        seriesLine.name = legendName;
+
+        seriesLine.yAxis = valueAxis;
+        // Add scrollbar
+        chart.scrollbarX = new am4charts.XYChartScrollbar();
+        chart.scrollbarX.series.push(seriesLine);
+
+        return seriesLine;
+      },
+      backupChart(){
         let chart = am4core.create(this.$refs.chartdiv, am4charts.XYChart);
 
         chart.paddingRight = 20;
@@ -87,41 +197,6 @@
         scrollbarX.series.push(series_kospi);
         scrollbarX.series.push(series_loanKr);
 
-        chart.scrollbarX = scrollbarX;
-
-        this.chart = chart;
-      },
-      backupChart(){
-        let chart = am4core.create(this.$refs.chartdiv, am4charts.XYChart);
-
-        chart.paddingRight = 20;
-
-        let data = [];
-        let visits = 10;
-        for (let i = 1; i < 366; i++) {
-          visits += Math.round((Math.random() < 0.5 ? 1 : -1) * Math.random() * 10);
-          data.push({ date: new Date(2018, 0, i), name: "name" + i, value: visits });
-        }
-
-        chart.data = data;
-        this.chartData = data;
-
-        let dateAxis = chart.xAxes.push(new am4charts.DateAxis());
-        dateAxis.renderer.grid.template.location = 0;
-
-        let valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
-        valueAxis.tooltip.disabled = true;
-        valueAxis.renderer.minWidth = 35;
-
-        let series = chart.series.push(new am4charts.LineSeries());
-        series.dataFields.dateX = "date";
-        series.dataFields.valueY = "value";
-
-        series.tooltipText = "{valueY.value}";
-        chart.cursor = new am4charts.XYCursor();
-
-        let scrollbarX = new am4charts.XYChartScrollbar();
-        scrollbarX.series.push(series);
         chart.scrollbarX = scrollbarX;
 
         this.chart = chart;
