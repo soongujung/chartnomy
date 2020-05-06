@@ -26,9 +26,8 @@
         api.get('/web/stock/trending')
           .then(res=>{
             this.chartData = res.data;
-            console.log('chartData >>> ', this.chartData);
-            // this.renderChart();
-            this.backupChart();
+            this.renderChart();
+            // this.backupChart();
           })
           .catch(err=>{
             console.log('err >>> ', err)
@@ -42,16 +41,14 @@
         let data = [];
         let visits = 10;
 
-        data = this.chartData;
+        this.chartData.map(obj=>{
+          let str_date = obj.date;
+          let dt_date = this.$moment(str_date, 'YYYYMMDD').toDate();
+          obj.date = dt_date;
+          // console.log(obj);
+        });
 
-        data.forEach( data => {
-          let str_date = data.date;
-          let dt_date = this.$moment(str_date).format('YYYYMMDD');
-          // console.log('dt_date >>> ', dt_date);
-        })
-
-        chart.data = data;
-        this.chartData = data;
+        chart.data = this.chartData;
 
         let dateAxis = chart.xAxes.push(new am4charts.DateAxis());
         dateAxis.renderer.grid.template.location = 0;
@@ -60,15 +57,36 @@
         valueAxis.tooltip.disabled = true;
         valueAxis.renderer.minWidth = 35;
 
-        let series = chart.series.push(new am4charts.LineSeries());
-        series.dataFields.dateX = "date";
-        series.dataFields.valueY = "value";
+        let series_kospi = chart.series.push(new am4charts.LineSeries());
+        series_kospi.dataFields.dateX = "date";
+        series_kospi.dataFields.valueY = "kospiPrice";
 
-        series.tooltipText = "{valueY.value}";
+        series_kospi.tooltipText = "kospi : {valueY.value}";
         chart.cursor = new am4charts.XYCursor();
 
+        let series_loanKr = chart.series.push(new am4charts.LineSeries());
+        series_loanKr.dataFields.dateX = "date";
+        series_loanKr.dataFields.valueY = "loanKrPrice";
+
+        series_loanKr.tooltipText = "정책금리 (한국) : {valueY.value}";
+        // chart.cursor = new am4charts.XYCursor();
+
+        let series_loanUs = chart.series.push(new am4charts.LineSeries());
+        series_loanUs.dataFields.dateX = "date";
+        series_loanUs.dataFields.valueY = "loanUsPrice";
+
+        series_loanUs.tooltipText = "정책금리 (미국) : {valueY.value}";
+
+        let series_exchangeWonDallor = chart.series.push(new am4charts.LineSeries());
+        series_exchangeWonDallor.dataFields.dateX = "date";
+        series_exchangeWonDallor.dataFields.valueY = "exchangeWonDallor";
+
+        series_exchangeWonDallor.tooltipText = "환율 (원/달러) : {valueY.value}";
+
         let scrollbarX = new am4charts.XYChartScrollbar();
-        scrollbarX.series.push(series);
+        scrollbarX.series.push(series_kospi);
+        scrollbarX.series.push(series_loanKr);
+
         chart.scrollbarX = scrollbarX;
 
         this.chart = chart;
