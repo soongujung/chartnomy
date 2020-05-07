@@ -21,7 +21,7 @@ export default new Router({
     },
     {
       path: '/zingchart',
-      name: 'ZingIndez',
+      name: 'ZingIndex',
       component: ZingIndex
     }
   ]
