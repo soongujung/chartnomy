@@ -26,8 +26,8 @@
         api.get('/web/stock/trending')
           .then(res=>{
             this.chartData = res.data;
-            // this.renderChart();
-            this.backupChart();
+            this.renderChart();
+            // this.backupChart();
           })
           .catch(err=>{
             console.log('err >>> ', err)
@@ -52,6 +52,7 @@
 
         let dateAxis = chart.xAxes.push(new am4charts.DateAxis());
         dateAxis.renderer.grid.template.location = 0;
+        dateAxis.renderer.minGridDistance = 50;
 
         // 단위 (원)
         let valueAxisWon = new am4charts.ValueAxis();
@@ -62,7 +63,7 @@
         valueAxisWon.renderer.opposite = false;
         valueAxisWon.title.fontWeight = 600;
         valueAxisWon.title.fontSize = 14;
-        valueAxisWon.tooltip.disabled = false;
+        valueAxisWon.tooltip.disabled = true;
         valueAxisWon.title.text = "원";
         valueAxisWon.title.rotation = 0;
         valueAxisWon.title.align = "top";
@@ -70,21 +71,21 @@
         valueAxisWon.renderer.grid.template.disabled = true;
 
         // 환율(원/달러)
-        let valueAxisWonDollarExchange = new am4charts.ValueAxis();
-        chart.yAxes.push(valueAxisWonDollarExchange);
+        // let valueAxisWonDollarExchange = new am4charts.ValueAxis();
+        // chart.yAxes.push(valueAxisWonDollarExchange);
 
-        valueAxisWonDollarExchange.title.dy = -50;
-        valueAxisWonDollarExchange.title.paddingRight = 0;
-        valueAxisWonDollarExchange.title.paddingBottom = 400;
-        valueAxisWonDollarExchange.renderer.opposite = false;
-        valueAxisWonDollarExchange.title.fontWeight = 600;
-        valueAxisWonDollarExchange.title.fontSize = 14;
-        valueAxisWonDollarExchange.tooltip.disabled = false;
-        valueAxisWonDollarExchange.title.text = "환율 (원)";
-        valueAxisWonDollarExchange.title.rotation = 0;
-        valueAxisWonDollarExchange.title.align = "top";
-        valueAxisWonDollarExchange.renderer.grid.template.strokeOpacity = 0;
-        valueAxisWonDollarExchange.renderer.grid.template.disabled = true;
+        // valueAxisWonDollarExchange.title.dy = -50;
+        // valueAxisWonDollarExchange.title.paddingRight = 0;
+        // valueAxisWonDollarExchange.title.paddingBottom = 400;
+        // valueAxisWonDollarExchange.renderer.opposite = false;
+        // valueAxisWonDollarExchange.title.fontWeight = 600;
+        // valueAxisWonDollarExchange.title.fontSize = 14;
+        // valueAxisWonDollarExchange.tooltip.disabled = true;
+        // valueAxisWonDollarExchange.title.text = "환율 (원)";
+        // valueAxisWonDollarExchange.title.rotation = 0;
+        // valueAxisWonDollarExchange.title.align = "top";
+        // valueAxisWonDollarExchange.renderer.grid.template.strokeOpacity = 0;
+        // valueAxisWonDollarExchange.renderer.grid.template.disabled = true;
 
         let valueAxisPercent = new am4charts.ValueAxis();
         chart.yAxes.push(valueAxisPercent);
@@ -95,7 +96,7 @@
         valueAxisPercent.renderer.opposite = true;
         valueAxisPercent.title.fontWeight = 600;
         valueAxisPercent.title.fontSize = 14;
-        valueAxisPercent.tooltip.disabled = false;
+        valueAxisPercent.tooltip.disabled = true;
         valueAxisPercent.title.text = "%";
         valueAxisPercent.title.rotation = 0;
         valueAxisPercent.title.align = "top";
@@ -103,7 +104,7 @@
         valueAxisPercent.renderer.grid.template.disabled = true;
 
         let seriesLineKospi = this.createLineSeries(chart, valueAxisWon, "kospiPrice", "date", "#339af0", "kospi : {valueY.value} (원)", "KOSPI 지수");
-        let seriesLineExcangeRate = this.createLineSeries(chart, valueAxisWonDollarExchange, "exchangeWonDallor", "date", "#d9480f", "환율 : {valueY.value} (원)", "환율 (달러)");
+        let seriesLineExcangeRate = this.createLineSeries(chart, valueAxisWon, "exchangeWonDallor", "date", "#d9480f", "환율 : {valueY.value} (원)", "환율 (달러)");
         let loanKrPrice = this.createLineSeries(chart, valueAxisPercent, "loanKrPrice", "date", "#51cf66", "정책 금리(한국) : {valueY.value} (%)", "정책 금리(한국)");
         let loanUsPrice = this.createLineSeries(chart, valueAxisPercent, "loanUsPrice", "date", "#868e96", "정책 금리(미국) : {valueY.value} (%)", "정책 금리(미국)");
 
@@ -116,7 +117,7 @@
         this.chart = chart;
       },
       createLineSeries(chart, valueAxis, valueColumn, dateColumn, color, tooltipText, legendName){
-        var seriesLine = new am4charts.LineSeries();
+        let seriesLine = new am4charts.LineSeries();
         chart.series.push(seriesLine);
 
         seriesLine.dataFields.valueY = valueColumn;
