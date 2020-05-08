@@ -4,6 +4,7 @@ import Router from 'vue-router'
 import TrendingIndex from "@/components/TrendingIndex";
 import ZingIndexVue from "@/components/ZingIndexVue";
 import ZingIndex from "@/components/ZingIndex";
+import ChartMenu from "@/components/ChartMenu";
 
 Vue.use(Router)
 
@@ -17,6 +18,11 @@ export default new Router({
     // }
     {
       path: '/',
+      name: 'ChartMenu',
+      component: ChartMenu
+    },
+    {
+      path: '/amchart4-vue',
       name: 'TrendingIndex',
       component: TrendingIndex
     },

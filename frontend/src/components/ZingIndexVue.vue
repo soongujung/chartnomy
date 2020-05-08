@@ -24,9 +24,38 @@
       return{
         chartData: {
           type: 'line',
-          series: [{
-            values: [4,5,3,3,4,4]
-          }]
+          // type: 'mixed',
+          title:{
+            text: "mixed chart"
+          },
+          'scale-x':{
+            'min-value': 1420218000000,
+            step: "day",
+            transform:{
+              type: "date",
+              all: "%y/%m/%d"
+            },
+            'items-overlap': true,
+            'max-items': 5
+          },
+          'scale-y':{
+            format:"$%v"
+          },
+          'scale-y-2':{
+            visible: true
+          },
+          series: [
+            {
+              type: 'line',
+              scales: 'scale-x,scale-y',
+              values: [4,5,3,3,4,4]
+            },
+            {
+              type: 'line',
+              scales: "scale-x,scale-y-2",
+              values: [2,3,2,3,2,3]
+            }
+          ]
         }
       }
     }
