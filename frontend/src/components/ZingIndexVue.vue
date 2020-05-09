@@ -2,7 +2,7 @@
   <div class="zingchart-vue-test">
     <h1>zingchart-vue</h1>
     <a href="https://www.npmjs.com/package/zingchart-vue">zinchart-vue official</a>
-    <zingchart class="chart-container" :data="chartData" :width="800"></zingchart>
+    <zingchart class="chart-container" :data="chartData" :width="1000" ></zingchart>
   </div>
 </template>
 
@@ -11,8 +11,7 @@
 
   import vueMoment from 'vue-moment';
   import zingchartVue from 'zingchart-vue';
-  // import {zingchart, ZC} from 'zingchart/es6.js';
-  // import './zingchart/modules-es6/zingchart-pareto.min.js';
+  import api from '@/api';
 
   Vue.use(vueMoment)
   Vue.use(zingchartVue)
@@ -24,31 +23,72 @@
     },
     data(){
       return{
-        chartData: {
+        apiData: [],
+        kospiPrice: [],
+        loanUsPrice: [],
+        loanKrPrice: [],
+        exchangeWonDallor: [],
+        dateAxisDd: [],
+        arr_columns : ['kospiPrice', 'loanUsPrice', 'loanKrPrice', 'exchangeWonDallor']
+      }
+    },
+    mounted() {
+      this.fetchData()
+    },
+    computed: {
+      chartData(){
+        return {
           type: 'line',
-          // type: 'mixed',
           title:{
             text: "mixed chart"
           },
-          'scale-x':{
-            'min-value': 1420218000000,
+          plot: {
+            marker:{
+              visible: false
+            }
+          },
+          plotarea:{
+            // margin: '60 50 40 0',
+          },
+          scaleX:{
+            // 'min-value': 1420218000000,
             step: "day",
+            values:this.dateAxisDd,
+            item: {
+              fontColor: '#222',
+              fontFamily: 'Open Sans'
+            },
             transform:{
               type: "date",
               all: "%y/%m/%d"
             },
-            'items-overlap': true,
-            'max-items': 5
+            zooming: {
+              shared: true
+            }
           },
-          'scale-y':{
-            format:"%v ($)"
+          legend:{
+
           },
-          'scale-y-2':{
+          tooltip: {
+            text: 'Close: %v',
+            backgroundColor: '#BBB',
+            borderColor: 'transparent'
+          },
+          scaleY:{
             visible: true,
-            format:"%v (￦)",
-            placement: 'default'
+            format:"%v",
+            placement: 'default',
+            guide: {
+              lineColor: '#222',
+              lineStyle: 'solid',
+              visible: true
+            },
+            item: {
+              fontColor: '#222',
+              fontFamily: 'Open Sans'
+            }
           },
-          'scale-y-3':{
+          scaleY3:{
             visible: true,
             format:"%v (%)",
           },
@@ -57,21 +97,72 @@
             {
               type: 'line',
               scales: 'scale-x,scale-y',
-              values: [4,5,3,3,4,4],
+              // values: [4,5,3,3,4,4],
+              values: this.kospiPrice,
+              text: '코스피 (￦)'
             },
             {
               type: 'line',
-              scales: "scale-x,scale-y-2",
-              values: [2,3,2,3,2,3]
+              scales: "scale-x,scale-y",
+              values: this.exchangeWonDallor,
+              text: '환율 (￦)',
             },
             {
               type: 'line',
               scales: "scale-x,scale-y-3",
-              values: [5,1,2,4,3,2]
+              values: this.loanKrPrice,
+              text: '정책금리(한국) (%)'
+            },
+            {
+              type: 'line',
+              scales: "scale-x,scale-y-3",
+              values: this.loanUsPrice,
+              text: '정책금리(미국) (%)'
             }
           ]
         }
       }
+    },
+    methods: {
+      fetchData(){
+        api.get('/web/stock/trending')
+        .then(res => {
+          this.apiData = res.data;
+          this.generateDateAxis()
+          this.generateChartData()
+          this.chartData.scaleX.values = this.dateAxisDd
+
+          // this.chartData.series[0].values = this.kospiPrice
+          // this.chartData.series[1].values = this.exchangeWonDallor
+          // this.chartData.series[2].values = this.loanKrPrice
+          // console.log('chartData >>> ', this.chartData)
+        })
+        .catch(err=>{
+          console.log('err >>> ', err)
+        })
+      },
+      generateDateAxis(){
+        this.apiData.forEach(obj => {
+          let str_date = obj.date
+          let dt_date = this.$moment(str_date, 'YYYYMMDD').toDate()
+          this.dateAxisDd.push(dt_date.getTime())
+        })
+        this.chartData.scaleX.values = this.dateAxisDd
+      },
+      generateChartData(){
+        let arr_columns = this.arr_columns
+        arr_columns.forEach(columnNm => {
+          this.convertObjArrToSeries(columnNm)
+        })
+      },
+      convertObjArrToSeries(columnNm){
+        let target = this[columnNm]
+        this.apiData.forEach(obj => {
+          let data = obj[columnNm] === null ? null : obj[columnNm]
+          // console.log('columnNm, data >>> ', columnNm, ', ', data)
+          target.push(data)
+        })
+      },
     }
   }
 </script>
@@ -80,13 +171,15 @@
 .zingchart-vue-test{
   /*display: inline-block;*/
   position: absolute;
-  top: 25%;
-  left: 25%;
+  /*top: 25%;*/
+  /*left: 25%;*/
   width: 100%;
   height: 100%;
   margin: 0 auto;
 }
 .chart-container{
+  padding-left: 20px;
+  padding-right: 20px;
   width: 100%;
   height: 100%;
   min-height: 800px;
