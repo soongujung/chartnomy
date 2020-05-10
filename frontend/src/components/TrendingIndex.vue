@@ -1,5 +1,11 @@
 <template>
-  <div class="hello" ref="chartdiv">
+  <div>
+    <a href="/">
+      <h1>GO HOME</h1>
+    </a>
+    <h1>Index Chart (KOSPI, 정책금리(한국/미국), 환율(원/달러)</h1>
+    <div class="hello" ref="chartdiv">
+    </div>
   </div>
 </template>
 
@@ -24,7 +30,7 @@
     methods:{
       getTrendingIndexResult(){
         api.get('/web/stock/trending')
-          .then(res=>{
+          .then(res => {
             this.chartData = res.data;
             this.renderChart();
             // this.backupChart();
@@ -104,15 +110,17 @@
         valueAxisPercent.renderer.grid.template.disabled = true;
 
         let seriesLineKospi = this.createLineSeries(chart, valueAxisWon, "kospiPrice", "date", "#339af0", "kospi : {valueY.value} (원)", "KOSPI 지수");
-        let seriesLineExcangeRate = this.createLineSeries(chart, valueAxisWon, "exchangeWonDallor", "date", "#d9480f", "환율 : {valueY.value} (원)", "환율 (달러)");
+        let seriesLineExchangeRate = this.createLineSeries(chart, valueAxisWon, "exchangeWonDallor", "date", "#d9480f", "환율 : {valueY.value} (원)", "환율 (달러)");
         let loanKrPrice = this.createLineSeries(chart, valueAxisPercent, "loanKrPrice", "date", "#51cf66", "정책 금리(한국) : {valueY.value} (%)", "정책 금리(한국)");
         let loanUsPrice = this.createLineSeries(chart, valueAxisPercent, "loanUsPrice", "date", "#868e96", "정책 금리(미국) : {valueY.value} (%)", "정책 금리(미국)");
 
-        // let scrollbarX = new am4charts.XYChartScrollbar();
-        // scrollbarX.series.push(series_kospi);
-        // scrollbarX.series.push(series_loanKr);
+        let scrollbarX = new am4charts.XYChartScrollbar();
+        scrollbarX.series.push(seriesLineKospi);
+        scrollbarX.series.push(seriesLineExchangeRate);
+        scrollbarX.series.push(loanKrPrice);
+        scrollbarX.series.push(loanUsPrice);
 
-        // chart.scrollbarX = scrollbarX;
+        chart.scrollbarX = scrollbarX;
 
         this.chart = chart;
       },

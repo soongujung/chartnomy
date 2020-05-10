@@ -1,7 +1,8 @@
 <template>
   <div class="zingchart-vue-test">
-    <h1>zingchart-vue</h1>
-    <a href="https://www.npmjs.com/package/zingchart-vue">zinchart-vue official</a>
+    <a href="/">
+      <h1>GO HOME</h1>
+    </a>
     <zingchart class="chart-container" :data="chartData" :width="1000" ></zingchart>
   </div>
 </template>
@@ -40,7 +41,7 @@
         return {
           type: 'line',
           title:{
-            text: "mixed chart"
+            text: "Index Chart (KOSPI, 정책금리(한국/미국), 환율(원/달러)"
           },
           plot: {
             marker:{
@@ -158,7 +159,7 @@
       convertObjArrToSeries(columnNm){
         let target = this[columnNm]
         this.apiData.forEach(obj => {
-          let data = obj[columnNm] === null ? null : obj[columnNm]
+          let data = obj[columnNm] === null ? undefined : obj[columnNm]
           // console.log('columnNm, data >>> ', columnNm, ', ', data)
           target.push(data)
         })
@@ -173,9 +174,9 @@
   position: absolute;
   /*top: 25%;*/
   /*left: 25%;*/
-  width: 100%;
-  height: 100%;
-  margin: 0 auto;
+  /*width: 100%;*/
+  /*height: 100%;*/
+  /*margin: 0 auto;*/
 }
 .chart-container{
   padding-left: 20px;
