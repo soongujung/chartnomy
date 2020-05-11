@@ -1,7 +1,10 @@
 package com.chartnomy.indicators.api.web.trending.index;
 
+import com.chartnomy.indicators.api.common.IndicatorType;
 import com.chartnomy.indicators.api.web.trending.index.dto.QTrendingDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingDto;
+import com.chartnomy.indicators.api.web.trending.index.dto.TrendingMonthCollectDto;
+import com.chartnomy.indicators.api.web.trending.index.dto.TrendingParameter;
 import com.chartnomy.indicators.domain.axis.entity.QDateAxisDd;
 import com.chartnomy.indicators.domain.exchange.entity.QExchangeRateWonDollar;
 import com.chartnomy.indicators.domain.kospi.entity.QKospi;
@@ -56,5 +59,9 @@ public class QTrendingIndexRepositoryImpl implements QTrendingIndexRepository {
 //		.where(dateAxisDd.date.loe(LocalDateTime.now()))
 		.fetch();
 		return result;
+	}
+
+	public List<TrendingMonthCollectDto> getTrendingMonthCollectResult(IndicatorType indicatorType, TrendingParameter parameter) {
+		return indicatorType.getTrendingMonthResult(queryFactory, parameter);
 	}
 }
