@@ -41,15 +41,15 @@ public enum IndicatorType {
 			QExchangeRateWonDollar exchangeRateWonDollar = QExchangeRateWonDollar.exchangeRateWonDollar;
 			QDateAxisDd dateAxisDd = QDateAxisDd.dateAxisDd;
 			List<TrendingMonthCollectDto> result = queryFactory.select(
-				new QTrendingMonthCollectDto(
-					exchangeRateWonDollar.price.min(),
-					exchangeRateWonDollar.price.max(),
-					exchangeRateWonDollar.price.avg()
+					new QTrendingMonthCollectDto(
+						exchangeRateWonDollar.price.min(),
+						exchangeRateWonDollar.price.max(),
+						exchangeRateWonDollar.price.avg()
+					)
 				)
-			)
 				.from(dateAxisDd)
 				.leftJoin(exchangeRateWonDollar)
-				.on(dateAxisDd.date.eq(exchangeRateWonDollar.time))
+					.on(dateAxisDd.date.eq(exchangeRateWonDollar.time))
 				.groupBy(dateAxisDd.date.dayOfMonth())
 				.fetch();
 			return result;
