@@ -2,6 +2,7 @@ package com.chartnomy.indicators.domain.kospi.entity;
 
 import com.chartnomy.indicators.domain.axis.entity.DateAxisDd;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
@@ -52,4 +53,8 @@ public class Kospi {
 	private String itemName3;
 
 	public void Kospi(){}
+
+	public String getYYYYMM(){
+		return time.format(DateTimeFormatter.ofPattern("yyyyMM"));
+	}
 }

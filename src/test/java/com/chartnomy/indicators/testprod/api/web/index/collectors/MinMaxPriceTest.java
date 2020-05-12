@@ -13,9 +13,12 @@ import com.chartnomy.indicators.domain.kospi.entity.QKospi;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,7 +42,7 @@ public class MinMaxPriceTest {
 	}
 
 	@Test
-	public void testCollectMinKospi(){
+	public void testCollectMaxKospi(){
 		List<Kospi> kospiList = queryFactory.selectFrom(kospi)
 			.leftJoin(dateAxisDd)
 			.on(dateAxisDd.date.eq(kospi.time))
@@ -47,15 +50,35 @@ public class MinMaxPriceTest {
 
 		Comparator<Kospi> kospiComp = Comparator.comparingDouble(Kospi::getPrice);
 
-		Map<LocalDateTime, Optional<Kospi>> collect = kospiList.stream()
+		// YYYYMM 별 최대값 구하기
+		Map<String, Optional<Kospi>> collectedData = kospiList.stream()
 			.map(k -> {
 				if (k.getPrice() == null) {
 					k.setPrice(0.00);
 				}
 				return k;
 			})
-			.collect(groupingBy(Kospi::getTime, maxBy(comparingDouble(Kospi::getPrice))));
+//			.collect(groupingBy(Kospi::getYYYYMM, maxBy(comparingDouble(Kospi::getPrice))));
+			.collect(groupingBy(Kospi::getYYYYMM, maxBy(kospiComp)));
 
-		System.out.println(kospiComp);
+		// YYYYMM 별 최대값 확인해보기
+//		for(Map.Entry<String, Optional<Kospi>> entry : collectedData.entrySet()){
+//			System.out.println(entry.getKey() + ":" + entry.getValue().get().getPrice());
+//		}
+
+		// 데이터 Sorting
+//		Map<String, Double> result = new LinkedHashMap<>();
+		Map<String, Kospi> result = new LinkedHashMap<>();
+
+		collectedData.entrySet().stream()
+			.sorted(Map.Entry.comparingByKey())
+//			.forEachOrdered(x->result.put(x.getKey(), x.getValue().get().getPrice()));
+			.forEachOrdered(x->result.put(x.getKey(), x.getValue().get()));
+
+//		System.out.println(result);
+		result.entrySet().stream()
+			.forEach(entry->{
+				System.out.println(entry.getKey() + " :: " + entry.getValue().getPrice());
+			});
 	}
 }
