@@ -25,9 +25,14 @@ public enum IndicatorType {
 				.from(dateAxisDd)
 				.leftJoin(kospi)
 				.on(dateAxisDd.date.eq(kospi.time))
-				.groupBy(dateAxisDd.date.dayOfMonth())
+				.groupBy(dateAxisDd.date)
 				.fetch();
 			return result;
+		}
+
+		@Override
+		public void setDataType() {
+			setDataType(DataType.DAILY);
 		}
 	},
 	EXCHANGE_RATE_DOLLAR("EXCHANGE_RATE_DOLLAR", 2){
@@ -49,12 +54,22 @@ public enum IndicatorType {
 				.fetch();
 			return result;
 		}
+
+		@Override
+		public void setDataType() {
+			setDataType(DataType.DAILY);
+		}
 	},
 	LOAN_RATE_KR("LOAN_RATE_KR", 3){
 		// 월별
 		@Override
 		public List<TrendingMonthCollectDto> getTrendingMonthResult(JPAQueryFactory queryFactory, TrendingParameter parameter) {
 			return null;
+		}
+
+		@Override
+		public void setDataType() {
+			setDataType(DataType.MONTHLY);
 		}
 	},
 	LOAN_RATE_US("LOAN_RATE_US", 4){
@@ -63,22 +78,35 @@ public enum IndicatorType {
 		public List<TrendingMonthCollectDto> getTrendingMonthResult(JPAQueryFactory queryFactory, TrendingParameter parameter) {
 			return null;
 		}
-	},
-	SP500("SP500", 5){
-		// 일별
+
 		@Override
-		public List<TrendingMonthCollectDto> getTrendingMonthResult(JPAQueryFactory queryFactory, TrendingParameter parameter) {
-			return null;
+		public void setDataType() {
+			setDataType(DataType.MONTHLY);
 		}
 	};
+	// S&P500
+//	SP500("SP500", 5){
+//		// 일별
+//		@Override
+//		public List<TrendingMonthCollectDto> getTrendingMonthResult(JPAQueryFactory queryFactory, TrendingParameter parameter) {
+//			return null;
+//		}
+//
+//		@Override
+//		public void setDataType() {
+//			setDataType(DataType.DAILY);
+//		}
+//	};
 
 	private String indicatorTypeNm;
 	private int indicatorTypeCd;
 	private QDateAxisDd qDateAxisDd = QDateAxisDd.dateAxisDd;
+	private DataType dataType;
 
 	IndicatorType(String indicatorTypeNm, int indicatorTypeCd){
 		this.indicatorTypeNm = indicatorTypeNm;
 		this.indicatorTypeCd = indicatorTypeCd;
+		this.setDataType();
 	}
 
 	public <T> T getType(T type){
@@ -86,6 +114,8 @@ public enum IndicatorType {
 	}
 
 	public abstract List<TrendingMonthCollectDto> getTrendingMonthResult(JPAQueryFactory queryFactory, TrendingParameter parameter);
+
+	public abstract void setDataType();
 
 	public String getIndicatorTypeNm() {
 		return indicatorTypeNm;
@@ -101,5 +131,13 @@ public enum IndicatorType {
 
 	public void setIndicatorTypeCd(int indicatorTypeCd) {
 		this.indicatorTypeCd = indicatorTypeCd;
+	}
+
+	public DataType getDataType() {
+		return dataType;
+	}
+
+	public void setDataType(DataType dataType) {
+		this.dataType = dataType;
 	}
 }
