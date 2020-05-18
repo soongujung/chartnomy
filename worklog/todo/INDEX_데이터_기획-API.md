@@ -18,6 +18,9 @@
 - DB에 저장된 raw 데이터는 가급적 SQL로 GroupBy 등을 통한 집계로직으로 가공하지 않는것을 원칙으로 한다.
 - leftJoin을 최대한 줄이도록 한다.
 
+## 1.3 일별 데이터 계획
+![이미자](./img/INDEX_COLLECT_PLAN.png)
+
 ### 1.2.1 일별 데이터 단건 조회 (각각의 조회) API URL
 - /api/trending/index/{category}?startDate=YYYYMMDD&endDate=YYYYMMDD
     - startDate, endDate 는 선택적인 파라미터이다.
