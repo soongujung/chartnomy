@@ -4,6 +4,7 @@ import static com.chartnomy.indicators.domain.axis.entity.QDateAxisDd.dateAxisDd
 import static com.chartnomy.indicators.domain.kospi.entity.QKospi.kospi;
 import static java.util.Comparator.comparing;
 import static java.util.Comparator.comparingDouble;
+import static java.util.stream.Collectors.averagingDouble;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.maxBy;
 
@@ -61,24 +62,45 @@ public class MinMaxPriceTest {
 //			.collect(groupingBy(Kospi::getYYYYMM, maxBy(comparingDouble(Kospi::getPrice))));
 			.collect(groupingBy(Kospi::getYYYYMM, maxBy(kospiComp)));
 
-		// YYYYMM 별 최대값 확인해보기
-//		for(Map.Entry<String, Optional<Kospi>> entry : collectedData.entrySet()){
-//			System.out.println(entry.getKey() + ":" + entry.getValue().get().getPrice());
-//		}
-
 		// 데이터 Sorting
-//		Map<String, Double> result = new LinkedHashMap<>();
 		Map<String, Kospi> result = new LinkedHashMap<>();
 
 		collectedData.entrySet().stream()
 			.sorted(Map.Entry.comparingByKey())
-//			.forEachOrdered(x->result.put(x.getKey(), x.getValue().get().getPrice()));
 			.forEachOrdered(x->result.put(x.getKey(), x.getValue().get()));
 
-//		System.out.println(result);
 		result.entrySet().stream()
 			.forEach(entry->{
 				System.out.println(entry.getKey() + " :: " + entry.getValue().getPrice());
+			});
+	}
+
+	@Test
+	public void testCollectAvgKospi(){
+		List<Kospi> kospiList = queryFactory.selectFrom(kospi)
+			.leftJoin(dateAxisDd)
+			.on(dateAxisDd.date.eq(kospi.time))
+			.fetch();
+
+		Map<String, Double> collectedData = kospiList.stream()
+			.map(k -> {
+				if (k.getPrice() == null) {
+					k.setPrice(0.00);
+				}
+				return k;
+			})
+			.collect(groupingBy(Kospi::getYYYYMM, averagingDouble(Kospi::getPrice)));
+
+		// 데이터 Sorting
+		Map<String, Double> result = new LinkedHashMap<>();
+
+		collectedData.entrySet().stream()
+			.sorted(Map.Entry.comparingByKey())
+			.forEachOrdered(x->result.put(x.getKey(), x.getValue()));
+
+		collectedData.entrySet().stream()
+			.forEach(entry->{
+				System.out.println(entry.getKey() + " :: " + entry.getValue());
 			});
 	}
 }
