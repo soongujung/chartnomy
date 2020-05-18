@@ -7,6 +7,7 @@ import static java.util.Comparator.comparingDouble;
 import static java.util.stream.Collectors.averagingDouble;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.maxBy;
+import static java.util.stream.Collectors.minBy;
 
 import com.chartnomy.indicators.domain.axis.entity.QDateAxisDd;
 import com.chartnomy.indicators.domain.kospi.entity.Kospi;
@@ -102,5 +103,42 @@ public class MinMaxPriceTest {
 			.forEach(entry->{
 				System.out.println(entry.getKey() + " :: " + entry.getValue());
 			});
+	}
+
+	@Test
+	public void testCollectAllKospi(){
+		List<Kospi> kospiList = queryFactory.selectFrom(kospi)
+			.leftJoin(dateAxisDd)
+			.on(dateAxisDd.date.eq(kospi.time))
+			.fetch();
+
+		Comparator<Kospi> kospiComp = Comparator.comparingDouble(Kospi::getPrice);
+
+		Map<String, Optional<Kospi>> max = kospiList.parallelStream()
+			.map(k -> {
+				if (k.getPrice() == null) {
+					k.setPrice(0.00);
+				}
+				return k;
+			})
+			.collect(groupingBy(Kospi::getYYYYMM, maxBy(kospiComp)));
+
+		Map<String, Optional<Kospi>> min = kospiList.parallelStream()
+			.map(k -> {
+				if (k.getPrice() == null) {
+					k.setPrice(0.00);
+				}
+				return k;
+			})
+			.collect(groupingBy(Kospi::getYYYYMM, minBy(kospiComp)));
+
+		Map<String, Double> avg = kospiList.parallelStream()
+			.map(k -> {
+				if (k.getPrice() == null) {
+					k.setPrice(0.00);
+				}
+				return k;
+			})
+			.collect(groupingBy(Kospi::getYYYYMM, averagingDouble(Kospi::getPrice)));
 	}
 }
