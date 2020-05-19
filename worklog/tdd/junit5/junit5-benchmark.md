@@ -1,5 +1,5 @@
 # JUnit5 Benchmark
-#1.일반적인 방법
+# 1.일반적인 방법
 JUnit5 를 이용해 성능 측정을 하고자 할때 아래의 interface 들을 overriding 한다. 
 - BeforeAllCallback
     - BeforeEachCallback
@@ -49,7 +49,7 @@ public class TimingExtension implements BeforeTestExecutionCallback, AfterTestEx
 }
 ```
 
-#2.커스터 마이징
+# 2.커스터 마이징
 그런데 나는 이런걸 원하는게 아니다. 어노테이션을 만들어서 원하는 메서드에 실행시간을 측정하도록 해주고 싶다.
 예를 들면 ([참고 - StackOverflow](https://stackoverflow.com/questions/14892125/what-is-the-best-practice-to-determine-the-execution-time-of-the-business-releva))  
 아래와 같은 코드를 커스텀한 어노테이션에 담아두고 어노테이션을 달아놓은 메서드에서만 실행하도록 하고 싶다.
