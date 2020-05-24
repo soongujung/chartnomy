@@ -1,17 +1,27 @@
 package com.chartnomy.indicators.temp.custom.extension;
 
 
+import static org.junit.jupiter.params.aggregator.AggregationUtils.hasAggregator;
+import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
 import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
 
 import com.chartnomy.indicators.temp.custom.annotation.CustomAnnotation;
+import com.chartnomy.indicators.temp.custom.params.CustomTestInvocationContext;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 import org.junit.jupiter.params.aggregator.AggregationUtils;
-import org.junit.platform.commons.util.AnnotationUtils;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.ArgumentsProvider;
+import org.junit.jupiter.params.provider.ArgumentsSource;
+import org.junit.jupiter.params.support.AnnotationConsumerInitializer;
+import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.ReflectionUtils;
 
 public class CustomExtension implements TestTemplateInvocationContextProvider {
 
@@ -41,6 +51,53 @@ public class CustomExtension implements TestTemplateInvocationContextProvider {
 	public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(
 		ExtensionContext context) {
 		System.out.println(" === provideTestTemplateInvocationContexts === ");
-		return null;
+		Method templateMethod = context.getRequiredTestMethod();
+
+		/**
+		 * context를 통해 얻어오는 testTemplateMethod 는 testCustomAnnotation 이다.
+		 * (@Test, @CustomAnnotation 을 달아놓은 메서드)
+		 */
+		System.out.println(" >>> templateMethod :: " + templateMethod);
+		AtomicLong invocationCount = new AtomicLong(0);
+
+		Stream<TestTemplateInvocationContext> result = findRepeatableAnnotations(templateMethod,
+			ArgumentsSource.class)
+			.stream()
+			.map(ArgumentsSource::value)
+			.map(ReflectionUtils::newInstance)
+			.map(provider -> AnnotationConsumerInitializer.initialize(templateMethod, provider))
+			.flatMap(provider -> arguments(provider, context))
+			.map(Arguments::get)
+			.map(arguments -> consumedArguments(arguments, templateMethod))
+			.map(arguments -> createInvocationContext(arguments))
+			.peek(invocationContext -> invocationCount.incrementAndGet())
+			.onClose(() ->
+				Preconditions.condition(invocationCount.get() > 0, "test"));
+
+		System.out.println("===== Stream<TestTemplateInvocationContext> ===== ");
+//		result.forEach(ctx -> {
+//			System.out.println(ctx.toString());
+//		});
+
+		return result;
+	}
+
+	private TestTemplateInvocationContext createInvocationContext(Object[] arguments){
+		return new CustomTestInvocationContext();
+	}
+
+	protected static Stream<? extends Arguments> arguments(ArgumentsProvider provider, ExtensionContext context) {
+		try {
+			return provider.provideArguments(context);
+		}
+		catch (Exception e) {
+			throw ExceptionUtils.throwAsUncheckedException(e);
+		}
+	}
+
+	private Object[] consumedArguments(Object[] arguments, Method templateMethod) {
+		int parameterCount = templateMethod.getParameterCount();
+		return hasAggregator(templateMethod) ? arguments
+			: (arguments.length > parameterCount ? Arrays.copyOf(arguments, parameterCount) : arguments);
 	}
 }
