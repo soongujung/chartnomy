@@ -12,6 +12,6 @@ then
 else
     echo "'$name_chartnomy_mysql' 컨테이너가 존재합니다. 기존 컨테이너를 중지하고 삭제합니다."
     docker container stop chartnomy-mysql
-    rm -rf ~/env/docker/chartnomy/volumes/chartnomy-mysql/*
+    rm -rf ~/env/docker/chartnomy/volumes/chartnomy-mariadb/*
     echo "\n'$name_chartnomy_mysql' 컨테이너 삭제를 완료했습니다.\n"
 fi
