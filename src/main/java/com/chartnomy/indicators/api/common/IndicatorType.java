@@ -15,19 +15,19 @@ public enum IndicatorType {
 		public List<TrendingMonthCollectDto> getTrendingMonthResult(JPAQueryFactory queryFactory, TrendingParameter parameter) {
 			QKospi kospi = QKospi.kospi;
 			QDateAxisDd dateAxisDd = QDateAxisDd.dateAxisDd;
-			List<TrendingMonthCollectDto> result = queryFactory.select(
-					new QTrendingMonthCollectDto(
-						kospi.price.min(),
-						kospi.price.max(),
-						kospi.price.avg()
-					)
-				)
-				.from(dateAxisDd)
-				.leftJoin(kospi)
-				.on(dateAxisDd.date.eq(kospi.time))
-				.groupBy(dateAxisDd.date)
-				.fetch();
-			return result;
+//			List<TrendingMonthCollectDto> result = queryFactory.select(
+//					new QTrendingMonthCollectDto(
+//						kospi.price.min(),
+//						kospi.price.max(),
+//						kospi.price.avg()
+//					)
+//				)
+//				.from(dateAxisDd)
+//				.leftJoin(kospi)
+//				.on(dateAxisDd.date.eq(kospi.time))
+//				.groupBy(dateAxisDd.date)
+//				.fetch();
+			return null;
 		}
 
 		@Override
@@ -40,19 +40,19 @@ public enum IndicatorType {
 		public List<TrendingMonthCollectDto> getTrendingMonthResult(JPAQueryFactory queryFactory, TrendingParameter parameter) {
 			QExchangeRateWonDollar exchangeRateWonDollar = QExchangeRateWonDollar.exchangeRateWonDollar;
 			QDateAxisDd dateAxisDd = QDateAxisDd.dateAxisDd;
-			List<TrendingMonthCollectDto> result = queryFactory.select(
-					new QTrendingMonthCollectDto(
-						exchangeRateWonDollar.price.min(),
-						exchangeRateWonDollar.price.max(),
-						exchangeRateWonDollar.price.avg()
-					)
-				)
-				.from(dateAxisDd)
-				.leftJoin(exchangeRateWonDollar)
-					.on(dateAxisDd.date.eq(exchangeRateWonDollar.time))
-				.groupBy(dateAxisDd.date.dayOfMonth())
-				.fetch();
-			return result;
+//			List<TrendingMonthCollectDto> result = queryFactory.select(
+//					new QTrendingMonthCollectDto(
+//						exchangeRateWonDollar.price.min(),
+//						exchangeRateWonDollar.price.max(),
+//						exchangeRateWonDollar.price.avg()
+//					)
+//				)
+//				.from(dateAxisDd)
+//				.leftJoin(exchangeRateWonDollar)
+//					.on(dateAxisDd.date.eq(exchangeRateWonDollar.time))
+//				.groupBy(dateAxisDd.date.dayOfMonth())
+//				.fetch();
+			return null;
 		}
 
 		@Override

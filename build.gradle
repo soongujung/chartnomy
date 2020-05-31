@@ -35,10 +35,13 @@ dependencies {
 	testImplementation('org.springframework.boot:spring-boot-starter-test'){
 		exclude module: 'junit'
 	}
-	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.2.0'
-	testCompile('org.junit.jupiter:junit-jupiter-params:5.2.0')
-	testRuntime('org.junit.jupiter:junit-jupiter-engine:5.2.0')
-	testRuntime('org.junit.vintage:junit-vintage-engine:5.3.1')
+//	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.1'
+	testImplementation ('org.junit.jupiter:junit-jupiter-api:5.6.1'){
+		exclude module:'junit-platform-commons'
+	}
+	testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.6.1')
+	testRuntimeOnly('org.junit.platform:junit-platform-engine:1.6.2')
+	testRuntimeOnly('org.junit.platform:junit-platform-commons:1.6.2')
 }
 
 def querydslDir = "$buildDir/generated/querydsl"

@@ -2,78 +2,51 @@ package com.chartnomy.indicators.testprod.api.web.index.collectors;
 
 import static com.chartnomy.indicators.domain.axis.entity.QDateAxisDd.dateAxisDd;
 import static com.chartnomy.indicators.domain.kospi.entity.QKospi.kospi;
-import static java.util.Comparator.comparing;
-import static java.util.Comparator.comparingDouble;
 import static java.util.stream.Collectors.averagingDouble;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.maxBy;
 import static java.util.stream.Collectors.minBy;
 
-import com.chartnomy.indicators.domain.axis.entity.QDateAxisDd;
+import com.chartnomy.indicators.domain.axis.entity.DateAxisDd;
 import com.chartnomy.indicators.domain.kospi.entity.Kospi;
-import com.chartnomy.indicators.domain.kospi.entity.QKospi;
+import com.chartnomy.indicators.extensions.TimerTestExtension;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import java.lang.reflect.Method;
-import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.AfterEachCallback;
-import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
-import org.junit.jupiter.api.extension.BeforeEachCallback;
-import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
-import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+@ExtendWith(TimerTestExtension.class)
 @SpringBootTest
 @ActiveProfiles("testprod")
-public class MinMaxPriceTest implements BeforeEachCallback, AfterEachCallback {
+public class MinMaxPriceTest{
 
 	@Autowired
 	private EntityManager em;
 
 	private JPAQueryFactory queryFactory;
 
-	private static final String START_TIME = "start_time";
-
 	@BeforeEach
 	public void setup(){
 		this.queryFactory = new JPAQueryFactory(em);
 	}
 
-	@Override
-	public void afterEach(ExtensionContext context) throws Exception {
-		getStore(context).put(START_TIME, System.currentTimeMillis());
+	@Test
+	public void testDateAxisDd(){
+		List<DateAxisDd> fetch = queryFactory.selectFrom(dateAxisDd)
+			.fetch();
 	}
 
-	@Override
-	public void beforeEach(ExtensionContext context) throws Exception {
-		Method testMethod = context.getRequiredTestMethod();
-		long startTime = getStore(context).remove(START_TIME, long.class);
-		long duration = System.currentTimeMillis() - startTime;
-
-		System.out.println("Method " + testMethod + " took " + duration + " ms");
-	}
-
-	private Store getStore(ExtensionContext context){
-		return context.getStore(Namespace.create(getClass(), context.getRequiredTestMethod()));
-	}
-
-
+	@DisplayName("코스피 월별 최대값 산출")
 	@Test
 	public void testCollectMaxKospi(){
 		List<Kospi> kospiList = queryFactory.selectFrom(kospi)
@@ -102,6 +75,7 @@ public class MinMaxPriceTest implements BeforeEachCallback, AfterEachCallback {
 			.forEachOrdered(x->result.put(x.getKey(), x.getValue().get()));
 	}
 
+	@DisplayName("코스피 월별 평균값 산출 ")
 	@Test
 	public void testCollectAvgKospi(){
 		List<Kospi> kospiList = queryFactory.selectFrom(kospi)
@@ -126,6 +100,7 @@ public class MinMaxPriceTest implements BeforeEachCallback, AfterEachCallback {
 			.forEachOrdered(x->result.put(x.getKey(), x.getValue()));
 	}
 
+	@DisplayName("KOSPI 의 월별 최대/최소/평균 값 산출")
 	@Test
 	public void testCollectAllKospi(){
 		List<Kospi> kospiList = queryFactory.selectFrom(kospi)
