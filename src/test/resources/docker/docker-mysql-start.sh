@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-name_chartnomy_mysql='chartnomy-mysql'
+name_chartnomy_mysql='chartnomy-mariadb'
 cnt_chartnomy_mysql=`docker container ls --filter name=chartnomy-mariadb | wc -l`
 cnt_chartnomy_mysql=$(($cnt_chartnomy_mysql -1))
 
