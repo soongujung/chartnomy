@@ -1,3 +1,4 @@
+CREATE SCHEMA IF NOT EXISTS ec2_web_stockdata;
 -- --------------
 -- 1) ec2_web_stockdata
 -- DATE_AXIS_DD
@@ -176,3 +177,5 @@ DELETE FROM loan_rate_kor WHERE 1=1;
 
 -- 7) loan_rate_usa
 DELETE FROM loan_rate_usa WHERE 1=1;
+
+commit;
