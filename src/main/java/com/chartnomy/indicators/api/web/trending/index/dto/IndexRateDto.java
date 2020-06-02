@@ -7,17 +7,17 @@ import java.time.LocalDateTime;
 import lombok.Data;
 
 @Data
-public class TrendingIndexDto {
+public class IndexRateDto {
 
 	@JsonFormat(shape = Shape.STRING, pattern = "yyyyMMdd", timezone = "Asia/Seoul")
 	private LocalDateTime date;
-	private Double	price;
+	private Double rate;
 
 	@QueryProjection
-	public TrendingIndexDto(
-		LocalDateTime date, Double price
+	public IndexRateDto(
+		LocalDateTime date, Double rate
 	){
 		this.date = date;
-		this.price = price;
+		this.rate = rate;
 	}
 }
