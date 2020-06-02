@@ -3,6 +3,7 @@ package com.chartnomy.indicators.api.web.trending.index;
 import com.chartnomy.indicators.api.common.DataType;
 import com.chartnomy.indicators.api.common.IndicatorType;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingDto;
+import com.chartnomy.indicators.api.web.trending.index.dto.TrendingIndexDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingMonthCollectDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingParameter;
 import java.util.Arrays;
@@ -51,5 +52,10 @@ public class TrendingIndexServiceImpl implements TrendingIndexService{
 	public List<TrendingMonthCollectDto> getTrendingMonthCollectResult(IndicatorType indicatorType, TrendingParameter parameter) {
 
 		return null;
+	}
+
+	@Override
+	public List<TrendingIndexDto> getKospiResult() {
+		return qIndexRepository.getKospiResult();
 	}
 }

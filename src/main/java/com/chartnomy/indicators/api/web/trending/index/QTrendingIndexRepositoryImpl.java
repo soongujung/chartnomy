@@ -1,8 +1,13 @@
 package com.chartnomy.indicators.api.web.trending.index;
 
+import static com.chartnomy.indicators.domain.axis.entity.QDateAxisDd.dateAxisDd;
+import static com.chartnomy.indicators.domain.kospi.entity.QKospi.kospi;
+
 import com.chartnomy.indicators.api.common.IndicatorType;
 import com.chartnomy.indicators.api.web.trending.index.dto.QTrendingDto;
+import com.chartnomy.indicators.api.web.trending.index.dto.QTrendingIndexDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingDto;
+import com.chartnomy.indicators.api.web.trending.index.dto.TrendingIndexDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingMonthCollectDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingParameter;
 import com.chartnomy.indicators.domain.axis.entity.QDateAxisDd;
@@ -63,5 +68,21 @@ public class QTrendingIndexRepositoryImpl implements QTrendingIndexRepository {
 
 	public List<TrendingMonthCollectDto> getTrendingMonthCollectResult(IndicatorType indicatorType, TrendingParameter parameter) {
 		return indicatorType.getTrendingMonthResult(queryFactory, parameter);
+	}
+
+	@Override
+	public List<TrendingIndexDto> getKospiResult() {
+			List<TrendingIndexDto> fetch = queryFactory.select(
+				new QTrendingIndexDto(
+					dateAxisDd.date.as("date"),
+					kospi.price.as("price")
+				)
+			)
+			.from(dateAxisDd)
+			.leftJoin(kospi)
+			.on(dateAxisDd.date.eq(kospi.time))
+			.fetch();
+
+		return fetch;
 	}
 }

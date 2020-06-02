@@ -1,6 +1,7 @@
 package com.chartnomy.indicators.api.web.trending.index;
 
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingDto;
+import com.chartnomy.indicators.api.web.trending.index.dto.TrendingIndexDto;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -24,5 +25,10 @@ public class TrendingIndexController {
 	@GetMapping("/api/web/stock/trending")
 	public @ResponseBody List<TrendingDto> getDefaultTrendingResult(){
 		return trendingIndexService.getDefaultTrendingResult();
+	}
+
+	@GetMapping("/api/web/trending/index/kospi")
+	public @ResponseBody List<TrendingIndexDto> getKospiResult(){
+		return trendingIndexService.getKospiResult();
 	}
 }
