@@ -111,7 +111,7 @@ create or replace index loan_household_month_TIME_index
 -- 6) ec2_web_stockdata
 -- loan_rate_kor
 -- --------------
-create table loan_rate_kor
+create table IF NOT EXISTS loan_rate_kor
 (
     UNIT_NAME  text     null,
     STAT_NAME  text     null,
@@ -128,14 +128,14 @@ create table loan_rate_kor
         unique (TIME)
 );
 
-create index loan_rate_kor_TIME_index
+create or replace index loan_rate_kor_TIME_index
     on loan_rate_kor (TIME);
 
 -- --------------
 -- 7) ec2_web_stockdata
 -- loan_rate_usa
 -- --------------
-create table loan_rate_usa
+create table IF NOT EXISTS loan_rate_usa
 (
     UNIT_NAME  text     null,
     STAT_NAME  text     null,
@@ -151,7 +151,7 @@ create table loan_rate_usa
         primary key
 );
 
-create index loan_rate_usa_TIME_index
+create or replace index loan_rate_usa_TIME_index
     on loan_rate_usa (TIME);
 
 

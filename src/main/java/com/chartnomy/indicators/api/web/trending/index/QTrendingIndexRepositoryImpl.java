@@ -1,6 +1,7 @@
 package com.chartnomy.indicators.api.web.trending.index;
 
 import static com.chartnomy.indicators.domain.axis.entity.QDateAxisDd.dateAxisDd;
+import static com.chartnomy.indicators.domain.exchange.entity.QExchangeRateWonDollar.exchangeRateWonDollar;
 import static com.chartnomy.indicators.domain.kospi.entity.QKospi.kospi;
 
 import com.chartnomy.indicators.api.common.IndicatorType;
@@ -72,7 +73,7 @@ public class QTrendingIndexRepositoryImpl implements QTrendingIndexRepository {
 
 	@Override
 	public List<TrendingIndexDto> getKospiResult() {
-			List<TrendingIndexDto> fetch = queryFactory.select(
+			List<TrendingIndexDto> result = queryFactory.select(
 				new QTrendingIndexDto(
 					dateAxisDd.date.as("date"),
 					kospi.price.as("price")
@@ -83,6 +84,23 @@ public class QTrendingIndexRepositoryImpl implements QTrendingIndexRepository {
 			.on(dateAxisDd.date.eq(kospi.time))
 			.fetch();
 
-		return fetch;
+		return result;
+	}
+
+	@Override
+	public List<TrendingIndexDto> getExchangeRateDollar() {
+
+		List<TrendingIndexDto> result = queryFactory.select(
+			new QTrendingIndexDto(
+				dateAxisDd.date.as("date"),
+				exchangeRateWonDollar.price.as("price")
+			)
+		)
+		.from(dateAxisDd)
+		.leftJoin(exchangeRateWonDollar)
+		.on(dateAxisDd.date.eq(exchangeRateWonDollar.time))
+		.fetch();
+
+		return result;
 	}
 }

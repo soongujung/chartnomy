@@ -14,4 +14,6 @@ public interface QTrendingIndexRepository {
 	List<TrendingMonthCollectDto> getTrendingMonthCollectResult(IndicatorType indicatorType, TrendingParameter parameter);
 
 	List<TrendingIndexDto> getKospiResult();
+
+	List<TrendingIndexDto> getExchangeRateDollar();
 }

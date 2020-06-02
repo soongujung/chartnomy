@@ -1,22 +1,13 @@
-package com.chartnomy.indicators.testdocker;
+package com.chartnomy.indicators.testdocker.api.web.trending.index.repository;
 
-import static com.chartnomy.indicators.domain.axis.entity.QDateAxisDd.dateAxisDd;
-import static com.chartnomy.indicators.domain.kospi.entity.QKospi.kospi;
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.maxBy;
-
-import com.chartnomy.indicators.domain.axis.entity.DateAxisDd;
-import com.chartnomy.indicators.domain.axis.entity.QDateAxisDd;
-import com.chartnomy.indicators.domain.kospi.entity.Kospi;
+import com.chartnomy.indicators.api.web.trending.index.QTrendingIndexRepository;
+import com.chartnomy.indicators.api.web.trending.index.dto.TrendingIndexDto;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -24,29 +15,26 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ApplicationEvent;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest
 @ActiveProfiles("testdocker")
 @TestInstance(Lifecycle.PER_CLASS)
 @TestMethodOrder(OrderAnnotation.class)
-public class ConnectionTest{
+public class TrendingIndexRepositoryTest {
 
 	@Autowired
 	private EntityManager entityManager;
 
 	@Autowired
 	private DataSource dataSource;
+
+	@Autowired
+	private QTrendingIndexRepository trendingRepository;
 
 	private JPAQueryFactory queryFactory;
 
@@ -55,6 +43,7 @@ public class ConnectionTest{
 		queryFactory = new JPAQueryFactory(entityManager);
 	}
 
+	@Disabled
 	@DisplayName("DB 셋업")
 	@Test
 	@Order(1)
@@ -68,13 +57,18 @@ public class ConnectionTest{
 		"/datasets/mariadb/insert/mariadb_insert_loan_rate_usa.sql",
 	}, config = @SqlConfig(dataSource = "dataSource"))
 	void setupSchema(){
+
 	}
 
 	@Test
 	@Order(2)
-	void test_connection(){
-		List<Kospi> fetch = queryFactory.selectFrom(kospi)
-			.fetch();
-		System.out.println(fetch);
+	void testGetKospiResult(){
+		List<TrendingIndexDto> kospiResult = trendingRepository.getKospiResult();
+	}
+
+	@Test
+	@Order(3)
+	void testGetExchangeRateDollar(){
+		List<TrendingIndexDto> exchangeRateDollar = trendingRepository.getExchangeRateDollar();
 	}
 }
