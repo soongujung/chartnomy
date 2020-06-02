@@ -4,7 +4,7 @@ import com.chartnomy.indicators.api.web.trending.index.QTrendingIndexRepository;
 import com.chartnomy.indicators.api.web.trending.index.dto.IndexPriceDto;
 import java.util.List;
 
-public enum CurrencyType {
+public enum ExchangeCurrencyType {
 	USD("USD", 1){
 		@Override
 		public List<IndexPriceDto> getExchangeRate(QTrendingIndexRepository repository) {
@@ -12,7 +12,7 @@ public enum CurrencyType {
 		}
 	};
 
-	CurrencyType(String currencyTypeNm, int currencyTypeCd){
+	ExchangeCurrencyType(String currencyTypeNm, int currencyTypeCd){
 		this.currencyTypeNm = currencyTypeNm;
 		this.currencyTypeCd = currencyTypeCd;
 	}
