@@ -1,7 +1,7 @@
 package com.chartnomy.indicators.api.web.trending.index;
 
+import com.chartnomy.indicators.api.web.trending.index.dto.IndexPriceDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingDto;
-import com.chartnomy.indicators.api.web.trending.index.dto.TrendingIndexDto;
 import com.chartnomy.indicators.domain.exchange.types.CurrencyType;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -30,12 +30,12 @@ public class TrendingIndexController {
 	}
 
 	@GetMapping("/api/web/trending/index/kospi")
-	public @ResponseBody List<TrendingIndexDto> getKospiResult(){
+	public @ResponseBody List<IndexPriceDto> getKospiResult(){
 		return trendingIndexService.getKospiResult();
 	}
 
 	@GetMapping("/api/web/trending/index/exchange/{currencyTypeNm}")
-	public @ResponseBody List<TrendingIndexDto> getExchangeRate(@PathVariable("currencyTypeNm") String currencyTypeNm){
+	public @ResponseBody List<IndexPriceDto> getExchangeRate(@PathVariable("currencyTypeNm") String currencyTypeNm){
 		CurrencyType currencyType = CurrencyType.valueOf(currencyTypeNm);
 		return trendingIndexService.getExchangeRate(currencyType);
 	}

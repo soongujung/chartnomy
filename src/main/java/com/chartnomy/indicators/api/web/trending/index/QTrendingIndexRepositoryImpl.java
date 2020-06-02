@@ -5,10 +5,10 @@ import static com.chartnomy.indicators.domain.exchange.entity.QExchangeRateWonDo
 import static com.chartnomy.indicators.domain.kospi.entity.QKospi.kospi;
 
 import com.chartnomy.indicators.api.common.IndicatorType;
+import com.chartnomy.indicators.api.web.trending.index.dto.IndexPriceDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.QTrendingDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.QTrendingIndexDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingDto;
-import com.chartnomy.indicators.api.web.trending.index.dto.TrendingIndexDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingMonthCollectDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingParameter;
 import com.chartnomy.indicators.domain.axis.entity.QDateAxisDd;
@@ -72,8 +72,8 @@ public class QTrendingIndexRepositoryImpl implements QTrendingIndexRepository {
 	}
 
 	@Override
-	public List<TrendingIndexDto> getKospiResult() {
-			List<TrendingIndexDto> result = queryFactory.select(
+	public List<IndexPriceDto> getKospiResult() {
+			List<IndexPriceDto> result = queryFactory.select(
 				new QTrendingIndexDto(
 					dateAxisDd.date.as("date"),
 					kospi.price.as("price")
@@ -88,9 +88,9 @@ public class QTrendingIndexRepositoryImpl implements QTrendingIndexRepository {
 	}
 
 	@Override
-	public List<TrendingIndexDto> getExchangeRateDollar() {
+	public List<IndexPriceDto> getExchangeRateDollar() {
 
-		List<TrendingIndexDto> result = queryFactory.select(
+		List<IndexPriceDto> result = queryFactory.select(
 			new QTrendingIndexDto(
 				dateAxisDd.date.as("date"),
 				exchangeRateWonDollar.price.as("price")

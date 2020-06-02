@@ -2,8 +2,8 @@ package com.chartnomy.indicators.api.web.trending.index;
 
 import com.chartnomy.indicators.api.common.DataType;
 import com.chartnomy.indicators.api.common.IndicatorType;
+import com.chartnomy.indicators.api.web.trending.index.dto.IndexPriceDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingDto;
-import com.chartnomy.indicators.api.web.trending.index.dto.TrendingIndexDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingMonthCollectDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingParameter;
 import com.chartnomy.indicators.domain.exchange.types.CurrencyType;
@@ -56,12 +56,12 @@ public class TrendingIndexServiceImpl implements TrendingIndexService{
 	}
 
 	@Override
-	public List<TrendingIndexDto> getKospiResult() {
+	public List<IndexPriceDto> getKospiResult() {
 		return qIndexRepository.getKospiResult();
 	}
 
 	@Override
-	public List<TrendingIndexDto> getExchangeRate(CurrencyType currencyType) {
+	public List<IndexPriceDto> getExchangeRate(CurrencyType currencyType) {
 		return currencyType.getExchangeRate(qIndexRepository);
 	}
 }

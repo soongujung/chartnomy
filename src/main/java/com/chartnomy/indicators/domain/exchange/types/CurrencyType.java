@@ -1,13 +1,13 @@
 package com.chartnomy.indicators.domain.exchange.types;
 
 import com.chartnomy.indicators.api.web.trending.index.QTrendingIndexRepository;
-import com.chartnomy.indicators.api.web.trending.index.dto.TrendingIndexDto;
+import com.chartnomy.indicators.api.web.trending.index.dto.IndexPriceDto;
 import java.util.List;
 
 public enum CurrencyType {
 	USD("USD", 1){
 		@Override
-		public List<TrendingIndexDto> getExchangeRate(QTrendingIndexRepository repository) {
+		public List<IndexPriceDto> getExchangeRate(QTrendingIndexRepository repository) {
 			return repository.getExchangeRateDollar();
 		}
 	};
@@ -20,7 +20,7 @@ public enum CurrencyType {
 	private String currencyTypeNm;
 	private int currencyTypeCd;
 
-	public abstract List<TrendingIndexDto> getExchangeRate(QTrendingIndexRepository repository);
+	public abstract List<IndexPriceDto> getExchangeRate(QTrendingIndexRepository repository);
 
 	public String getCurrencyTypeNm() {
 		return currencyTypeNm;

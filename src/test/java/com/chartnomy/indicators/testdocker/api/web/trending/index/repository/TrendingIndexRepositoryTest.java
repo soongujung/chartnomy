@@ -1,7 +1,7 @@
 package com.chartnomy.indicators.testdocker.api.web.trending.index.repository;
 
 import com.chartnomy.indicators.api.web.trending.index.QTrendingIndexRepository;
-import com.chartnomy.indicators.api.web.trending.index.dto.TrendingIndexDto;
+import com.chartnomy.indicators.api.web.trending.index.dto.IndexPriceDto;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -63,12 +63,12 @@ public class TrendingIndexRepositoryTest {
 	@Test
 	@Order(2)
 	void testGetKospiResult(){
-		List<TrendingIndexDto> kospiResult = trendingRepository.getKospiResult();
+		List<IndexPriceDto> kospiResult = trendingRepository.getKospiResult();
 	}
 
 	@Test
 	@Order(3)
 	void testGetExchangeRateDollar(){
-		List<TrendingIndexDto> exchangeRateDollar = trendingRepository.getExchangeRateDollar();
+		List<IndexPriceDto> exchangeRateDollar = trendingRepository.getExchangeRateDollar();
 	}
 }
