@@ -1,10 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 // import HelloWorld from '@/components/HelloWorld'
-import TrendingIndex from "@/components/TrendingIndex";
-import ZingIndexVue from "@/components/ZingIndexVue";
-import ZingIndex from "@/components/ZingIndex";
+import ZingIndexSample from "@/components/ZingIndexSample";
+import ZingChartDemo from "@/components/ZingChartDemo";
 import ChartMenu from "@/components/ChartMenu";
+import ZingChartIndex from "@/components/ZingChartIndex";
+import AmChartIndexSample from "../components/AmChartIndexSample";
 
 Vue.use(Router)
 
@@ -23,18 +24,23 @@ export default new Router({
     },
     {
       path: '/amchart4-vue',
-      name: 'TrendingIndex',
-      component: TrendingIndex
+      name: 'AmChartIndexSample',
+      component: AmChartIndexSample
     },
     {
       path: '/zingchart-vue',
-      name: 'ZingIndexVue',
-      component: ZingIndexVue
+      name: 'ZingIndexSample',
+      component: ZingIndexSample
+    },
+    {
+      path: '/zingchart-api',
+      name: 'ZingChartIndex',
+      component: ZingChartIndex
     },
     {
       path: '/zingchart-org',
-      name: 'ZingIndexOrg',
-      component: ZingIndex
-    }
+      name: 'ZingChartDemo',
+      component: ZingChartDemo
+    },
   ]
 })
