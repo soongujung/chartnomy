@@ -3,10 +3,12 @@ package com.chartnomy.indicators.api.web.trending.index;
 import com.chartnomy.indicators.api.common.DataType;
 import com.chartnomy.indicators.api.common.IndicatorType;
 import com.chartnomy.indicators.api.web.trending.index.dto.IndexPriceDto;
+import com.chartnomy.indicators.api.web.trending.index.dto.IndexRateDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingMonthCollectDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingParameter;
-import com.chartnomy.indicators.domain.exchange.types.CurrencyType;
+import com.chartnomy.indicators.domain.exchange.types.ExchangeCurrencyType;
+import com.chartnomy.indicators.domain.loan.types.LoanType;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -61,7 +63,13 @@ public class TrendingIndexServiceImpl implements TrendingIndexService{
 	}
 
 	@Override
-	public List<IndexPriceDto> getExchangeRate(CurrencyType currencyType) {
-		return currencyType.getExchangeRate(qIndexRepository);
+	public List<IndexPriceDto> getExchangeRate(ExchangeCurrencyType exchangeCurrencyType) {
+		return exchangeCurrencyType.getExchangeRate(qIndexRepository);
 	}
+
+	@Override
+	public List<IndexRateDto> getLoanRate(LoanType loanType) {
+		return loanType.getLoanRate(qIndexRepository);
+	}
+
 }

@@ -3,11 +3,15 @@ package com.chartnomy.indicators.api.web.trending.index;
 import static com.chartnomy.indicators.domain.axis.entity.QDateAxisDd.dateAxisDd;
 import static com.chartnomy.indicators.domain.exchange.entity.QExchangeRateWonDollar.exchangeRateWonDollar;
 import static com.chartnomy.indicators.domain.kospi.entity.QKospi.kospi;
+import static com.chartnomy.indicators.domain.loan.entity.QLoanKr.loanKr;
+import static com.chartnomy.indicators.domain.loan.entity.QLoanUs.loanUs;
 
 import com.chartnomy.indicators.api.common.IndicatorType;
 import com.chartnomy.indicators.api.web.trending.index.dto.IndexPriceDto;
+import com.chartnomy.indicators.api.web.trending.index.dto.IndexRateDto;
+import com.chartnomy.indicators.api.web.trending.index.dto.QIndexRateDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.QTrendingDto;
-import com.chartnomy.indicators.api.web.trending.index.dto.QTrendingIndexDto;
+import com.chartnomy.indicators.api.web.trending.index.dto.QIndexPriceDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingMonthCollectDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingParameter;
@@ -74,7 +78,7 @@ public class QTrendingIndexRepositoryImpl implements QTrendingIndexRepository {
 	@Override
 	public List<IndexPriceDto> getKospiResult() {
 			List<IndexPriceDto> result = queryFactory.select(
-				new QTrendingIndexDto(
+				new QIndexPriceDto(
 					dateAxisDd.date.as("date"),
 					kospi.price.as("price")
 				)
@@ -91,7 +95,7 @@ public class QTrendingIndexRepositoryImpl implements QTrendingIndexRepository {
 	public List<IndexPriceDto> getExchangeRateDollar() {
 
 		List<IndexPriceDto> result = queryFactory.select(
-			new QTrendingIndexDto(
+			new QIndexPriceDto(
 				dateAxisDd.date.as("date"),
 				exchangeRateWonDollar.price.as("price")
 			)
@@ -99,6 +103,40 @@ public class QTrendingIndexRepositoryImpl implements QTrendingIndexRepository {
 		.from(dateAxisDd)
 		.leftJoin(exchangeRateWonDollar)
 		.on(dateAxisDd.date.eq(exchangeRateWonDollar.time))
+		.fetch();
+
+		return result;
+	}
+
+	@Override
+	public List<IndexRateDto> getLoanKrRate() {
+
+		List<IndexRateDto> result = queryFactory.select(
+			new QIndexRateDto(
+				dateAxisDd.date.as("date"),
+				loanKr.price.as("rate")
+			)
+		)
+		.from(dateAxisDd)
+		.leftJoin(loanKr)
+		.on(dateAxisDd.date.eq(loanKr.time))
+		.fetch();
+
+		return result;
+	}
+
+	@Override
+	public List<IndexRateDto> getLoanUsRate() {
+
+		List<IndexRateDto> result = queryFactory.select(
+			new QIndexRateDto(
+				dateAxisDd.date.as("date"),
+				loanUs.price.as("rate")
+			)
+		)
+		.from(dateAxisDd)
+		.leftJoin(loanUs)
+		.on(dateAxisDd.date.eq(loanUs.time))
 		.fetch();
 
 		return result;

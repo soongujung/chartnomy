@@ -1,8 +1,10 @@
 package com.chartnomy.indicators.api.web.trending.index;
 
 import com.chartnomy.indicators.api.web.trending.index.dto.IndexPriceDto;
+import com.chartnomy.indicators.api.web.trending.index.dto.IndexRateDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingDto;
-import com.chartnomy.indicators.domain.exchange.types.CurrencyType;
+import com.chartnomy.indicators.domain.exchange.types.ExchangeCurrencyType;
+import com.chartnomy.indicators.domain.loan.types.LoanType;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -36,7 +38,13 @@ public class TrendingIndexController {
 
 	@GetMapping("/api/web/trending/index/exchange/{currencyTypeNm}")
 	public @ResponseBody List<IndexPriceDto> getExchangeRate(@PathVariable("currencyTypeNm") String currencyTypeNm){
-		CurrencyType currencyType = CurrencyType.valueOf(currencyTypeNm);
-		return trendingIndexService.getExchangeRate(currencyType);
+		ExchangeCurrencyType exchangeCurrencyType = ExchangeCurrencyType.valueOf(currencyTypeNm);
+		return trendingIndexService.getExchangeRate(exchangeCurrencyType);
+	}
+
+	@GetMapping("/api/web/trending/index/loan/{loanType}")
+	public @ResponseBody List<IndexRateDto> getLoanRate(@PathVariable("loanType") String loanTypeNm){
+		LoanType loanType = LoanType.valueOf(loanTypeNm);
+		return trendingIndexService.getLoanRate(loanType);
 	}
 }

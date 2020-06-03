@@ -2,6 +2,7 @@ package com.chartnomy.indicators.api.web.trending.index;
 
 import com.chartnomy.indicators.api.common.IndicatorType;
 import com.chartnomy.indicators.api.web.trending.index.dto.IndexPriceDto;
+import com.chartnomy.indicators.api.web.trending.index.dto.IndexRateDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingMonthCollectDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingParameter;
@@ -16,4 +17,8 @@ public interface QTrendingIndexRepository {
 	List<IndexPriceDto> getKospiResult();
 
 	List<IndexPriceDto> getExchangeRateDollar();
+
+	List<IndexRateDto> getLoanKrRate();
+
+	List<IndexRateDto> getLoanUsRate();
 }
