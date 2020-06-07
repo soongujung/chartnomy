@@ -18,7 +18,7 @@
   Vue.use(zingchartVue)
 
   export default {
-    name: "ZingIndexVue",
+    name: "ZingChartSample",
     components: {
       zingchart: zingchartVue
     },

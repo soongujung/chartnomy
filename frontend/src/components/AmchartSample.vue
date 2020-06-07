@@ -20,7 +20,7 @@
   Vue.use(vueMoment)
 
   export default {
-    name: 'TrendingIndex',
+    name: 'AmchartSample',
     data(){
       return {
         'chartData': [],

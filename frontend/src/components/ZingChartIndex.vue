@@ -18,12 +18,22 @@
 
 
   export default {
-    name: "TrendingIndexVue",
+    name: "ZingChartIndex",
     data(){
       return {
         'chartData': [],
-        'chart': {}
+        'chart': {},
+        apiResult: {}
       };
+    },
+    mounted(){
+      this.getLoanKr()
+      this.getLoanUs()
+      this.getExchangeRateUs()
+      this.getKospi()
+    },
+    beforeDestroy(){
+      //
     },
     methods:{
       fetchAll(){
@@ -32,41 +42,44 @@
       fetchEach(indexType){
 
       },
+      bindingResult(prop_name, response_data){
+        this.apiResult[prop_name] = response_data;
+      },
       getLoanKr(){
-        api.get('/api/web/trending/index/loan/LOAN_KR')
+        api.get('/web/trending/index/loan/LOAN_KR')
         .then(res => {
-
+          this.bindingResult('LOAN_KR', res.data);
         })
         .catch(err => {
           console.log('err >>> ', err);
         });
       },
       getLoanUs(){
-
+        api.get('/web/trending/index/loan/LOAN_US')
+        .then(res => {
+          this.bindingResult('LOAN_US', res.data);
+        })
+        .catch(err => {
+          console.log('err >>> ', err);
+        });
       },
       getExchangeRateUs(){
-        api.get('/api/web/trending/index/exchange/USD')
+        api.get('/web/trending/index/exchange/USD')
         .then(res => {
-
+          this.bindingResult('USD', res.data);
         })
         .catch(err => {
 
         });
       },
       getKospi(){
-        api.get('/api/web/trending/index/kospi')
+        api.get('/web/trending/index/kospi')
         .then(res => {
-
+          this.bindingResult('kospi', res.data);
         })
         .catch(err => {
 
         })
-      },
-      mounted(){
-        //
-      },
-      beforeDestroy(){
-        //
       }
     }
   }
