@@ -31,7 +31,7 @@ public class TrendingIndexController {
 		return trendingIndexService.getDefaultTrendingResult();
 	}
 
-	@GetMapping("/api/web/trending/index/kospi")
+	@GetMapping("/api/web/trending/index/KOSPI")
 	public @ResponseBody List<IndexPriceDto> getKospiResult(){
 		return trendingIndexService.getKospiResult();
 	}

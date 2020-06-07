@@ -21,9 +21,13 @@
     name: "ZingChartIndex",
     data(){
       return {
-        'chartData': [],
-        'chart': {},
-        apiResult: {}
+        chartData: [],
+        chart: {},
+        apiResult: {},
+        LOAN_KR: [],
+        LOAN_US: [],
+        USD: [],
+        KOSPI: []
       };
     },
     mounted(){
@@ -39,11 +43,33 @@
       fetchAll(){
 
       },
-      fetchEach(indexType){
-
+      bindingResult(column_name, response_data){
+        this.apiResult[column_name] = response_data;
+        this.convertObjArrToSeries(column_name)
       },
-      bindingResult(prop_name, response_data){
-        this.apiResult[prop_name] = response_data;
+      convertObjArrToSeries(column_name){
+        let target = this[column_name]
+        // console.log(' >>> ', this.apiResult[column_name])
+        this.apiResult[column_name].forEach(obj => {
+          // let data = obj[column_name] === null ? null : obj[column_name];
+          let data;
+          // 수정 필요... (backend, frontend 모두)
+          switch (column_name) {
+            case 'LOAN_KR':
+            case 'LOAN_US':
+              data = obj['rate']
+              break;
+            case 'USD':
+            case 'KOSPI':
+              data = obj['price']
+              break;
+            default:
+              data = data === null ? null : data;
+              // data = obj[column_name] === null ? null : obj[column_name];
+                break;
+          }
+          target.push(data)
+        })
       },
       getLoanKr(){
         api.get('/web/trending/index/loan/LOAN_KR')
@@ -73,9 +99,9 @@
         });
       },
       getKospi(){
-        api.get('/web/trending/index/kospi')
+        api.get('/web/trending/index/KOSPI')
         .then(res => {
-          this.bindingResult('kospi', res.data);
+          this.bindingResult('KOSPI', res.data);
         })
         .catch(err => {
 
