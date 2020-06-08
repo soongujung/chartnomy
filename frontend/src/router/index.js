@@ -4,7 +4,8 @@ import Router from 'vue-router'
 import ZingChartSample from "@/components/ZingChartSample";
 import ChartMenu from "@/components/ChartMenu";
 import ZingChartIndex from "@/components/ZingChartIndex";
-import AmchartSample from "../components/AmchartSample";
+import AmchartSample from "@/components/AmchartSample";
+import AmchartIndex from "@/components/AmchartIndex";
 
 Vue.use(Router)
 
@@ -25,6 +26,11 @@ export default new Router({
       path: '/amchart-sample',
       name: 'AmchartSample',
       component: AmchartSample
+    },
+    {
+      path: '/amchart-index',
+      name: 'AmchartIndex',
+      component: AmchartIndex
     },
     {
       path: '/zingchart-sample',
