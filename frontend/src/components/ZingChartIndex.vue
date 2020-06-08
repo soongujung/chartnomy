@@ -3,9 +3,7 @@
     <a href="/">
       <h1>GO HOME</h1>
     </a>
-    <h1> 경제 지표 추이 - KOSPI, 정책금리(한국/미국), 환율(원/달러)</h1>
-    <div class="hello" ref="chartdiv">
-    </div>
+    <zingchart class="chart-container" :data="chartData" :width="1000"></zingchart>
   </div>
 </template>
 
@@ -14,20 +12,25 @@
 
   import Vue from 'vue';
   import vueMoment from 'vue-moment';
-  Vue.use(vueMoment)
+  import zingchartVue from 'zingchart-vue';
 
+  Vue.use(vueMoment)
+  Vue.use(zingchartVue)
 
   export default {
     name: "ZingChartIndex",
+    components: {
+      zingchart: zingchartVue
+    },
     data(){
       return {
-        chartData: [],
         chart: {},
         apiResult: {},
         LOAN_KR: [],
         LOAN_US: [],
         USD: [],
-        KOSPI: []
+        KOSPI: [],
+        DATE: []
       };
     },
     mounted(){
@@ -36,22 +39,23 @@
       this.getExchangeRateUs()
       this.getKospi()
     },
+    computed: {
+      chartData(){
+        return this.renderChart()
+        // return
+      }
+    },
     beforeDestroy(){
       //
     },
     methods:{
-      fetchAll(){
-
-      },
       bindingResult(column_name, response_data){
         this.apiResult[column_name] = response_data;
         this.convertObjArrToSeries(column_name)
       },
       convertObjArrToSeries(column_name){
         let target = this[column_name]
-        // console.log(' >>> ', this.apiResult[column_name])
         this.apiResult[column_name].forEach(obj => {
-          // let data = obj[column_name] === null ? null : obj[column_name];
           let data;
           // 수정 필요... (backend, frontend 모두)
           switch (column_name) {
@@ -63,11 +67,11 @@
             case 'KOSPI':
               data = obj['price']
               break;
-            default:
-              data = data === null ? null : data;
-              // data = obj[column_name] === null ? null : obj[column_name];
-                break;
+            case 'DATE':
+              data = obj['date']
+              break;
           }
+          data = data == undefined ? 0 : data;
           target.push(data)
         })
       },
@@ -75,6 +79,7 @@
         api.get('/web/trending/index/loan/LOAN_KR')
         .then(res => {
           this.bindingResult('LOAN_KR', res.data);
+          this.bindingResult('DATE', res.data);
         })
         .catch(err => {
           console.log('err >>> ', err);
@@ -95,7 +100,7 @@
           this.bindingResult('USD', res.data);
         })
         .catch(err => {
-
+          console.log('err >>> ', err);
         });
       },
       getKospi(){
@@ -104,8 +109,92 @@
           this.bindingResult('KOSPI', res.data);
         })
         .catch(err => {
-
+          console.log('err >>> ', err);
         })
+      },
+      renderChart(){
+        return {
+          type: 'line',
+          title:{
+            text: "Index Chart (KOSPI, 정책금리(한국/미국), 환율(원/달러)"
+          },
+          plot: {
+            marker:{
+              visible: true
+            }
+          },
+          plotarea:{
+            // margin: '60 50 40 0',
+          },
+          scaleX:{
+            step: "day",
+            values: this.DATE,
+            item: {
+              fontColor: '#222',
+              fontFamily: 'Open Sans'
+            },
+            transform:{
+              type: "DATE",
+              all: "%y/%m/%d"
+            },
+            zooming: {
+              shared: true
+            }
+          },
+          legend:{
+
+          },
+          tooltip: {
+            backgroundColor: '#222',
+            borderColor: 'transparent'
+          },
+          scaleY:{
+            visible: true,
+            format:"%v",
+            placement: 'default',
+            guide: {
+              lineColor: '#222',
+              lineStyle: 'solid',
+              visible: true
+            },
+            item: {
+              fontColor: '#222',
+              fontFamily: 'Open Sans'
+            }
+          },
+          scaleY3:{
+            visible: true,
+            format:"%v (%)",
+          },
+          preview:{},
+          series: [
+            {
+              type: 'line',
+              scales: 'scale-x,scale-y',
+              // values: [4,5,3,3,4,4],
+              values: this.KOSPI,
+              text: '코스피 (￦)'
+            },
+            {
+              type: 'line',
+              scales: "scale-x,scale-y",
+              values: this.USD,
+              text: '환율 (￦)',
+            },
+            {
+              type: 'line',
+              scales: "scale-x,scale-y-3",
+              values: this.LOAN_KR,
+              text: '정책금리(한국) (%)'
+            },
+            {
+              type: 'line',
+              scales: "scale-x,scale-y-3",
+              values: this.LOAN_US,
+              text: '정책금리(미국) (%)'
+            }
+          ]
+        }
       }
     }
   }
