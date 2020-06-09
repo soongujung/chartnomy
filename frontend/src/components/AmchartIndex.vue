@@ -12,7 +12,7 @@
 <script>
   import * as am4core from "@amcharts/amcharts4/core";
   import * as am4charts from "@amcharts/amcharts4/charts"
-  // import am4thems_animated from "@amcharts/amcharts4/themes/animated";
+  import am4thems_animated from "@amcharts/amcharts4/themes/animated";
   import api from '@/api';
 
   import Vue from 'vue';
@@ -29,7 +29,8 @@
         LOAN_KR: [],
         LOAN_US: [],
         USD: [],
-        KOSPI: []
+        KOSPI: [],
+        DATE: []
       };
     },
     created(){
@@ -41,15 +42,19 @@
     beforeDestroy(){
 
     },
+    mounted() {
+      this.renderChart();
+    },
+    beforeDestroy() {
+      // if (this.chart) {
+      //   this.chart.dispose();
+      // }
+    },
     methods:{
-      getTrendingIndexResult(){
-        // ...
-        // this.renderChart();
-        // ...
-      },
       bindingResult(column_name, response_data){
         this.apiResult[column_name] = response_data;
-        // this.convertObjArrToSeries(column_name)
+        this.convertObjArrToSeries(column_name)
+        // this.generateChartData(column_name)
       },
       convertObjArrToSeries(column_name){
         let target = this[column_name]
@@ -66,17 +71,72 @@
               data = obj['price']
               break;
             case 'DATE':
-              data = obj['date']
+              data = this.$moment(obj['date'], 'YYYYMMDD').toDate();
               break;
           }
           data = data == null ? 0 : data;
           target.push(data)
         })
       },
+      transformApiResult(){
+        // 1. bindingResult 시에 아래의 데이터를 구성한다.
+
+        // let sample = {
+        //   '19950101': {
+        //     date : this.$moment(obj['date'], 'YYYYMMDD').toDate(),
+        //     KOSPI: xxx,
+        //     LOAN_US: xxx,
+        //     LOAN_KR: xxx,
+        //     USD: xxxx
+        //   },
+        //   '19950102': {
+        //     date : this.$moment(obj['date'], 'YYYYMMDD').toDate(),
+        //     KOSPI: xxx,
+        //     LOAN_US: xxx,
+        //     LOAN_KR: xxx,
+        //     USD: xxxx
+        //   },
+        //   ...
+        // }
+
+        // 2. transformApiResult를 각 개별지표에 대해 모두 순회하고 난 이후에는 시간별로 순회하면서 아래와 같은 자료로 변형하기
+        // 참고) 귀찮아서... Promise를 안쓰려 했으나... ㅋㅋㅋ Promise를 사용해야 하게 되었다.
+        //  this.getLoanKr() -> this.getLoanUs() -> this.getExchangeRateUs() -> this.getKospi() -> transformApiResult -> generateChartData()
+        // [
+        //   {
+        //     date: xxxx,
+        //     KOSPI: xxxx,
+        //     LOAN_US: xxxx,
+        //     LOAN_KR: xxxx,
+        //     USD: xxxx,
+        //   },
+        //   {
+        //     date: xxxx,
+        //     KOSPI: xxxx,
+        //     LOAN_US: xxxx,
+        //     LOAN_KR: xxxx,
+        //     USD: xxxx,
+        //   },
+        //   // ...
+        // ]
+      },
+      generateChartData(){
+        let arr_columns = ['DATE', 'KOSPI', 'LOAN_KR', 'LOAN_US', 'USD']
+        let chart_data = this.chartData;
+
+        this.apiResult['DATE'].forEach(dt => {
+          let element = new Object();
+          element.date = dt;
+          chart_data.push(element)
+        })
+
+        arr_columns.forEach(function(column_name, i, arr){
+
+        })
+      },
       getLoanKr(){
         api.get('/web/trending/index/loan/LOAN_KR')
         .then(res => {
-          console.log('>>> ', res.data);
           this.bindingResult('LOAN_KR', res.data);
           this.bindingResult('DATE', res.data);
         })
@@ -116,16 +176,27 @@
 
         chart.paddingRight = 20;
 
-        let data = [];
-        let visits = 10;
+        // this.chartData['DATE']    = this['DATE'];
+        // this.chartData['KOSPI']   = this['KOSPI'];
+        // this.chartData['LOAN_KR'] = this['LOAN_KR'];
+        // this.chartData['LOAN_US'] = this['LOAN_US'];
+        // this.chartData['USD']     = this['USD'];
 
-        this.chartData.map(obj=>{
-          let str_date = obj.date;
-          let dt_date = this.$moment(str_date, 'YYYYMMDD').toDate();
-          obj.date = dt_date;
-          // console.log(obj);
-        });
+        // let arrChartData = new Array();
 
+        // let dateArray = this['DATE'];
+        // let chartDataArray = [];
+        // dateArray.forEach(function(date, i, array){
+        //   let obj = new Object();
+        //   obj['DATE'] = date;
+        //   obj['KOSPI'] = this['KOSPI'][i];
+        //   obj['LOAN_KR'] = this['LOAN_KR'][i];
+        //   obj['LOAN_US'] = this['LOAN_US'][i];
+        //   obj['USD'] = this['USD'][i];
+        //   chartDataArray.push(obj);
+        // });
+
+        this.chartData = chartDataArray;
         chart.data = this.chartData;
 
         let dateAxis = chart.xAxes.push(new am4charts.DateAxis());
@@ -225,14 +296,7 @@
         return seriesLine;
       }
     },
-    mounted() {
-      this.getTrendingIndexResult();
-    },
-    beforeDestroy() {
-      if (this.chart) {
-        this.chart.dispose();
-      }
-    }
+
   }
 </script>
 
