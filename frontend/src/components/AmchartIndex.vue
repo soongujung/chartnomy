@@ -34,13 +34,11 @@
       };
     },
     created(){
-      this.getLoanKr()
-      this.getLoanUs()
-      this.getExchangeRateUs()
-      this.getKospi()
-    },
-    beforeDestroy(){
-
+      // this.getLoanKr()
+      // this.getLoanUs()
+      // this.getExchangeRateUs()
+      // this.getKospi()
+      this.fetchIndexResult()
     },
     mounted() {
       this.renderChart();
@@ -51,6 +49,26 @@
       // }
     },
     methods:{
+      async fetchIndexResult(){
+        await this.getLoanKr()
+        console.log('getLoanKr >>> ')
+
+        await this.getLoanUs()
+        console.log('getLoanUs >>> ')
+
+        await this.getExchangeRateUs()
+        console.log('getExchangeRateUs >>> ')
+
+        await this.getKospi()
+        console.log('getKospi >>> ')
+
+        await this.transformApiResult()
+        console.log('transformApiResult >>> ')
+
+        await this.generateChartData()
+        console.log('generateChartData >>> ')
+
+      },
       bindingResult(column_name, response_data){
         this.apiResult[column_name] = response_data;
         this.convertObjArrToSeries(column_name)
@@ -79,6 +97,14 @@
         })
       },
       transformApiResult(){
+        return new Promise(function (resolve, reject) {
+          let sample = {
+
+          }
+
+          resolve(sample)
+        })
+
         // 1. bindingResult 시에 아래의 데이터를 구성한다.
 
         // let sample = {
@@ -120,56 +146,69 @@
         //   // ...
         // ]
       },
-      generateChartData(){
-        let arr_columns = ['DATE', 'KOSPI', 'LOAN_KR', 'LOAN_US', 'USD']
-        let chart_data = this.chartData;
+      generateChartData(){  // transform 된 데이터를 적용
+        let chartData = this.chartData
+        let apiResult = this.apiResult
+        return new Promise(function(resolve, reject){
+          let arr_columns = ['DATE', 'KOSPI', 'LOAN_KR', 'LOAN_US', 'USD']
+          let chart_data = chartData;
 
-        this.apiResult['DATE'].forEach(dt => {
-          let element = new Object();
-          element.date = dt;
-          chart_data.push(element)
-        })
+          apiResult['DATE'].forEach(dt => {
+            let element = new Object();
+            element.date = dt;
+            chart_data.push(element)
+          })
 
-        arr_columns.forEach(function(column_name, i, arr){
+          arr_columns.forEach(function(column_name, i, arr){
 
+          })
         })
       },
       getLoanKr(){
-        api.get('/web/trending/index/loan/LOAN_KR')
+        let promise = api.get('/web/trending/index/loan/LOAN_KR')
         .then(res => {
           this.bindingResult('LOAN_KR', res.data);
           this.bindingResult('DATE', res.data);
+
         })
         .catch(err => {
           console.log('err >>> ', err);
         });
+
+        return promise;
       },
       getLoanUs(){
-        api.get('/web/trending/index/loan/LOAN_US')
+        let promise = api.get('/web/trending/index/loan/LOAN_US')
         .then(res => {
           this.bindingResult('LOAN_US', res.data);
         })
         .catch(err => {
           console.log('err >>> ', err);
         });
+
+        return promise;
       },
       getExchangeRateUs(){
-        api.get('/web/trending/index/exchange/USD')
+        let promise = api.get('/web/trending/index/exchange/USD')
         .then(res => {
           this.bindingResult('USD', res.data);
         })
         .catch(err => {
           console.log('err >>> ', err);
         });
+
+        return promise;
       },
       getKospi(){
-        api.get('/web/trending/index/KOSPI')
+        let promise = api.get('/web/trending/index/KOSPI')
         .then(res => {
           this.bindingResult('KOSPI', res.data);
         })
         .catch(err => {
           console.log('err >>> ', err);
-        })
+        });
+
+        return promise;
       },
       renderChart(){
         let chart = am4core.create(this.$refs.chartdiv, am4charts.XYChart);
@@ -196,7 +235,8 @@
         //   chartDataArray.push(obj);
         // });
 
-        this.chartData = chartDataArray;
+        // this.chartData = chartDataArray;
+
         chart.data = this.chartData;
 
         let dateAxis = chart.xAxes.push(new am4charts.DateAxis());
