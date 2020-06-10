@@ -1,19 +1,9 @@
 package com.chartnomy.indicators.testdocker;
 
-import static com.chartnomy.indicators.domain.axis.entity.QDateAxisDd.dateAxisDd;
 import static com.chartnomy.indicators.domain.kospi.entity.QKospi.kospi;
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.maxBy;
-
-import com.chartnomy.indicators.domain.axis.entity.DateAxisDd;
-import com.chartnomy.indicators.domain.axis.entity.QDateAxisDd;
 import com.chartnomy.indicators.domain.kospi.entity.Kospi;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeAll;
@@ -27,9 +17,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ApplicationEvent;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
