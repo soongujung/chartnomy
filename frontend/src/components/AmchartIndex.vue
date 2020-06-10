@@ -30,18 +30,43 @@
         LOAN_US: [],
         USD: [],
         KOSPI: [],
-        DATE: []
+        DATE: [],
+        chartOptions: {
+          DATE: 'DATE',
+          USD: {
+            color: '#d9480f',
+            valueColumn: 'USD',
+            tooltipText: '환율 : {valueY.value} (원)',
+            legendName: '환율 (달러)',
+          },
+          KOSPI: {
+            color: '#339af0',
+            valueColumn: 'KOSPI',
+            tooltipText: 'kospi : {valueY.value} (원)',
+            legendName: 'KOSPI 지수',
+          },
+          LOAN_KR: {
+            color: '#51cf66',
+            valueColumn: 'LOAN_KR',
+            tooltipText: '정책 금리(한국) : {valueY.value} (%)',
+            legendName: '정책 금리(한국)',
+          },
+          LOAN_US: {
+            color: '#868e96',
+            valueColumn: 'LOAN_US',
+            tooltipText: '정책 금리(미국) : {valueY.value} (%)',
+            legendName: '정책 금리(미국)',
+          }
+        }
       };
     },
     created(){
-      // this.getLoanKr()
-      // this.getLoanUs()
-      // this.getExchangeRateUs()
-      // this.getKospi()
-      this.fetchIndexResult()
+      // this.fetchIndexResult()
+      // this.renderChart()
     },
     mounted() {
-      this.renderChart();
+      // this.renderChart();
+      this.fetchIndexResult()
     },
     beforeDestroy() {
       // if (this.chart) {
@@ -50,6 +75,7 @@
     },
     methods:{
       async fetchIndexResult(){
+
         await this.getLoanKr()
         console.log('getLoanKr >>> ')
 
@@ -60,25 +86,30 @@
         console.log('getExchangeRateUs >>> ')
 
         await this.getKospi()
+        this.renderChart()
         console.log('getKospi >>> ')
 
-        await this.transformApiResult()
-        console.log('transformApiResult >>> ')
+        // let promise_LOAN_KR = this.getLoanKr()
+        // let promise_LOAN_US = this.getLoanUs()
+        // let promise_USD = this.getExchangeRateUs()
+        // let promise_KOSPI = this.getKospi()
+        // let renderChart = this.renderChart
 
-        await this.generateChartData()
-        console.log('generateChartData >>> ')
+        // Promise.all([
+        //   promise_KOSPI, promise_LOAN_KR, promise_LOAN_US, promise_USD
+        // ])
+        // .then(function(result){
+        //   renderChart()
+        // })
 
       },
       bindingResult(column_name, response_data){
         this.apiResult[column_name] = response_data;
-        this.convertObjArrToSeries(column_name)
-        // this.generateChartData(column_name)
       },
       convertObjArrToSeries(column_name){
         let target = this[column_name]
         this.apiResult[column_name].forEach(obj => {
           let data;
-          // 수정 필요... (backend, frontend 모두)
           switch (column_name) {
             case 'LOAN_KR':
             case 'LOAN_US':
@@ -95,56 +126,6 @@
           data = data == null ? 0 : data;
           target.push(data)
         })
-      },
-      transformApiResult(){
-        return new Promise(function (resolve, reject) {
-          let sample = {
-
-          }
-
-          resolve(sample)
-        })
-
-        // 1. bindingResult 시에 아래의 데이터를 구성한다.
-
-        // let sample = {
-        //   '19950101': {
-        //     date : this.$moment(obj['date'], 'YYYYMMDD').toDate(),
-        //     KOSPI: xxx,
-        //     LOAN_US: xxx,
-        //     LOAN_KR: xxx,
-        //     USD: xxxx
-        //   },
-        //   '19950102': {
-        //     date : this.$moment(obj['date'], 'YYYYMMDD').toDate(),
-        //     KOSPI: xxx,
-        //     LOAN_US: xxx,
-        //     LOAN_KR: xxx,
-        //     USD: xxxx
-        //   },
-        //   ...
-        // }
-
-        // 2. transformApiResult를 각 개별지표에 대해 모두 순회하고 난 이후에는 시간별로 순회하면서 아래와 같은 자료로 변형하기
-        // 참고) 귀찮아서... Promise를 안쓰려 했으나... ㅋㅋㅋ Promise를 사용해야 하게 되었다.
-        //  this.getLoanKr() -> this.getLoanUs() -> this.getExchangeRateUs() -> this.getKospi() -> transformApiResult -> generateChartData()
-        // [
-        //   {
-        //     date: xxxx,
-        //     KOSPI: xxxx,
-        //     LOAN_US: xxxx,
-        //     LOAN_KR: xxxx,
-        //     USD: xxxx,
-        //   },
-        //   {
-        //     date: xxxx,
-        //     KOSPI: xxxx,
-        //     LOAN_US: xxxx,
-        //     LOAN_KR: xxxx,
-        //     USD: xxxx,
-        //   },
-        //   // ...
-        // ]
       },
       generateChartData(){  // transform 된 데이터를 적용
         let chartData = this.chartData
@@ -212,32 +193,9 @@
       },
       renderChart(){
         let chart = am4core.create(this.$refs.chartdiv, am4charts.XYChart);
-
+        this.chart = chart;
         chart.paddingRight = 20;
-
-        // this.chartData['DATE']    = this['DATE'];
-        // this.chartData['KOSPI']   = this['KOSPI'];
-        // this.chartData['LOAN_KR'] = this['LOAN_KR'];
-        // this.chartData['LOAN_US'] = this['LOAN_US'];
-        // this.chartData['USD']     = this['USD'];
-
-        // let arrChartData = new Array();
-
-        // let dateArray = this['DATE'];
-        // let chartDataArray = [];
-        // dateArray.forEach(function(date, i, array){
-        //   let obj = new Object();
-        //   obj['DATE'] = date;
-        //   obj['KOSPI'] = this['KOSPI'][i];
-        //   obj['LOAN_KR'] = this['LOAN_KR'][i];
-        //   obj['LOAN_US'] = this['LOAN_US'][i];
-        //   obj['USD'] = this['USD'][i];
-        //   chartDataArray.push(obj);
-        // });
-
-        // this.chartData = chartDataArray;
-
-        chart.data = this.chartData;
+        // chart.data = this.chartData;
 
         let dateAxis = chart.xAxes.push(new am4charts.DateAxis());
         dateAxis.renderer.grid.template.location = 0;
@@ -259,23 +217,6 @@
         valueAxisWon.renderer.grid.template.strokeOpacity = 0;
         valueAxisWon.renderer.grid.template.disabled = true;
 
-        // 환율(원/달러)
-        // let valueAxisWonDollarExchange = new am4charts.ValueAxis();
-        // chart.yAxes.push(valueAxisWonDollarExchange);
-
-        // valueAxisWonDollarExchange.title.dy = -50;
-        // valueAxisWonDollarExchange.title.paddingRight = 0;
-        // valueAxisWonDollarExchange.title.paddingBottom = 400;
-        // valueAxisWonDollarExchange.renderer.opposite = false;
-        // valueAxisWonDollarExchange.title.fontWeight = 600;
-        // valueAxisWonDollarExchange.title.fontSize = 14;
-        // valueAxisWonDollarExchange.tooltip.disabled = true;
-        // valueAxisWonDollarExchange.title.text = "환율 (원)";
-        // valueAxisWonDollarExchange.title.rotation = 0;
-        // valueAxisWonDollarExchange.title.align = "top";
-        // valueAxisWonDollarExchange.renderer.grid.template.strokeOpacity = 0;
-        // valueAxisWonDollarExchange.renderer.grid.template.disabled = true;
-
         let valueAxisPercent = new am4charts.ValueAxis();
         chart.yAxes.push(valueAxisPercent);
 
@@ -292,41 +233,70 @@
         valueAxisPercent.renderer.grid.template.strokeOpacity = 0;
         valueAxisPercent.renderer.grid.template.disabled = true;
 
-        let seriesLineKospi = this.createLineSeries(chart, valueAxisWon, "KOSPI", "date", "#339af0", "kospi : {valueY.value} (원)", "KOSPI 지수");
-        let seriesLineExchangeRate = this.createLineSeries(chart, valueAxisWon, "USD", "date", "#d9480f", "환율 : {valueY.value} (원)", "환율 (달러)");
-        let loanKrPrice = this.createLineSeries(chart, valueAxisPercent, "LOAN_KR", "date", "#51cf66", "정책 금리(한국) : {valueY.value} (%)", "정책 금리(한국)");
-        let loanUsPrice = this.createLineSeries(chart, valueAxisPercent, "LOAN_US", "date", "#868e96", "정책 금리(미국) : {valueY.value} (%)", "정책 금리(미국)");
+        let series_KOSPI    = this.createSeries(chart, valueAxisWon, 'KOSPI');
+        let series_USD      = this.createSeries(chart, valueAxisWon, 'USD');
+        let series_LOAN_KR  = this.createSeries(chart, valueAxisPercent, 'LOAN_KR');
+        let series_LOAN_US  = this.createSeries(chart, valueAxisPercent, 'LOAN_US');
 
         let scrollbarX = new am4charts.XYChartScrollbar();
-        scrollbarX.series.push(seriesLineKospi);
-        scrollbarX.series.push(seriesLineExchangeRate);
-        scrollbarX.series.push(loanKrPrice);
-        scrollbarX.series.push(loanUsPrice);
+        scrollbarX.series.push(series_KOSPI);
+        scrollbarX.series.push(series_USD);
+        scrollbarX.series.push(series_LOAN_KR);
+        scrollbarX.series.push(series_LOAN_US);
 
         chart.scrollbarX = scrollbarX;
 
-        this.chart = chart;
+
       },
-      createLineSeries(chart, valueAxis, valueColumn, dateColumn, color, tooltipText, legendName){
+      createSeries(chart, valueAxis, indexType){
+        console.log('indexType >>> ', indexType)
+        let chartOption = this.chartOptions[indexType]
+        let dateColumnNm = this.chartOptions['DATE']
+
         let seriesLine = new am4charts.LineSeries();
+        let color = chartOption.color;
+        // let chart = this.chart;
+
+        // seriesLine.data = this[indexType]
         chart.series.push(seriesLine);
 
-        seriesLine.dataFields.valueY = valueColumn;
-        seriesLine.dataFields.dateX = dateColumn;
+        let valueNm;
+        switch (indexType) {
+          case 'LOAN_KR':
+          case 'LOAN_US':
+            valueNm = 'rate'
+            break;
+          case 'USD':
+          case 'KOSPI':
+            valueNm = 'price'
+            break;
+          // case 'DATE':
+          //   valueNm = this.$moment(obj['date'], 'YYYYMMDD').toDate();
+          //   break;
+        }
+
+        this.apiResult[indexType].forEach(obj=>{
+          obj['date'] = this.$moment(obj['date'], 'YYYYMMDD').toDate();
+        })
+
+        seriesLine.data = this.apiResult[indexType]
+
+        seriesLine.dataFields.valueY = valueNm;
+        seriesLine.dataFields.dateX = dateColumnNm;
         seriesLine.strokeWidth = 2;                     // 선의 굵기
         seriesLine.minBulletDistance = 10;
         seriesLine.stroke = am4core.color(color);       // 선의 색상
         seriesLine.fill = am4core.color(color);         // 선의 내부
         seriesLine.tensionX = 0.8;
 
-        seriesLine.tooltipText = tooltipText;
+        seriesLine.tooltipText = chartOption.tooltipText;
         seriesLine.tooltip.pointerOrientation = "vertical";
         seriesLine.tooltip.getFillFromObject = false;
         seriesLine.tooltip.label.fill = am4core.color(color);           // 툴팁 내부 폰트 색상
         seriesLine.tooltip.background.cornerRadius = 20;                // 툴팁 테두리 Radius
         seriesLine.tooltip.background.fillOpacity = 0.8;                // 툴팁 투명도
         seriesLine.tooltip.label.padding(12,12,12,12);
-        seriesLine.name = legendName;
+        seriesLine.name = chartOption.legendName;
 
         seriesLine.yAxis = valueAxis;
         // Add scrollbar
