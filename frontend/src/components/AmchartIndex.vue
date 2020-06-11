@@ -23,50 +23,62 @@
     name: 'AmchartIndex',
     data(){
       return {
-        chartData : [],
         chart : {},
         apiResult : {},
-        LOAN_KR: [],
-        LOAN_US: [],
-        USD: [],
-        KOSPI: [],
-        DATE: [],
         chartOptions: {
+          valueAxisPercent: null,
+          valueAxisWon: null,
           DATE: 'DATE',
           USD: {
             color: '#d9480f',
+            valueNm: 'price',
             valueColumn: 'USD',
             tooltipText: '환율 : {valueY.value} (원)',
             legendName: '환율 (달러)',
+            seriesLine: null,
+            valueAxis: null,
           },
           KOSPI: {
             color: '#339af0',
+            valueNm: 'price',
             valueColumn: 'KOSPI',
             tooltipText: 'kospi : {valueY.value} (원)',
             legendName: 'KOSPI 지수',
+            seriesLine: null,
+            valueAxis: null,
           },
           LOAN_KR: {
             color: '#51cf66',
+            valueNm: 'rate',
             valueColumn: 'LOAN_KR',
             tooltipText: '정책 금리(한국) : {valueY.value} (%)',
             legendName: '정책 금리(한국)',
+            seriesLine: null,
+            valueAxis: null,
           },
           LOAN_US: {
             color: '#868e96',
+            valueNm: 'rate',
             valueColumn: 'LOAN_US',
             tooltipText: '정책 금리(미국) : {valueY.value} (%)',
             legendName: '정책 금리(미국)',
+            seriesLine: null,
+            valueAxis: null,
           }
-        }
+        },
+        // LOAN_KR: [],
+        // LOAN_US: [],
+        // USD: [],
+        // KOSPI: [],
+        // DATE: [],
       };
     },
     created(){
-      // this.fetchIndexResult()
-      // this.renderChart()
+      this.fetchIndexResult()
     },
     mounted() {
-      // this.renderChart();
-      this.fetchIndexResult()
+      this.renderChart()
+      console.log('renderChart >>> ')
     },
     beforeDestroy() {
       if (this.chart) {
@@ -76,37 +88,35 @@
     methods:{
       async fetchIndexResult(){
 
+        const chartOption = this.chartOptions
+
         await this.getLoanKr()
         console.log('getLoanKr >>> ')
-        this.convertObjArrToSeries('LOAN_KR')
+        let series_LOAN_KR_data = this.apiResult[chartOption.LOAN_KR.valueNm]
+        let series_LOAN_KR = chartOption.LOAN_KR.seriesLine
+        series_LOAN_KR.data = series_LOAN_KR_data
 
         await this.getLoanUs()
         console.log('getLoanUs >>> ')
-        this.convertObjArrToSeries('LOAN_US')
+        let series_LOAN_US_data = this.apiResult[chartOption.LOAN_US.valueNm]
+        let series_LOAN_US = chartOption.LOAN_US.seriesLine
+        series_LOAN_US.data = series_LOAN_US_data
 
         await this.getExchangeRateUs()
         console.log('getExchangeRateUs >>> ')
-        this.convertObjArrToSeries('USD')
+        let series_USD_data = this.apiResult[chartOption.USD.valueNm]
+        let series_USD = chartOption.USD.seriesLine
+        series_USD.data = series_USD_data
 
         await this.getKospi()
         console.log('getKospi >>> ')
-        this.convertObjArrToSeries('KOSPI')
+        let series_KOSPI_data = this.apiResult[chartOption.KOSPI.valueNm]
+        let series_KOSPI = chartOption.KOSPI.seriesLine
+        series_KOSPI.data = series_KOSPI_data
 
-        this.renderChart()
-        console.log('renderChart >>> ')
-
-        // let promise_LOAN_KR = this.getLoanKr()
-        // let promise_LOAN_US = this.getLoanUs()
-        // let promise_USD = this.getExchangeRateUs()
-        // let promise_KOSPI = this.getKospi()
-        // let renderChart = this.renderChart
-
-        // Promise.all([
-        //   promise_KOSPI, promise_LOAN_KR, promise_LOAN_US, promise_USD
-        // ])
-        // .then(function(result){
-        //   renderChart()
-        // })
+        // this.chart.invalidateData()
+        this.chart.validateData()
+        this.chart.invalidateSeries()
 
       },
       bindingResult(column_name, response_data){
@@ -120,12 +130,13 @@
        *    ...
        * }
        * 를
-       * this['KOSPI'], this['LOAN_US'], this['LOAN_KR'], ...
-       * [
-       *    {date: 'xxxx', value: 'xxx'},
-       *    {date: 'xxxx', value: 'xxx'}, ...
-       * ]
-       * 로 변환
+       *    this.chart['KOSPI'] = [{value: 'xxxx'}, {value: 'xxxx'}, ... ]
+       *    this.chart['LOAN_US'] = [{value: 'xxxx'}, {value: 'xxxx'}, ... ]
+       *    this.chart['LOAN_KR'] = [{value: 'xxxx'}, {value: 'xxxx'}, ... ]
+       *    this.chart['USD'] = [{value: 'xxxx'}, {value: 'xxxx'}, ... ]
+       *
+       * 로 변환하는 기능 구현하기
+       *
        * @param column_name
        */
       convertObjArrToSeries(column_name){
@@ -200,7 +211,6 @@
         let chart = am4core.create(this.$refs.chartdiv, am4charts.XYChart);
         this.chart = chart;
         chart.paddingRight = 20;
-        // chart.data = this.chartData;
 
         let dateAxis = chart.xAxes.push(new am4charts.DateAxis());
         dateAxis.renderer.grid.template.location = 0;
@@ -221,6 +231,7 @@
         valueAxisWon.title.align = "top";
         valueAxisWon.renderer.grid.template.strokeOpacity = 0;
         valueAxisWon.renderer.grid.template.disabled = true;
+        this.chartOptions.valueAxisWon = valueAxisWon;
 
         let valueAxisPercent = new am4charts.ValueAxis();
         chart.yAxes.push(valueAxisPercent);
@@ -238,10 +249,18 @@
         valueAxisPercent.renderer.grid.template.strokeOpacity = 0;
         valueAxisPercent.renderer.grid.template.disabled = true;
 
-        let series_KOSPI    = this.createSeries(chart, valueAxisWon, 'KOSPI');
-        let series_USD      = this.createSeries(chart, valueAxisWon, 'USD');
-        let series_LOAN_KR  = this.createSeries(chart, valueAxisPercent, 'LOAN_KR');
-        let series_LOAN_US  = this.createSeries(chart, valueAxisPercent, 'LOAN_US');
+        // this.chartOptions.valueAxisPercent = valueAxisPercent;
+        // this.chartOptions.valueAxisWon = valueAxisWon;
+
+        this.chartOptions.KOSPI.valueAxis = valueAxisWon;
+        this.chartOptions.USD.valueAxis = valueAxisWon;
+        this.chartOptions.LOAN_KR.valueAxis = valueAxisPercent;
+        this.chartOptions.LOAN_US.valueAxis = valueAxisPercent;
+
+        let series_KOSPI    = this.createSeries(chart,  'KOSPI');
+        let series_USD      = this.createSeries(chart,  'USD');
+        let series_LOAN_KR  = this.createSeries(chart,  'LOAN_KR');
+        let series_LOAN_US  = this.createSeries(chart,  'LOAN_US');
 
         let scrollbarX = new am4charts.XYChartScrollbar();
         scrollbarX.series.push(series_KOSPI);
@@ -252,24 +271,27 @@
         chart.scrollbarX = scrollbarX;
 
       },
-      createSeries(chart, valueAxis, indexType){
-        console.log('indexType >>> ', indexType)
+      createSeries(chart, indexType){
+        console.log('createSeries :: indexType >>> ', indexType)
+        // let valueNm = 'value';
         let chartOption = this.chartOptions[indexType]
+        let valueNm = chartOption.valueNm;
         let dateColumnNm = this.chartOptions['DATE']
+        let color = chartOption.color;
 
         let seriesLine = new am4charts.LineSeries();
-        let color = chartOption.color;
+        chartOption.seriesLine = seriesLine;
 
         chart.series.push(seriesLine);
 
-        let valueNm = 'value';
-        this.apiResult[indexType].forEach(obj=>{
-          obj['date'] = this.$moment(obj['date'], 'YYYYMMDD').toDate();
-        })
+        // seriesLine.data = this.apiResult[indexType]
+        // console.log(this.apiResult[indexType])
 
-        // seriesLine.data = this.apiResult[indexType][valueNm]
-        seriesLine.data = this[indexType]
-        console.log(this[indexType])
+        // seriesLine.data = this[indexType]
+        seriesLine.data = null;
+
+        // seriesLine.yAxis = valueAxis;
+        seriesLine.yAxis = chartOption.valueAxis;
 
         seriesLine.dataFields.valueY = valueNm;
         seriesLine.dataFields.dateX = dateColumnNm;
@@ -288,7 +310,6 @@
         seriesLine.tooltip.label.padding(12,12,12,12);
         seriesLine.name = chartOption.legendName;
 
-        seriesLine.yAxis = valueAxis;
         // Add scrollbar
         chart.scrollbarX = new am4charts.XYChartScrollbar();
         chart.scrollbarX.series.push(seriesLine);
