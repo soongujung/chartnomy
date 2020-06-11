@@ -66,11 +66,6 @@
             valueAxis: null,
           }
         },
-        // LOAN_KR: [],
-        // LOAN_US: [],
-        // USD: [],
-        // KOSPI: [],
-        // DATE: [],
       };
     },
     created(){
@@ -123,12 +118,12 @@
         this.apiResult[column_name] = response_data;
       },
       /**
-       * apiResult
-       * {
-       *    DATE : [{date: 'xxxx', rate: 'xx'}, {date: 'xxxx', rate: 'xx'}, ...],
-       *    KOSPI : [{date: 'xxxx', rate: 'xx'}, {date: 'xxxx', rate: 'xx'}, ...],
-       *    ...
-       * }
+       *    apiResult
+       *    {
+       *       DATE : [{date: 'xxxx', rate: 'xx'}, {date: 'xxxx', rate: 'xx'}, ...],
+       *       KOSPI : [{date: 'xxxx', rate: 'xx'}, {date: 'xxxx', rate: 'xx'}, ...],
+       *       ...
+       *    }
        * 를
        *    this.chart['KOSPI'] = [{value: 'xxxx'}, {value: 'xxxx'}, ... ]
        *    this.chart['LOAN_US'] = [{value: 'xxxx'}, {value: 'xxxx'}, ... ]
@@ -209,6 +204,10 @@
       },
       renderChart(){
         let chart = am4core.create(this.$refs.chartdiv, am4charts.XYChart);
+        am4core.options.minPolylineStep
+        am4core.options.onlyShowOnViewport = true;
+        am4core.options.queue = true;
+
         this.chart = chart;
         chart.paddingRight = 20;
 
@@ -296,7 +295,7 @@
         seriesLine.dataFields.valueY = valueNm;
         seriesLine.dataFields.dateX = dateColumnNm;
         seriesLine.strokeWidth = 2;                     // 선의 굵기
-        seriesLine.minBulletDistance = 10;
+        seriesLine.minBulletDistance = 20;
         seriesLine.stroke = am4core.color(color);       // 선의 색상
         seriesLine.fill = am4core.color(color);         // 선의 내부
         seriesLine.tensionX = 0.8;
