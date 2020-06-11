@@ -69,25 +69,31 @@
       this.fetchIndexResult()
     },
     beforeDestroy() {
-      // if (this.chart) {
-      //   this.chart.dispose();
-      // }
+      if (this.chart) {
+        this.chart.dispose();
+      }
     },
     methods:{
       async fetchIndexResult(){
 
         await this.getLoanKr()
         console.log('getLoanKr >>> ')
+        this.convertObjArrToSeries('LOAN_KR')
 
         await this.getLoanUs()
         console.log('getLoanUs >>> ')
+        this.convertObjArrToSeries('LOAN_US')
 
         await this.getExchangeRateUs()
         console.log('getExchangeRateUs >>> ')
+        this.convertObjArrToSeries('USD')
 
         await this.getKospi()
-        this.renderChart()
         console.log('getKospi >>> ')
+        this.convertObjArrToSeries('KOSPI')
+
+        this.renderChart()
+        console.log('renderChart >>> ')
 
         // let promise_LOAN_KR = this.getLoanKr()
         // let promise_LOAN_US = this.getLoanUs()
@@ -106,43 +112,42 @@
       bindingResult(column_name, response_data){
         this.apiResult[column_name] = response_data;
       },
+      /**
+       * apiResult
+       * {
+       *    DATE : [{date: 'xxxx', rate: 'xx'}, {date: 'xxxx', rate: 'xx'}, ...],
+       *    KOSPI : [{date: 'xxxx', rate: 'xx'}, {date: 'xxxx', rate: 'xx'}, ...],
+       *    ...
+       * }
+       * 를
+       * this['KOSPI'], this['LOAN_US'], this['LOAN_KR'], ...
+       * [
+       *    {date: 'xxxx', value: 'xxx'},
+       *    {date: 'xxxx', value: 'xxx'}, ...
+       * ]
+       * 로 변환
+       * @param column_name
+       */
       convertObjArrToSeries(column_name){
         let target = this[column_name]
         this.apiResult[column_name].forEach(obj => {
-          let data;
+          let data = new Object();
           switch (column_name) {
             case 'LOAN_KR':
             case 'LOAN_US':
-              data = obj['rate']
+              data['value'] = obj['rate']
               break;
             case 'USD':
             case 'KOSPI':
-              data = obj['price']
+              data['value'] = obj['price']
               break;
             case 'DATE':
               data = this.$moment(obj['date'], 'YYYYMMDD').toDate();
               break;
           }
-          data = data == null ? 0 : data;
+          data['date'] = this.$moment(obj['date'], 'YYYYMMDD').toDate();
+          data = data == null ? null : data;
           target.push(data)
-        })
-      },
-      generateChartData(){  // transform 된 데이터를 적용
-        let chartData = this.chartData
-        let apiResult = this.apiResult
-        return new Promise(function(resolve, reject){
-          let arr_columns = ['DATE', 'KOSPI', 'LOAN_KR', 'LOAN_US', 'USD']
-          let chart_data = chartData;
-
-          apiResult['DATE'].forEach(dt => {
-            let element = new Object();
-            element.date = dt;
-            chart_data.push(element)
-          })
-
-          arr_columns.forEach(function(column_name, i, arr){
-
-          })
         })
       },
       getLoanKr(){
@@ -246,7 +251,6 @@
 
         chart.scrollbarX = scrollbarX;
 
-
       },
       createSeries(chart, valueAxis, indexType){
         console.log('indexType >>> ', indexType)
@@ -255,31 +259,17 @@
 
         let seriesLine = new am4charts.LineSeries();
         let color = chartOption.color;
-        // let chart = this.chart;
 
-        // seriesLine.data = this[indexType]
         chart.series.push(seriesLine);
 
-        let valueNm;
-        switch (indexType) {
-          case 'LOAN_KR':
-          case 'LOAN_US':
-            valueNm = 'rate'
-            break;
-          case 'USD':
-          case 'KOSPI':
-            valueNm = 'price'
-            break;
-          // case 'DATE':
-          //   valueNm = this.$moment(obj['date'], 'YYYYMMDD').toDate();
-          //   break;
-        }
-
+        let valueNm = 'value';
         this.apiResult[indexType].forEach(obj=>{
           obj['date'] = this.$moment(obj['date'], 'YYYYMMDD').toDate();
         })
 
-        seriesLine.data = this.apiResult[indexType]
+        // seriesLine.data = this.apiResult[indexType][valueNm]
+        seriesLine.data = this[indexType]
+        console.log(this[indexType])
 
         seriesLine.dataFields.valueY = valueNm;
         seriesLine.dataFields.dateX = dateColumnNm;
