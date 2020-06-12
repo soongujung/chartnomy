@@ -28,7 +28,7 @@
         chartOptions: {
           valueAxisPercent: null,
           valueAxisWon: null,
-          DATE: 'DATE',
+          DATE: 'date',
           USD: {
             color: '#d9480f',
             valueNm: 'price',
@@ -87,35 +87,33 @@
 
         await this.getLoanKr()
         console.log('getLoanKr >>> ')
-        let series_LOAN_KR_data = this.apiResult[chartOption.LOAN_KR.valueNm]
         let series_LOAN_KR = chartOption.LOAN_KR.seriesLine
-        series_LOAN_KR.data = series_LOAN_KR_data
+        series_LOAN_KR.data = this.apiResult['LOAN_KR']
 
         await this.getLoanUs()
         console.log('getLoanUs >>> ')
-        let series_LOAN_US_data = this.apiResult[chartOption.LOAN_US.valueNm]
         let series_LOAN_US = chartOption.LOAN_US.seriesLine
-        series_LOAN_US.data = series_LOAN_US_data
+        series_LOAN_US.data = this.apiResult['LOAN_US']
 
         await this.getExchangeRateUs()
         console.log('getExchangeRateUs >>> ')
-        let series_USD_data = this.apiResult[chartOption.USD.valueNm]
         let series_USD = chartOption.USD.seriesLine
-        series_USD.data = series_USD_data
+        series_USD.data = this.apiResult['USD']
 
         await this.getKospi()
         console.log('getKospi >>> ')
-        let series_KOSPI_data = this.apiResult[chartOption.KOSPI.valueNm]
         let series_KOSPI = chartOption.KOSPI.seriesLine
-        series_KOSPI.data = series_KOSPI_data
+        series_KOSPI.data = this.apiResult['KOSPI']
 
         // this.chart.invalidateData()
-        this.chart.validateData()
-        this.chart.invalidateSeries()
+        // this.chart.validateData()
 
       },
       bindingResult(column_name, response_data){
         this.apiResult[column_name] = response_data;
+        this.apiResult[column_name].forEach(obj => {
+          obj['date'] = this.$moment(obj['date'], 'YYYYMMDD').toDate();
+        })
       },
       /**
        *    apiResult
@@ -161,7 +159,6 @@
         .then(res => {
           this.bindingResult('LOAN_KR', res.data);
           this.bindingResult('DATE', res.data);
-
         })
         .catch(err => {
           console.log('err >>> ', err);
@@ -278,18 +275,13 @@
         let dateColumnNm = this.chartOptions['DATE']
         let color = chartOption.color;
 
-        let seriesLine = new am4charts.LineSeries();
+        // let seriesLine = new am4charts.LineSeries();
+        // chart.series.push(seriesLine);
+        let seriesLine = chart.series.push(new am4charts.LineSeries())
         chartOption.seriesLine = seriesLine;
 
-        chart.series.push(seriesLine);
-
         // seriesLine.data = this.apiResult[indexType]
-        // console.log(this.apiResult[indexType])
-
-        // seriesLine.data = this[indexType]
         seriesLine.data = null;
-
-        // seriesLine.yAxis = valueAxis;
         seriesLine.yAxis = chartOption.valueAxis;
 
         seriesLine.dataFields.valueY = valueNm;
@@ -310,8 +302,8 @@
         seriesLine.name = chartOption.legendName;
 
         // Add scrollbar
-        chart.scrollbarX = new am4charts.XYChartScrollbar();
-        chart.scrollbarX.series.push(seriesLine);
+        // chart.scrollbarX = new am4charts.XYChartScrollbar();
+        // chart.scrollbarX.series.push(seriesLine);
 
         return seriesLine;
       }
