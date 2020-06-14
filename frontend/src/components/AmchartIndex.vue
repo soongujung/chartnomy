@@ -28,6 +28,7 @@
         chartOptions: {
           valueAxisPercent: null,
           valueAxisWon: null,
+          dateAxis: null,
           DATE: 'date',
           USD: {
             color: '#d9480f',
@@ -68,8 +69,10 @@
         },
       };
     },
-    created(){
-      this.fetchIndexResult()
+    async created(){
+      // this.fetchIndexResult()
+      await this.getApiResult()
+      await this.renderSeriesChart()
     },
     mounted() {
       this.renderChart()
@@ -81,6 +84,36 @@
       }
     },
     methods:{
+      async getApiResult(){
+        await this.getLoanKr()
+        console.log('getLoanKr >>> ')
+
+        await this.getLoanUs()
+        console.log('getLoanUs >>> ')
+
+        await this.getExchangeRateUs()
+        console.log('getExchangeRateUs >>> ')
+
+        await this.getKospi()
+        console.log('getKospi >>> ')
+      },
+      renderSeriesChart(){
+        const chartOption = this.chartOptions
+
+        let series_LOAN_KR = chartOption.LOAN_KR.seriesLine
+        series_LOAN_KR.data = this.apiResult['LOAN_KR']
+
+        let series_LOAN_US = chartOption.LOAN_US.seriesLine
+        series_LOAN_US.data = this.apiResult['LOAN_US']
+
+        let series_USD = chartOption.USD.seriesLine
+        series_USD.data = this.apiResult['USD']
+
+        let series_KOSPI = chartOption.KOSPI.seriesLine
+        series_KOSPI.data = this.apiResult['KOSPI']
+
+        this.chart.validateData()
+      },
       async fetchIndexResult(){
 
         const chartOption = this.chartOptions
@@ -106,52 +139,13 @@
         series_KOSPI.data = this.apiResult['KOSPI']
 
         // this.chart.invalidateData()
-        // this.chart.validateData()
+        this.chart.validateData()
 
       },
       bindingResult(column_name, response_data){
         this.apiResult[column_name] = response_data;
         this.apiResult[column_name].forEach(obj => {
           obj['date'] = this.$moment(obj['date'], 'YYYYMMDD').toDate();
-        })
-      },
-      /**
-       *    apiResult
-       *    {
-       *       DATE : [{date: 'xxxx', rate: 'xx'}, {date: 'xxxx', rate: 'xx'}, ...],
-       *       KOSPI : [{date: 'xxxx', rate: 'xx'}, {date: 'xxxx', rate: 'xx'}, ...],
-       *       ...
-       *    }
-       * 를
-       *    this.chart['KOSPI'] = [{value: 'xxxx'}, {value: 'xxxx'}, ... ]
-       *    this.chart['LOAN_US'] = [{value: 'xxxx'}, {value: 'xxxx'}, ... ]
-       *    this.chart['LOAN_KR'] = [{value: 'xxxx'}, {value: 'xxxx'}, ... ]
-       *    this.chart['USD'] = [{value: 'xxxx'}, {value: 'xxxx'}, ... ]
-       *
-       * 로 변환하는 기능 구현하기
-       *
-       * @param column_name
-       */
-      convertObjArrToSeries(column_name){
-        let target = this[column_name]
-        this.apiResult[column_name].forEach(obj => {
-          let data = new Object();
-          switch (column_name) {
-            case 'LOAN_KR':
-            case 'LOAN_US':
-              data['value'] = obj['rate']
-              break;
-            case 'USD':
-            case 'KOSPI':
-              data['value'] = obj['price']
-              break;
-            case 'DATE':
-              data = this.$moment(obj['date'], 'YYYYMMDD').toDate();
-              break;
-          }
-          data['date'] = this.$moment(obj['date'], 'YYYYMMDD').toDate();
-          data = data == null ? null : data;
-          target.push(data)
         })
       },
       getLoanKr(){
@@ -209,8 +203,23 @@
         chart.paddingRight = 20;
 
         let dateAxis = chart.xAxes.push(new am4charts.DateAxis());
-        dateAxis.renderer.grid.template.location = 0;
+        this.chartOptions.dateAxis = dateAxis;
+
+        // dateAxis.renderer.grid.template.location = 0;
+        dateAxis.renderer.grid.template.location = 0.5;
         dateAxis.renderer.minGridDistance = 50;
+        dateAxis.renderer.ticks.template.length = 8;
+        dateAxis.renderer.ticks.template.strokeOpacity = 0.1;
+        dateAxis.renderer.grid.template.disabled = true;
+        dateAxis.renderer.ticks.template.disabled = false;
+        dateAxis.renderer.ticks.template.strokeOpacity = 0.2;
+        dateAxis.renderer.minLabelPosition = 0.01;
+        dateAxis.renderer.maxLabelPosition = 0.99;
+        dateAxis.keepSelection = true;
+        dateAxis.minHeight = 30;
+
+        dateAxis.groupData = true;
+        dateAxis.minZoomCount = 5;
 
         // 단위 (원)
         let valueAxisWon = new am4charts.ValueAxis();
@@ -264,7 +273,7 @@
         scrollbarX.series.push(series_LOAN_KR);
         scrollbarX.series.push(series_LOAN_US);
 
-        chart.scrollbarX = scrollbarX;
+        // chart.scrollbarX = scrollbarX;
 
       },
       createSeries(chart, indexType){
