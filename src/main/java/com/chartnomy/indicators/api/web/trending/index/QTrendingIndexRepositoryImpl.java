@@ -77,7 +77,7 @@ public class QTrendingIndexRepositoryImpl implements QTrendingIndexRepository {
 	}
 
 	@Override
-	public List<IndexPriceDto> getKospiResult() {
+	public List<IndexPriceDto> getKospiResult(LocalDateTime fromDate, LocalDateTime toDate) {
 			List<IndexPriceDto> result = queryFactory.select(
 				new QIndexPriceDto(
 					dateAxisDd.date.as("date"),
@@ -86,14 +86,15 @@ public class QTrendingIndexRepositoryImpl implements QTrendingIndexRepository {
 			)
 			.from(dateAxisDd)
 			.leftJoin(kospi)
-			.on(dateAxisDd.date.eq(kospi.time))
+			.on(dateAxisDd.date.eq(kospi.time).and(dateAxisDd.date.between(fromDate, toDate)))
+				.where(dateAxisDd.date.between(fromDate, toDate))
 			.fetch();
 
 		return result;
 	}
 
 	@Override
-	public List<IndexPriceDto> getExchangeRateDollar() {
+	public List<IndexPriceDto> getExchangeRateDollar(LocalDateTime fromDate, LocalDateTime toDate) {
 
 		List<IndexPriceDto> result = queryFactory.select(
 			new QIndexPriceDto(
@@ -103,7 +104,8 @@ public class QTrendingIndexRepositoryImpl implements QTrendingIndexRepository {
 		)
 		.from(dateAxisDd)
 		.leftJoin(exchangeRateWonDollar)
-		.on(dateAxisDd.date.eq(exchangeRateWonDollar.time))
+		.on(dateAxisDd.date.eq(exchangeRateWonDollar.time).and(dateAxisDd.date.between(fromDate, toDate)))
+			.where(dateAxisDd.date.between(fromDate, toDate))
 		.fetch();
 
 		return result;

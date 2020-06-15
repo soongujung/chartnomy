@@ -35,17 +35,23 @@ public class TrendingIndexController {
 	}
 
 	@GetMapping("/api/web/trending/index/KOSPI")
-	public @ResponseBody List<IndexPriceDto> getKospiResult(){
-		return trendingIndexService.getKospiResult();
+	public @ResponseBody List<IndexPriceDto> getKospiResult(
+							@RequestParam("from") String from,
+							@RequestParam("to") String to){
+		LocalDateTime fromDate = processDateParam(from);
+		LocalDateTime toDate = processDateParam(to);
+		return trendingIndexService.getKospiResult(fromDate, toDate);
 	}
 
 	@GetMapping("/api/web/trending/index/exchange/{currencyTypeNm}")
 	public @ResponseBody List<IndexPriceDto> getExchangeRate(
 							@PathVariable("currencyTypeNm") String currencyTypeNm,
-							@RequestParam("from") LocalDateTime from,
-							@RequestParam("to") LocalDateTime to ){
+							@RequestParam("from") String from,
+							@RequestParam("to") String to ){
 		ExchangeCurrencyType exchangeCurrencyType = ExchangeCurrencyType.valueOf(currencyTypeNm);
-		return trendingIndexService.getExchangeRate(exchangeCurrencyType);
+		LocalDateTime fromDate = processDateParam(from);
+		LocalDateTime toDate = processDateParam(to);
+		return trendingIndexService.getExchangeRate(exchangeCurrencyType, fromDate, toDate);
 	}
 
 	@GetMapping("/api/web/trending/index/loan/{loanType}")
@@ -54,8 +60,12 @@ public class TrendingIndexController {
 							@RequestParam("from") String from,
 							@RequestParam("to") String to ){
 		LoanType loanType = LoanType.valueOf(loanTypeNm);
-		LocalDateTime fromDate = LocalDateTime.parse(from, DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-		LocalDateTime toDate = LocalDateTime.parse(to, DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+		LocalDateTime fromDate = processDateParam(from);
+		LocalDateTime toDate = processDateParam(to);
 		return trendingIndexService.getLoanRate(loanType, fromDate, toDate);
+	}
+
+	private LocalDateTime processDateParam(String strDate){
+		return LocalDateTime.parse(strDate, DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
 	}
 }

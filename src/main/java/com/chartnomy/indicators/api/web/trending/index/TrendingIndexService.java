@@ -20,9 +20,9 @@ public interface TrendingIndexService {
 
 	List<TrendingMonthCollectDto> getTrendingMonthCollectResult(IndicatorType indicatorType, TrendingParameter parameter);
 
-	List<IndexPriceDto> getKospiResult();
+	List<IndexPriceDto> getKospiResult(LocalDateTime fromDate, LocalDateTime toDate);
 
-	List<IndexPriceDto> getExchangeRate(ExchangeCurrencyType exchangeCurrencyType);
+	List<IndexPriceDto> getExchangeRate(ExchangeCurrencyType exchangeCurrencyType, LocalDateTime fromDate, LocalDateTime toDate);
 
 	List<IndexRateDto> getLoanRate(LoanType loanType, LocalDateTime fromDate, LocalDateTime toDate);
 }

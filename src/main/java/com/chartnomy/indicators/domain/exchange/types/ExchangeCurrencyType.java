@@ -2,13 +2,14 @@ package com.chartnomy.indicators.domain.exchange.types;
 
 import com.chartnomy.indicators.api.web.trending.index.QTrendingIndexRepository;
 import com.chartnomy.indicators.api.web.trending.index.dto.IndexPriceDto;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public enum ExchangeCurrencyType {
 	USD("USD", 1){
 		@Override
-		public List<IndexPriceDto> getExchangeRate(QTrendingIndexRepository repository) {
-			return repository.getExchangeRateDollar();
+		public List<IndexPriceDto> getExchangeRate(QTrendingIndexRepository repository, LocalDateTime fromDate, LocalDateTime toDate) {
+			return repository.getExchangeRateDollar(fromDate, toDate);
 		}
 	};
 
@@ -20,7 +21,7 @@ public enum ExchangeCurrencyType {
 	private String currencyTypeNm;
 	private int currencyTypeCd;
 
-	public abstract List<IndexPriceDto> getExchangeRate(QTrendingIndexRepository repository);
+	public abstract List<IndexPriceDto> getExchangeRate(QTrendingIndexRepository repository, LocalDateTime fromDate, LocalDateTime toDate);
 
 	public String getCurrencyTypeNm() {
 		return currencyTypeNm;

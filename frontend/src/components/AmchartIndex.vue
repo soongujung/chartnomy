@@ -31,6 +31,7 @@
           dateAxis: null,
           DATE: 'date',
           USD: {
+            requestUrl: '/web/trending/index/exchange/USD',
             color: '#d9480f',
             valueNm: 'price',
             valueColumn: 'USD',
@@ -40,6 +41,7 @@
             valueAxis: null,
           },
           KOSPI: {
+            requestUrl: '/web/trending/index/KOSPI',
             color: '#339af0',
             valueNm: 'price',
             valueColumn: 'KOSPI',
@@ -93,11 +95,11 @@
         await this.getLoanUs()
         console.log('getLoanUs >>> ')
 
-        // await this.getExchangeRateUs()
-        // console.log('getExchangeRateUs >>> ')
-        //
-        // await this.getKospi()
-        // console.log('getKospi >>> ')
+        await this.getExchangeRateUs()
+        console.log('getExchangeRateUs >>> ')
+
+        await this.getKospi()
+        console.log('getKospi >>> ')
       },
       renderSeriesChart(){
         const chartOption = this.chartOptions
@@ -189,7 +191,6 @@
         let requestUrl = this.chartOptions.LOAN_US.requestUrl;
         let queryString = this.buildDateQueryParam(requestUrl, this.getFromToDate())
 
-        // let promise = api.get('/web/trending/index/loan/LOAN_US')
         let promise = api.get(queryString)
         .then(res => {
           this.bindingResult('LOAN_US', res.data);
@@ -201,7 +202,11 @@
         return promise;
       },
       getExchangeRateUs(){
-        let promise = api.get('/web/trending/index/exchange/USD')
+        let requestUrl = this.chartOptions.USD.requestUrl;
+        let queryString = this.buildDateQueryParam(requestUrl, this.getFromToDate())
+
+        // let promise = api.get('/web/trending/index/exchange/USD')
+        let promise = api.get(queryString)
         .then(res => {
           this.bindingResult('USD', res.data);
         })
@@ -212,7 +217,11 @@
         return promise;
       },
       getKospi(){
-        let promise = api.get('/web/trending/index/KOSPI')
+        let requestUrl = this.chartOptions.KOSPI.requestUrl;
+        let queryString = this.buildDateQueryParam(requestUrl, this.getFromToDate())
+
+        // let promise = api.get('/web/trending/index/KOSPI')
+        let promise = api.get(queryString)
         .then(res => {
           this.bindingResult('KOSPI', res.data);
         })

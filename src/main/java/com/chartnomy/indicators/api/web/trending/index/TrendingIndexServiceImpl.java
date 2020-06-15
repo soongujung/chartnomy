@@ -59,13 +59,13 @@ public class TrendingIndexServiceImpl implements TrendingIndexService{
 	}
 
 	@Override
-	public List<IndexPriceDto> getKospiResult() {
-		return qIndexRepository.getKospiResult();
+	public List<IndexPriceDto> getKospiResult(LocalDateTime fromDate, LocalDateTime toDate) {
+		return qIndexRepository.getKospiResult(fromDate, toDate);
 	}
 
 	@Override
-	public List<IndexPriceDto> getExchangeRate(ExchangeCurrencyType exchangeCurrencyType) {
-		return exchangeCurrencyType.getExchangeRate(qIndexRepository);
+	public List<IndexPriceDto> getExchangeRate(ExchangeCurrencyType exchangeCurrencyType, LocalDateTime fromDate, LocalDateTime toDate) {
+		return exchangeCurrencyType.getExchangeRate(qIndexRepository, fromDate, toDate);
 	}
 
 	@Override
