@@ -21,6 +21,7 @@ import com.chartnomy.indicators.domain.kospi.entity.QKospi;
 import com.chartnomy.indicators.domain.loan.entity.QLoanKr;
 import com.chartnomy.indicators.domain.loan.entity.QLoanUs;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
@@ -109,7 +110,7 @@ public class QTrendingIndexRepositoryImpl implements QTrendingIndexRepository {
 	}
 
 	@Override
-	public List<IndexRateDto> getLoanKrRate() {
+	public List<IndexRateDto> getLoanKrRate(LocalDateTime fromDate, LocalDateTime toDate) {
 
 		List<IndexRateDto> result = queryFactory.select(
 			new QIndexRateDto(
@@ -119,14 +120,15 @@ public class QTrendingIndexRepositoryImpl implements QTrendingIndexRepository {
 		)
 		.from(dateAxisDd)
 		.leftJoin(loanKr)
-		.on(dateAxisDd.date.eq(loanKr.time))
+		.on(dateAxisDd.date.eq(loanKr.time).and(dateAxisDd.date.between(fromDate, toDate)))
+			.where(dateAxisDd.date.between(fromDate, toDate))
 		.fetch();
 
 		return result;
 	}
 
 	@Override
-	public List<IndexRateDto> getLoanUsRate() {
+	public List<IndexRateDto> getLoanUsRate(LocalDateTime fromDate, LocalDateTime toDate) {
 
 		List<IndexRateDto> result = queryFactory.select(
 			new QIndexRateDto(
@@ -136,7 +138,8 @@ public class QTrendingIndexRepositoryImpl implements QTrendingIndexRepository {
 		)
 		.from(dateAxisDd)
 		.leftJoin(loanUs)
-		.on(dateAxisDd.date.eq(loanUs.time))
+		.on(dateAxisDd.date.eq(loanUs.time).and(dateAxisDd.date.between(fromDate, toDate)))
+			.where(dateAxisDd.date.between(fromDate, toDate))
 		.fetch();
 
 		return result;

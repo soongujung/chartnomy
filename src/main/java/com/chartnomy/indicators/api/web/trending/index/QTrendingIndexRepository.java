@@ -6,6 +6,7 @@ import com.chartnomy.indicators.api.web.trending.index.dto.IndexRateDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingMonthCollectDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingParameter;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface QTrendingIndexRepository {
@@ -18,7 +19,7 @@ public interface QTrendingIndexRepository {
 
 	List<IndexPriceDto> getExchangeRateDollar();
 
-	List<IndexRateDto> getLoanKrRate();
+	List<IndexRateDto> getLoanKrRate(LocalDateTime fromDate, LocalDateTime toDate);
 
-	List<IndexRateDto> getLoanUsRate();
+	List<IndexRateDto> getLoanUsRate(LocalDateTime fromDate, LocalDateTime toDate);
 }

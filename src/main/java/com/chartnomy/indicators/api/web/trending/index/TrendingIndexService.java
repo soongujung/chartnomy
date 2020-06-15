@@ -8,6 +8,7 @@ import com.chartnomy.indicators.api.web.trending.index.dto.TrendingMonthCollectD
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingParameter;
 import com.chartnomy.indicators.domain.exchange.types.ExchangeCurrencyType;
 import com.chartnomy.indicators.domain.loan.types.LoanType;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -23,5 +24,5 @@ public interface TrendingIndexService {
 
 	List<IndexPriceDto> getExchangeRate(ExchangeCurrencyType exchangeCurrencyType);
 
-	List<IndexRateDto> getLoanRate(LoanType loanType);
+	List<IndexRateDto> getLoanRate(LoanType loanType, LocalDateTime fromDate, LocalDateTime toDate);
 }

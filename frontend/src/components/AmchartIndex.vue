@@ -49,6 +49,7 @@
             valueAxis: null,
           },
           LOAN_KR: {
+            requestUrl: '/web/trending/index/loan/LOAN_KR',
             color: '#51cf66',
             valueNm: 'rate',
             valueColumn: 'LOAN_KR',
@@ -58,6 +59,7 @@
             valueAxis: null,
           },
           LOAN_US: {
+            requestUrl: '/web/trending/index/loan/LOAN_US',
             color: '#868e96',
             valueNm: 'rate',
             valueColumn: 'LOAN_US',
@@ -91,11 +93,11 @@
         await this.getLoanUs()
         console.log('getLoanUs >>> ')
 
-        await this.getExchangeRateUs()
-        console.log('getExchangeRateUs >>> ')
-
-        await this.getKospi()
-        console.log('getKospi >>> ')
+        // await this.getExchangeRateUs()
+        // console.log('getExchangeRateUs >>> ')
+        //
+        // await this.getKospi()
+        // console.log('getKospi >>> ')
       },
       renderSeriesChart(){
         const chartOption = this.chartOptions
@@ -148,8 +150,31 @@
           obj['date'] = this.$moment(obj['date'], 'YYYYMMDD').toDate();
         })
       },
+      getFromToDate(){
+        let from_date = this.$moment().add(-5, 'Y').format('YYYY')
+        from_date = from_date + '0101000001'
+
+        let curr_meoment = this.$moment()
+        let curr_year = curr_meoment.format('YYYY')
+        let to_date = curr_year + '1231235959'
+
+        return {
+          from: from_date,
+          to: to_date
+        }
+      },
+      buildDateQueryParam(requestUrl, obj){
+        let from = obj.from
+        let to = obj.to
+        let result = requestUrl + '?' + 'from=' + from +'&' + 'to=' + to;
+        return result
+      },
       getLoanKr(){
-        let promise = api.get('/web/trending/index/loan/LOAN_KR')
+        let requestUrl = this.chartOptions.LOAN_KR.requestUrl;
+        let queryString = this.buildDateQueryParam(requestUrl, this.getFromToDate())
+
+        // let promise = api.get('/web/trending/index/loan/LOAN_KR')
+        let promise = api.get(queryString)
         .then(res => {
           this.bindingResult('LOAN_KR', res.data);
           this.bindingResult('DATE', res.data);
@@ -161,7 +186,11 @@
         return promise;
       },
       getLoanUs(){
-        let promise = api.get('/web/trending/index/loan/LOAN_US')
+        let requestUrl = this.chartOptions.LOAN_US.requestUrl;
+        let queryString = this.buildDateQueryParam(requestUrl, this.getFromToDate())
+
+        // let promise = api.get('/web/trending/index/loan/LOAN_US')
+        let promise = api.get(queryString)
         .then(res => {
           this.bindingResult('LOAN_US', res.data);
         })
@@ -254,9 +283,6 @@
         valueAxisPercent.renderer.grid.template.strokeOpacity = 0;
         valueAxisPercent.renderer.grid.template.disabled = true;
 
-        // this.chartOptions.valueAxisPercent = valueAxisPercent;
-        // this.chartOptions.valueAxisWon = valueAxisWon;
-
         this.chartOptions.KOSPI.valueAxis = valueAxisWon;
         this.chartOptions.USD.valueAxis = valueAxisWon;
         this.chartOptions.LOAN_KR.valueAxis = valueAxisPercent;
@@ -273,7 +299,7 @@
         scrollbarX.series.push(series_LOAN_KR);
         scrollbarX.series.push(series_LOAN_US);
 
-        // chart.scrollbarX = scrollbarX;
+        chart.scrollbarX = scrollbarX;
 
       },
       createSeries(chart, indexType){

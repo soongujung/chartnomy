@@ -5,11 +5,14 @@ import com.chartnomy.indicators.api.web.trending.index.dto.IndexRateDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingDto;
 import com.chartnomy.indicators.domain.exchange.types.ExchangeCurrencyType;
 import com.chartnomy.indicators.domain.loan.types.LoanType;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -37,14 +40,22 @@ public class TrendingIndexController {
 	}
 
 	@GetMapping("/api/web/trending/index/exchange/{currencyTypeNm}")
-	public @ResponseBody List<IndexPriceDto> getExchangeRate(@PathVariable("currencyTypeNm") String currencyTypeNm){
+	public @ResponseBody List<IndexPriceDto> getExchangeRate(
+							@PathVariable("currencyTypeNm") String currencyTypeNm,
+							@RequestParam("from") LocalDateTime from,
+							@RequestParam("to") LocalDateTime to ){
 		ExchangeCurrencyType exchangeCurrencyType = ExchangeCurrencyType.valueOf(currencyTypeNm);
 		return trendingIndexService.getExchangeRate(exchangeCurrencyType);
 	}
 
 	@GetMapping("/api/web/trending/index/loan/{loanType}")
-	public @ResponseBody List<IndexRateDto> getLoanRate(@PathVariable("loanType") String loanTypeNm){
+	public @ResponseBody List<IndexRateDto> getLoanRate(
+							@PathVariable("loanType") String loanTypeNm,
+							@RequestParam("from") String from,
+							@RequestParam("to") String to ){
 		LoanType loanType = LoanType.valueOf(loanTypeNm);
-		return trendingIndexService.getLoanRate(loanType);
+		LocalDateTime fromDate = LocalDateTime.parse(from, DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+		LocalDateTime toDate = LocalDateTime.parse(to, DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+		return trendingIndexService.getLoanRate(loanType, fromDate, toDate);
 	}
 }

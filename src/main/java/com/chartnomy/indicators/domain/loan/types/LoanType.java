@@ -2,19 +2,22 @@ package com.chartnomy.indicators.domain.loan.types;
 
 import com.chartnomy.indicators.api.web.trending.index.QTrendingIndexRepository;
 import com.chartnomy.indicators.api.web.trending.index.dto.IndexRateDto;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public enum LoanType {
 	LOAN_KR("LOAN_KR", 1){
 		@Override
-		public List<IndexRateDto> getLoanRate(QTrendingIndexRepository repository) {
-			return repository.getLoanKrRate();
+		public List<IndexRateDto> getLoanRate(QTrendingIndexRepository repository,
+												LocalDateTime fromDate, LocalDateTime toDate) {
+			return repository.getLoanKrRate(fromDate, toDate);
 		}
 	},
 	LOAN_US("LOAN_US", 2){
 		@Override
-		public List<IndexRateDto> getLoanRate(QTrendingIndexRepository repository) {
-			return repository.getLoanUsRate();
+		public List<IndexRateDto> getLoanRate(QTrendingIndexRepository repository,
+												LocalDateTime fromDate, LocalDateTime toDate) {
+			return repository.getLoanUsRate(fromDate, toDate);
 		}
 	};
 
@@ -24,5 +27,6 @@ public enum LoanType {
 
 	LoanType(String loanTypeNm, int loanTypeCd){}
 
-	public abstract List<IndexRateDto> getLoanRate(QTrendingIndexRepository repository);
+	public abstract List<IndexRateDto> getLoanRate(QTrendingIndexRepository repository,
+													LocalDateTime fromDate, LocalDateTime toDate);
 }

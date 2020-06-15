@@ -9,6 +9,7 @@ import com.chartnomy.indicators.api.web.trending.index.dto.TrendingMonthCollectD
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingParameter;
 import com.chartnomy.indicators.domain.exchange.types.ExchangeCurrencyType;
 import com.chartnomy.indicators.domain.loan.types.LoanType;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -68,8 +69,8 @@ public class TrendingIndexServiceImpl implements TrendingIndexService{
 	}
 
 	@Override
-	public List<IndexRateDto> getLoanRate(LoanType loanType) {
-		return loanType.getLoanRate(qIndexRepository);
+	public List<IndexRateDto> getLoanRate(LoanType loanType, LocalDateTime fromDate, LocalDateTime toDate) {
+		return loanType.getLoanRate(qIndexRepository, fromDate, toDate);
 	}
 
 }
