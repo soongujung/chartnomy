@@ -107,17 +107,40 @@
 
         let series_LOAN_KR = chartOption.LOAN_KR.seriesLine
         series_LOAN_KR.data = this.apiResult['LOAN_KR']
+        this.renderTooltip('LOAN_KR')
 
         let series_LOAN_US = chartOption.LOAN_US.seriesLine
         series_LOAN_US.data = this.apiResult['LOAN_US']
+        this.renderTooltip('LOAN_US')
 
         let series_USD = chartOption.USD.seriesLine
         series_USD.data = this.apiResult['USD']
+        this.renderTooltip('USD')
 
         let series_KOSPI = chartOption.KOSPI.seriesLine
         series_KOSPI.data = this.apiResult['KOSPI']
+        this.renderTooltip('KOSPI')
 
         this.chart.validateData()
+      },
+      renderTooltip(indexTypeNm){
+        let chartOption = this.chartOptions[indexTypeNm];
+        let seriesLine = chartOption.seriesLine;
+        let color = chartOption.color;
+
+        seriesLine.minBulletDistance = 20;
+        seriesLine.name = chartOption.legendName;
+        seriesLine.tensionX = 0.8;
+
+        seriesLine.tooltipText = chartOption.tooltipText;
+        seriesLine.tooltip.pointerOrientation = "vertical";
+        seriesLine.tooltip.getFillFromObject = false;
+        seriesLine.tooltip.label.fill = am4core.color(color);           // 툴팁 내부 폰트 색상
+        seriesLine.tooltip.background.cornerRadius = 20;                // 툴팁 테두리 Radius
+        seriesLine.tooltip.background.fillOpacity = 0.8;                // 툴팁 투명도
+        seriesLine.tooltip.label.padding(12,12,12,12);
+        seriesLine.name = chartOption.legendName;
+        seriesLine.yAxis = chartOption.valueAxis;
       },
       async fetchIndexResult(){
 
@@ -269,7 +292,7 @@
         valueAxisWon.renderer.opposite = false;
         valueAxisWon.title.fontWeight = 600;
         valueAxisWon.title.fontSize = 14;
-        valueAxisWon.tooltip.disabled = true;
+        valueAxisWon.tooltip.disabled = false;
         valueAxisWon.title.text = "원";
         valueAxisWon.title.rotation = 0;
         valueAxisWon.title.align = "top";
@@ -285,7 +308,7 @@
         valueAxisPercent.renderer.opposite = true;
         valueAxisPercent.title.fontWeight = 600;
         valueAxisPercent.title.fontSize = 14;
-        valueAxisPercent.tooltip.disabled = true;
+        valueAxisPercent.tooltip.disabled = false;
         valueAxisPercent.title.text = "%";
         valueAxisPercent.title.rotation = 0;
         valueAxisPercent.title.align = "top";
@@ -301,7 +324,7 @@
         valueAxisUSD.renderer.opposite = false;
         valueAxisUSD.title.fontWeight = 600;
         valueAxisUSD.title.fontSize = 14;
-        valueAxisUSD.tooltip.disabled = true;
+        valueAxisUSD.tooltip.disabled = false;
         valueAxisUSD.title.text = "환율 (원)";
         valueAxisUSD.title.rotation = 0;
         valueAxisUSD.title.align = "top";
@@ -341,27 +364,46 @@
         // seriesLine.data = this.apiResult[indexType]
         seriesLine.data = null;
         seriesLine.yAxis = chartOption.valueAxis;
+        seriesLine.showOnInit = false;
 
         seriesLine.dataFields.valueY = valueNm;
         seriesLine.dataFields.dateX = dateColumnNm;
-        seriesLine.strokeWidth = 2;                     // 선의 굵기
-        seriesLine.minBulletDistance = 20;
+
         seriesLine.stroke = am4core.color(color);       // 선의 색상
         seriesLine.fill = am4core.color(color);         // 선의 내부
-        seriesLine.tensionX = 0.8;
+        seriesLine.strokeWidth = 2;                     // 선의 굵기
 
-        seriesLine.tooltipText = chartOption.tooltipText;
-        seriesLine.tooltip.pointerOrientation = "vertical";
-        seriesLine.tooltip.getFillFromObject = false;
-        seriesLine.tooltip.label.fill = am4core.color(color);           // 툴팁 내부 폰트 색상
-        seriesLine.tooltip.background.cornerRadius = 20;                // 툴팁 테두리 Radius
-        seriesLine.tooltip.background.fillOpacity = 0.8;                // 툴팁 투명도
-        seriesLine.tooltip.label.padding(12,12,12,12);
-        seriesLine.name = chartOption.legendName;
+        // seriesLine.minBulletDistance = 20;
+        // seriesLine.name = chartOption.legendName;
+        // seriesLine.tensionX = 0.8;
+        //
+        // seriesLine.tooltipText = chartOption.tooltipText;
+        // seriesLine.tooltip.pointerOrientation = "vertical";
+        // seriesLine.tooltip.getFillFromObject = false;
+        // seriesLine.tooltip.label.fill = am4core.color(color);           // 툴팁 내부 폰트 색상
+        // seriesLine.tooltip.background.cornerRadius = 20;                // 툴팁 테두리 Radius
+        // seriesLine.tooltip.background.fillOpacity = 0.8;                // 툴팁 투명도
+        // seriesLine.tooltip.label.padding(12,12,12,12);
+        // seriesLine.name = chartOption.legendName;
+        // seriesLine.yAxis = chartOption.valueAxis;
 
+        // let bullet = seriesLine.bullets.push(new am4charts.CircleBullet());
+        // bullet.circle.fill = am4core.color('#000');
+        // bullet.circle.strokeWidth = 2;
+        // bullet.circle.propertyFields.radius = "townSize";
+        //
+        // let state = bullet.states.create("hover");
+        // state.properties.scale = 1.2;
+        //
+        // let label = seriesLine.bullets.push(new am4charts.LabelBullet());
+        // label.label.text=chartOption.tooltipText;
+        // label.label.horizontalCenter = "left";
+        // label.label.dx = 14;
+        //
+        // chart.legend = new am4charts.Legend();
         // Add scrollbar
-        chart.scrollbarX = new am4charts.XYChartScrollbar();
-        chart.scrollbarX.series.push(seriesLine);
+        // chart.scrollbarX = new am4charts.XYChartScrollbar();
+        // chart.scrollbarX.series.push(seriesLine);
 
         return seriesLine;
       }
