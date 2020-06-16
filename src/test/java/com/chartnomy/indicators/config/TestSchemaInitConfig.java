@@ -48,6 +48,7 @@ public class TestSchemaInitConfig {
 		"/datasets/mariadb/insert/mariadb_insert_loan_household_month.sql",
 		"/datasets/mariadb/insert/mariadb_insert_loan_rate_kor.sql",
 		"/datasets/mariadb/insert/mariadb_insert_loan_rate_usa.sql",
+		"/datasets/mariadb/insert/mariadb_insert_exchange_dollar_day.sql",
 	}, config = @SqlConfig(dataSource = "dataSource"))
 	private void insertData() {
 	}

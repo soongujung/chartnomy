@@ -28,6 +28,7 @@
         chartOptions: {
           valueAxisPercent: null,
           valueAxisWon: null,
+          valueAxisUSD: null,
           dateAxis: null,
           DATE: 'date',
           USD: {
@@ -243,7 +244,6 @@
         let dateAxis = chart.xAxes.push(new am4charts.DateAxis());
         this.chartOptions.dateAxis = dateAxis;
 
-        // dateAxis.renderer.grid.template.location = 0;
         dateAxis.renderer.grid.template.location = 0.5;
         dateAxis.renderer.minGridDistance = 50;
         dateAxis.renderer.ticks.template.length = 8;
@@ -262,6 +262,7 @@
         // 단위 (원)
         let valueAxisWon = new am4charts.ValueAxis();
         chart.yAxes.push(valueAxisWon);
+        this.chartOptions.valueAxisWon = valueAxisWon;
         valueAxisWon.title.dy = -50;
         valueAxisWon.title.paddingRight = 0;
         valueAxisWon.title.paddingBottom = 400;
@@ -274,11 +275,10 @@
         valueAxisWon.title.align = "top";
         valueAxisWon.renderer.grid.template.strokeOpacity = 0;
         valueAxisWon.renderer.grid.template.disabled = true;
-        this.chartOptions.valueAxisWon = valueAxisWon;
 
         let valueAxisPercent = new am4charts.ValueAxis();
         chart.yAxes.push(valueAxisPercent);
-
+        this.chartOptions.valueAxisPercent = valueAxisPercent
         valueAxisPercent.title.dy = -50;
         valueAxisPercent.title.paddingRight = 0;
         valueAxisPercent.title.paddingBottom = 400;
@@ -292,8 +292,24 @@
         valueAxisPercent.renderer.grid.template.strokeOpacity = 0;
         valueAxisPercent.renderer.grid.template.disabled = true;
 
+        let valueAxisUSD = new am4charts.ValueAxis();
+        chart.yAxes.push(valueAxisUSD);
+        this.chartOptions.valueAxisUSD = valueAxisUSD;
+        valueAxisUSD.title.dy = -50;
+        valueAxisUSD.title.paddingRight = 0;
+        valueAxisUSD.title.paddingBottom = 400;
+        valueAxisUSD.renderer.opposite = false;
+        valueAxisUSD.title.fontWeight = 600;
+        valueAxisUSD.title.fontSize = 14;
+        valueAxisUSD.tooltip.disabled = true;
+        valueAxisUSD.title.text = "환율 (원)";
+        valueAxisUSD.title.rotation = 0;
+        valueAxisUSD.title.align = "top";
+        valueAxisUSD.renderer.grid.template.strokeOpacity = 0;
+        valueAxisUSD.renderer.grid.template.disabled = true;
+
         this.chartOptions.KOSPI.valueAxis = valueAxisWon;
-        this.chartOptions.USD.valueAxis = valueAxisWon;
+        this.chartOptions.USD.valueAxis = valueAxisUSD;
         this.chartOptions.LOAN_KR.valueAxis = valueAxisPercent;
         this.chartOptions.LOAN_US.valueAxis = valueAxisPercent;
 
@@ -313,14 +329,12 @@
       },
       createSeries(chart, indexType){
         console.log('createSeries :: indexType >>> ', indexType)
-        // let valueNm = 'value';
+
         let chartOption = this.chartOptions[indexType]
         let valueNm = chartOption.valueNm;
         let dateColumnNm = this.chartOptions['DATE']
         let color = chartOption.color;
 
-        // let seriesLine = new am4charts.LineSeries();
-        // chart.series.push(seriesLine);
         let seriesLine = chart.series.push(new am4charts.LineSeries())
         chartOption.seriesLine = seriesLine;
 
@@ -346,8 +360,8 @@
         seriesLine.name = chartOption.legendName;
 
         // Add scrollbar
-        // chart.scrollbarX = new am4charts.XYChartScrollbar();
-        // chart.scrollbarX.series.push(seriesLine);
+        chart.scrollbarX = new am4charts.XYChartScrollbar();
+        chart.scrollbarX.series.push(seriesLine);
 
         return seriesLine;
       }

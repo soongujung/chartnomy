@@ -4,6 +4,7 @@ import com.chartnomy.indicators.api.web.trending.index.QTrendingIndexRepository;
 import com.chartnomy.indicators.api.web.trending.index.dto.IndexPriceDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.IndexRateDto;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
@@ -64,24 +65,62 @@ public class TrendingIndexRepositoryTest {
 	@Test
 	@Order(2)
 	void testGetKospiResult(){
-		List<IndexPriceDto> kospiResult = trendingRepository.getKospiResult();
+
+		List<IndexPriceDto> kospiResult = trendingRepository.getKospiResult(
+			getDateParameter().getFromDate(),
+			getDateParameter().getToDate()
+		);
 	}
 
 	@Test
 	@Order(3)
 	void testGetExchangeRateDollar(){
-		List<IndexPriceDto> exchangeRateDollar = trendingRepository.getExchangeRateDollar();
+		List<IndexPriceDto> exchangeRateDollar = trendingRepository.getExchangeRateDollar(
+			getDateParameter().getFromDate(),
+			getDateParameter().getToDate()
+		);
 	}
 
 	@Test
 	@Order(4)
 	void testGetLoanRateKr(){
-		List<IndexRateDto> loanKrRate = trendingRepository.getLoanKrRate();
+		List<IndexRateDto> loanKrRate = trendingRepository.getLoanKrRate(
+			getDateParameter().getFromDate(),
+			getDateParameter().getToDate()
+		);
 	}
 
 	@Test
 	@Order(5)
 	void testGetLoanRateUs(){
-		List<IndexRateDto> loanUsRate = trendingRepository.getLoanUsRate();
+		List<IndexRateDto> loanUsRate = trendingRepository.getLoanUsRate(
+			getDateParameter().getFromDate(),
+			getDateParameter().getToDate()
+		);
+	}
+
+	private TestDateParameter getDateParameter(){
+		return null;
+	}
+
+	class TestDateParameter{
+		LocalDateTime fromDate;
+		LocalDateTime toDate;
+
+		public LocalDateTime getFromDate() {
+			return fromDate;
+		}
+
+		public void setFromDate(LocalDateTime fromDate) {
+			this.fromDate = fromDate;
+		}
+
+		public LocalDateTime getToDate() {
+			return toDate;
+		}
+
+		public void setToDate(LocalDateTime toDate) {
+			this.toDate = toDate;
+		}
 	}
 }

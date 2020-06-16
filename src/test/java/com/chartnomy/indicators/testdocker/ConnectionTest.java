@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -42,6 +43,7 @@ public class ConnectionTest{
 		queryFactory = new JPAQueryFactory(entityManager);
 	}
 
+//	@Disabled
 	@DisplayName("DB 셋업")
 	@Test
 	@Order(1)
@@ -53,6 +55,7 @@ public class ConnectionTest{
 		"/datasets/mariadb/insert/mariadb_insert_loan_household_month.sql",
 		"/datasets/mariadb/insert/mariadb_insert_loan_rate_kor.sql",
 		"/datasets/mariadb/insert/mariadb_insert_loan_rate_usa.sql",
+		"/datasets/mariadb/insert/mariadb_insert_exchange_dollar_day.sql",
 	}, config = @SqlConfig(dataSource = "dataSource"))
 	void setupSchema(){
 	}
@@ -60,8 +63,8 @@ public class ConnectionTest{
 	@Test
 	@Order(2)
 	void test_connection(){
-		List<Kospi> fetch = queryFactory.selectFrom(kospi)
-			.fetch();
-		System.out.println(fetch);
+//		List<Kospi> fetch = queryFactory.selectFrom(kospi)
+//			.fetch();
+//		System.out.println(fetch);
 	}
 }
