@@ -122,6 +122,7 @@
         this.renderTooltip('KOSPI')
 
         this.chart.validateData()
+        this.chart.legend = new am4charts.Legend();
       },
       renderTooltip(indexTypeNm){
         let chartOption = this.chartOptions[indexTypeNm];
