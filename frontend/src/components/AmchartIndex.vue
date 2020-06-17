@@ -3,7 +3,7 @@
     <a href="/">
       <h1>GO HOME</h1>
     </a>
-    <h1>Index Chart (KOSPI, 정책금리(한국/미국), 환율(원/달러)</h1>
+<!--    <h1>Index Chart (KOSPI, 정책금리(한국/미국), 환율(원/달러)</h1>-->
     <div class="hello" ref="chartdiv">
     </div>
   </div>
@@ -36,7 +36,7 @@
             color: '#d9480f',
             valueNm: 'price',
             valueColumn: 'USD',
-            tooltipText: '환율 : {valueY.value} (원)',
+            tooltipText: '환율 : {valueY.value} (달러/원)',
             legendName: '환율 (달러)',
             seriesLine: null,
             valueAxis: null,
@@ -134,17 +134,19 @@
         seriesLine.tensionX = 0.8;
 
         seriesLine.tooltipText = chartOption.tooltipText;
-        seriesLine.tooltip.pointerOrientation = "vertical";
+        // seriesLine.tooltip.pointerOrientation = "vertical";
         seriesLine.tooltip.getFillFromObject = false;
+        seriesLine.tooltip.getStrokeFromObject = true;
         seriesLine.tooltip.label.fill = am4core.color(color);           // 툴팁 내부 폰트 색상
         seriesLine.tooltip.background.cornerRadius = 20;                // 툴팁 테두리 Radius
-        seriesLine.tooltip.background.fillOpacity = 0.8;                // 툴팁 투명도
-        seriesLine.tooltip.label.padding(12,12,12,12);
+        // seriesLine.tooltip.background.fillOpacity = 0.8;                // 툴팁 투명도
+        seriesLine.tooltip.background.fill = am4core.color('#222');
+        seriesLine.tooltip.background.strokeWidth = 2;
+        seriesLine.tooltip.label.fill = seriesLine.stroke;
+        // seriesLine.tooltip.label.padding(12,12,12,12);
         seriesLine.name = chartOption.legendName;
-        seriesLine.yAxis = chartOption.valueAxis;
       },
       async fetchIndexResult(){
-
         const chartOption = this.chartOptions
 
         await this.getLoanKr()
@@ -349,7 +351,7 @@
         scrollbarX.series.push(series_LOAN_US);
 
         chart.scrollbarX = scrollbarX;
-
+        chart.cursor = new am4charts.XYCursor();
       },
       createSeries(chart, indexType){
         console.log('createSeries :: indexType >>> ', indexType)
