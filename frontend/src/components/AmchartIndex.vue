@@ -176,6 +176,25 @@
           to: to_date
         }
       },
+      fetchData(indexTypeNm){
+        let chartOption = this.chartOptions[indexTypeNm]
+        let requestUrl = chartOption.requestUrl
+        let queryString = this.buildDateQueryParam(requestUrl, this.getDefaultDateParameter())
+
+        let promise = api.get(queryString)
+          .then(res => {
+            this.bindingResult(indexTypeNm, res.data)
+          })
+          .catch(err => {
+            console.log('err >>> ', err)
+          })
+
+        return promise
+      },
+      // TODO (5)
+      // date series 를 만드는 함수를 만들어서 따로 모듈로 등록하자.
+      // 실제 서버 쪽의 시간 데이터와 잘 맞아야 하는데 해당 내용이 잘 맞는지는 아직 확신을 할수 없다.
+
       // TODO (1)
       // getLoanKr, getLoanUs, getUSD, getKospi 함수들은 공통적인 로직들이 있다.
       // HOC 개념을 적용해 indexTypeNm 에 따라 다른 API 요청을 하는 로직으로 변환하자.
