@@ -3,7 +3,6 @@
     <a href="/">
       <h1>GO HOME</h1>
     </a>
-<!--    <h1>Index Chart (KOSPI, 정책금리(한국/미국), 환율(원/달러)</h1>-->
     <div class="hello" ref="chartdiv">
     </div>
   </div>
@@ -31,6 +30,11 @@
           valueAxisUSD: null,
           dateAxis: null,
           DATE: 'date',
+          // TODO (3)
+          // 지표를 가져오는 DTO를 선언할 때 뭘 어떻게 들고올지 막막해서
+          // price, rate 두가지 종류의 DTO 를 만들었었다.
+          // value, date 이렇게 두개의 필드만을 가져오도록 DTO 수정작업이 필요하다.
+          // Date 의 경우도 하나의 데이터로 취급하여 데이터를 가져오도록 검색조건에 맞는 데이터를 가져오도록 구성할 것
           USD: {
             requestUrl: '/web/trending/index/exchange/USD',
             color: '#d9480f',
@@ -75,7 +79,6 @@
       };
     },
     async created(){
-      // this.fetchIndexResult()
       await this.getApiResult()
       await this.renderSeriesChart()
     },
@@ -96,7 +99,7 @@
         await this.getLoanUs()
         console.log('getLoanUs >>> ')
 
-        await this.getExchangeRateUs()
+        await this.getUSD()
         console.log('getExchangeRateUs >>> ')
 
         await this.getKospi()
@@ -146,45 +149,26 @@
         // seriesLine.tooltip.label.padding(12,12,12,12);
         seriesLine.name = chartOption.legendName;
       },
-      async fetchIndexResult(){
-        const chartOption = this.chartOptions
-
-        await this.getLoanKr()
-        console.log('getLoanKr >>> ')
-        let series_LOAN_KR = chartOption.LOAN_KR.seriesLine
-        series_LOAN_KR.data = this.apiResult['LOAN_KR']
-
-        await this.getLoanUs()
-        console.log('getLoanUs >>> ')
-        let series_LOAN_US = chartOption.LOAN_US.seriesLine
-        series_LOAN_US.data = this.apiResult['LOAN_US']
-
-        await this.getExchangeRateUs()
-        console.log('getExchangeRateUs >>> ')
-        let series_USD = chartOption.USD.seriesLine
-        series_USD.data = this.apiResult['USD']
-
-        await this.getKospi()
-        console.log('getKospi >>> ')
-        let series_KOSPI = chartOption.KOSPI.seriesLine
-        series_KOSPI.data = this.apiResult['KOSPI']
-
-        // this.chart.invalidateData()
-        this.chart.validateData()
-
-      },
       bindingResult(column_name, response_data){
         this.apiResult[column_name] = response_data;
         this.apiResult[column_name].forEach(obj => {
           obj['date'] = this.$moment(obj['date'], 'YYYYMMDD').toDate();
         })
       },
-      getFromToDate(){
+      // TODO (2)
+      // Nodejs 오픈소스 중에 queryString을 조합해주는 모듈이 있는데 해당 내용을 찾아서 새로운 버전을 만들자.
+      buildDateQueryParam(requestUrl, obj){
+        let from = obj.from
+        let to = obj.to
+        let result = requestUrl + '?' + 'from=' + from +'&' + 'to=' + to;
+        return result
+      },
+      getDefaultDateParameter(){
         let from_date = this.$moment().add(-5, 'Y').format('YYYY')
         from_date = from_date + '0101000001'
 
-        let curr_meoment = this.$moment()
-        let curr_year = curr_meoment.format('YYYY')
+        let curr_moment = this.$moment()
+        let curr_year = curr_moment.format('YYYY')
         let to_date = curr_year + '1231235959'
 
         return {
@@ -192,17 +176,13 @@
           to: to_date
         }
       },
-      buildDateQueryParam(requestUrl, obj){
-        let from = obj.from
-        let to = obj.to
-        let result = requestUrl + '?' + 'from=' + from +'&' + 'to=' + to;
-        return result
-      },
+      // TODO (1)
+      // getLoanKr, getLoanUs, getUSD, getKospi 함수들은 공통적인 로직들이 있다.
+      // HOC 개념을 적용해 indexTypeNm 에 따라 다른 API 요청을 하는 로직으로 변환하자.
       getLoanKr(){
         let requestUrl = this.chartOptions.LOAN_KR.requestUrl;
-        let queryString = this.buildDateQueryParam(requestUrl, this.getFromToDate())
+        let queryString = this.buildDateQueryParam(requestUrl, this.getDefaultDateParameter())
 
-        // let promise = api.get('/web/trending/index/loan/LOAN_KR')
         let promise = api.get(queryString)
         .then(res => {
           this.bindingResult('LOAN_KR', res.data);
@@ -216,7 +196,7 @@
       },
       getLoanUs(){
         let requestUrl = this.chartOptions.LOAN_US.requestUrl;
-        let queryString = this.buildDateQueryParam(requestUrl, this.getFromToDate())
+        let queryString = this.buildDateQueryParam(requestUrl, this.getDefaultDateParameter())
 
         let promise = api.get(queryString)
         .then(res => {
@@ -228,11 +208,10 @@
 
         return promise;
       },
-      getExchangeRateUs(){
+      getUSD(){
         let requestUrl = this.chartOptions.USD.requestUrl;
-        let queryString = this.buildDateQueryParam(requestUrl, this.getFromToDate())
+        let queryString = this.buildDateQueryParam(requestUrl, this.getDefaultDateParameter())
 
-        // let promise = api.get('/web/trending/index/exchange/USD')
         let promise = api.get(queryString)
         .then(res => {
           this.bindingResult('USD', res.data);
@@ -245,9 +224,8 @@
       },
       getKospi(){
         let requestUrl = this.chartOptions.KOSPI.requestUrl;
-        let queryString = this.buildDateQueryParam(requestUrl, this.getFromToDate())
+        let queryString = this.buildDateQueryParam(requestUrl, this.getDefaultDateParameter())
 
-        // let promise = api.get('/web/trending/index/KOSPI')
         let promise = api.get(queryString)
         .then(res => {
           this.bindingResult('KOSPI', res.data);
@@ -364,7 +342,6 @@
         let seriesLine = chart.series.push(new am4charts.LineSeries())
         chartOption.seriesLine = seriesLine;
 
-        // seriesLine.data = this.apiResult[indexType]
         seriesLine.data = null;
         seriesLine.yAxis = chartOption.valueAxis;
         seriesLine.showOnInit = false;
@@ -375,38 +352,6 @@
         seriesLine.stroke = am4core.color(color);       // 선의 색상
         seriesLine.fill = am4core.color(color);         // 선의 내부
         seriesLine.strokeWidth = 2;                     // 선의 굵기
-
-        // seriesLine.minBulletDistance = 20;
-        // seriesLine.name = chartOption.legendName;
-        // seriesLine.tensionX = 0.8;
-        //
-        // seriesLine.tooltipText = chartOption.tooltipText;
-        // seriesLine.tooltip.pointerOrientation = "vertical";
-        // seriesLine.tooltip.getFillFromObject = false;
-        // seriesLine.tooltip.label.fill = am4core.color(color);           // 툴팁 내부 폰트 색상
-        // seriesLine.tooltip.background.cornerRadius = 20;                // 툴팁 테두리 Radius
-        // seriesLine.tooltip.background.fillOpacity = 0.8;                // 툴팁 투명도
-        // seriesLine.tooltip.label.padding(12,12,12,12);
-        // seriesLine.name = chartOption.legendName;
-        // seriesLine.yAxis = chartOption.valueAxis;
-
-        // let bullet = seriesLine.bullets.push(new am4charts.CircleBullet());
-        // bullet.circle.fill = am4core.color('#000');
-        // bullet.circle.strokeWidth = 2;
-        // bullet.circle.propertyFields.radius = "townSize";
-        //
-        // let state = bullet.states.create("hover");
-        // state.properties.scale = 1.2;
-        //
-        // let label = seriesLine.bullets.push(new am4charts.LabelBullet());
-        // label.label.text=chartOption.tooltipText;
-        // label.label.horizontalCenter = "left";
-        // label.label.dx = 14;
-        //
-        // chart.legend = new am4charts.Legend();
-        // Add scrollbar
-        // chart.scrollbarX = new am4charts.XYChartScrollbar();
-        // chart.scrollbarX.series.push(seriesLine);
 
         return seriesLine;
       }
