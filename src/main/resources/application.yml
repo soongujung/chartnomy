@@ -1,7 +1,7 @@
 spring:
   profiles:
-#    active: prod
     active: testdocker
+#    active: prod
 ---
 spring:
   profiles: local
@@ -34,7 +34,6 @@ spring:
     password: 1111
     hikari:
       auto-commit: true
-
   jpa:
     hibernate:
       ddl-auto: none
