@@ -24,5 +24,5 @@ public interface QTrendingIndexRepository {
 
 	List<IndexRateDto> getLoanUsRate(LocalDateTime fromDate, LocalDateTime toDate);
 
-	List<IndexDateDto> getDateResult(LocalDateTime fromDate, LocalDateTime toDate);
+	List<IndexDateDto> getDateSeries(LocalDateTime fromDate, LocalDateTime toDate);
 }

@@ -1,5 +1,6 @@
 package com.chartnomy.indicators.api.web.trending.index;
 
+import com.chartnomy.indicators.api.web.trending.index.dto.IndexDateDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.IndexPriceDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.IndexRateDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingDto;
@@ -35,11 +36,13 @@ public class TrendingIndexController {
 	}
 
 	@GetMapping("/api/web/trending/index/DATE")
-	public @ResponseBody List<IndexPriceDto> getDateSeries(
+	public @ResponseBody List<IndexDateDto> getDateSeries(
 		@RequestParam("from") String from,
 		@RequestParam("to") String to
 	){
-		return null;
+		LocalDateTime fromDate = processDateParam(from);
+		LocalDateTime toDate = processDateParam(to);
+		return trendingIndexService.getDateSeries(fromDate, toDate);
 	}
 
 	@GetMapping("/api/web/trending/index/KOSPI")

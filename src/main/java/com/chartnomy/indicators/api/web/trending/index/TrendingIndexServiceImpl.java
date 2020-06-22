@@ -2,6 +2,7 @@ package com.chartnomy.indicators.api.web.trending.index;
 
 import com.chartnomy.indicators.api.common.DataType;
 import com.chartnomy.indicators.api.common.IndicatorType;
+import com.chartnomy.indicators.api.web.trending.index.dto.IndexDateDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.IndexPriceDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.IndexRateDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingDto;
@@ -71,6 +72,11 @@ public class TrendingIndexServiceImpl implements TrendingIndexService{
 	@Override
 	public List<IndexRateDto> getLoanRate(LoanType loanType, LocalDateTime fromDate, LocalDateTime toDate) {
 		return loanType.getLoanRate(qIndexRepository, fromDate, toDate);
+	}
+
+	@Override
+	public List<IndexDateDto> getDateSeries(LocalDateTime fromDate, LocalDateTime toDate) {
+		return qIndexRepository.getDateSeries(fromDate, toDate);
 	}
 
 }

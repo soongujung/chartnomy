@@ -6,13 +6,13 @@ import com.chartnomy.indicators.api.web.trending.index.QTrendingIndexRepository;
 import com.chartnomy.indicators.api.web.trending.index.dto.IndexDateDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.IndexPriceDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.IndexRateDto;
+import com.chartnomy.indicators.config.TestSchemaInitConfig;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -22,13 +22,18 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+@Import(TestSchemaInitConfig.class)
 @SpringBootTest
+//@ExtendWith(SpringExtension.class)
 @ActiveProfiles("testdocker")
 @TestInstance(Lifecycle.PER_CLASS)
 @TestMethodOrder(OrderAnnotation.class)
@@ -117,19 +122,13 @@ public class TrendingIndexRepositoryTest {
 		LocalDateTime fromDate = LocalDateTime.parse(fromStr, dateFormatter);
 		LocalDateTime toDate = LocalDateTime.parse(toStr, dateFormatter);
 
-		List<IndexDateDto> dateResult = trendingRepository.getDateResult(
-			fromDate, toDate
-		);
+		List<IndexDateDto> dateResult = trendingRepository.getDateSeries(fromDate, toDate);
 
 		int dateResultSize = dateResult.size();
-//		System.out.println("size >>> " + dateResultSize);
-		assertThat(dateResultSize).isEqualTo(366); // ?
+		assertThat(dateResultSize).isEqualTo(366); // 2020년은 윤년 이기 때문에 366일
 
 		IndexDateDto startDate = dateResult.get(0);
 		IndexDateDto endDate = dateResult.get(dateResultSize - 1);
-
-//		System.out.println("fromDate >>> " + dateResult.get(0) + ", " + fromDate);
-//		System.out.println("toDate >>> " + dateResult.get(dateResultSize -1) + ", " + toDate);
 
 		assertThat(startDate.getDate()).isEqualTo(fromDate);
 		assertThat(endDate.getDate()).isEqualTo(toDate);

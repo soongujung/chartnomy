@@ -152,7 +152,7 @@ public class QTrendingIndexRepositoryImpl implements QTrendingIndexRepository {
 	}
 
 	@Override
-	public List<IndexDateDto> getDateResult(LocalDateTime fromDate, LocalDateTime toDate) {
+	public List<IndexDateDto> getDateSeries(LocalDateTime fromDate, LocalDateTime toDate) {
 
 		List<IndexDateDto> dateList = queryFactory.select(
 			new QIndexDateDto(
