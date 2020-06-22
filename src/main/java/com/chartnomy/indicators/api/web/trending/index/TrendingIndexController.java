@@ -34,6 +34,14 @@ public class TrendingIndexController {
 		return trendingIndexService.getDefaultTrendingResult();
 	}
 
+	@GetMapping("/api/web/trending/index/DATE")
+	public @ResponseBody List<IndexPriceDto> getDateSeries(
+		@RequestParam("from") String from,
+		@RequestParam("to") String to
+	){
+		return null;
+	}
+
 	@GetMapping("/api/web/trending/index/KOSPI")
 	public @ResponseBody List<IndexPriceDto> getKospiResult(
 							@RequestParam("from") String from,

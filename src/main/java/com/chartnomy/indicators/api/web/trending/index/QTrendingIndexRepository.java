@@ -1,6 +1,7 @@
 package com.chartnomy.indicators.api.web.trending.index;
 
 import com.chartnomy.indicators.api.common.IndicatorType;
+import com.chartnomy.indicators.api.web.trending.index.dto.IndexDateDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.IndexPriceDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.IndexRateDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingDto;
@@ -22,4 +23,6 @@ public interface QTrendingIndexRepository {
 	List<IndexRateDto> getLoanKrRate(LocalDateTime fromDate, LocalDateTime toDate);
 
 	List<IndexRateDto> getLoanUsRate(LocalDateTime fromDate, LocalDateTime toDate);
+
+	List<IndexDateDto> getDateResult(LocalDateTime fromDate, LocalDateTime toDate);
 }

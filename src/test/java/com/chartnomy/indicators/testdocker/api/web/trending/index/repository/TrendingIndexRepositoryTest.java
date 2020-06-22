@@ -1,13 +1,18 @@
 package com.chartnomy.indicators.testdocker.api.web.trending.index.repository;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.chartnomy.indicators.api.web.trending.index.QTrendingIndexRepository;
+import com.chartnomy.indicators.api.web.trending.index.dto.IndexDateDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.IndexPriceDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.IndexRateDto;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -97,6 +102,37 @@ public class TrendingIndexRepositoryTest {
 			getDateParameter().getFromDate(),
 			getDateParameter().getToDate()
 		);
+	}
+
+	@Test
+	@Order(6)
+	void testDateResult(){
+//		String fromStr = "20200101000001"; // 이렇게 하면 1월 2일 부터 조회된다.
+		String fromStr 	= "20200101000000";
+		String toStr 	= "20201231000000";
+
+		String formatter = "yyyyMMddHHmmss";
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(formatter);
+
+		LocalDateTime fromDate = LocalDateTime.parse(fromStr, dateFormatter);
+		LocalDateTime toDate = LocalDateTime.parse(toStr, dateFormatter);
+
+		List<IndexDateDto> dateResult = trendingRepository.getDateResult(
+			fromDate, toDate
+		);
+
+		int dateResultSize = dateResult.size();
+//		System.out.println("size >>> " + dateResultSize);
+		assertThat(dateResultSize).isEqualTo(366); // ?
+
+		IndexDateDto startDate = dateResult.get(0);
+		IndexDateDto endDate = dateResult.get(dateResultSize - 1);
+
+//		System.out.println("fromDate >>> " + dateResult.get(0) + ", " + fromDate);
+//		System.out.println("toDate >>> " + dateResult.get(dateResultSize -1) + ", " + toDate);
+
+		assertThat(startDate.getDate()).isEqualTo(fromDate);
+		assertThat(endDate.getDate()).isEqualTo(toDate);
 	}
 
 	private TestDateParameter getDateParameter(){

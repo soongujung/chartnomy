@@ -7,8 +7,10 @@ import static com.chartnomy.indicators.domain.loan.entity.QLoanKr.loanKr;
 import static com.chartnomy.indicators.domain.loan.entity.QLoanUs.loanUs;
 
 import com.chartnomy.indicators.api.common.IndicatorType;
+import com.chartnomy.indicators.api.web.trending.index.dto.IndexDateDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.IndexPriceDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.IndexRateDto;
+import com.chartnomy.indicators.api.web.trending.index.dto.QIndexDateDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.QIndexRateDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.QTrendingDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.QIndexPriceDto;
@@ -20,6 +22,8 @@ import com.chartnomy.indicators.domain.exchange.entity.QExchangeRateWonDollar;
 import com.chartnomy.indicators.domain.kospi.entity.QKospi;
 import com.chartnomy.indicators.domain.loan.entity.QLoanKr;
 import com.chartnomy.indicators.domain.loan.entity.QLoanUs;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -145,5 +149,22 @@ public class QTrendingIndexRepositoryImpl implements QTrendingIndexRepository {
 		.fetch();
 
 		return result;
+	}
+
+	@Override
+	public List<IndexDateDto> getDateResult(LocalDateTime fromDate, LocalDateTime toDate) {
+
+		List<IndexDateDto> dateList = queryFactory.select(
+			new QIndexDateDto(
+				dateAxisDd.date.as("date")
+			)
+		)
+		.from(dateAxisDd)
+		.where(
+			dateAxisDd.date.goe(fromDate).and(dateAxisDd.date.loe(toDate))
+		)
+		.fetch();
+
+		return dateList;
 	}
 }
