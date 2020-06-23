@@ -11,14 +11,17 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-@SpringBootTest
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(TrendingIndexController.class)
+//@WebMvcTest(TrendingIndexController.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 public class TrendingIndexControllerTest {
 
 	@Autowired
@@ -34,6 +37,7 @@ public class TrendingIndexControllerTest {
 					get("/api/web/trending/index/DATE")
 						.param("from", from)
 						.param("to", to)
+					.accept(MediaType.APPLICATION_JSON)
 				)
 				.andExpect(status().isOk())
 //				.andExpect(content().string())
