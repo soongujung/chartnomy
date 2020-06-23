@@ -42,6 +42,13 @@ dependencies {
 	testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.6.1')
 	testRuntimeOnly('org.junit.platform:junit-platform-engine:1.6.2')
 	testRuntimeOnly('org.junit.platform:junit-platform-commons:1.6.2')
+	testRuntimeOnly('org.mockito:mockito-core:3.3.3')
+	testRuntimeOnly('org.mockito:mockito-junit-jupiter:3.3.3')
+	testRuntimeOnly('org.mockito:mockito-all:1.10.19')
+//	testCompile group: 'org.mockito', name: 'mockito-core', version: '3.3.3'
+//	testCompile group: 'name.falgout.jeffrey.testing.junit5', name: 'mockito-extension', version: '1.2.1'
+
+
 }
 
 def querydslDir = "$buildDir/generated/querydsl"
