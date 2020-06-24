@@ -66,14 +66,24 @@ public class TrendingIndexRepositoryTest {
 	@Order(1)
 	@Sql(scripts = {
 		"/datasets/mariadb/ddl/schema.sql",
-		"/datasets/mariadb/insert/mariadb_insert_date_axis_dd.sql",
-		"/datasets/mariadb/insert/mariadb_insert_kospi_day.sql",
-		"/datasets/mariadb/insert/mariadb_insert_loan_corporate_month.sql",
-		"/datasets/mariadb/insert/mariadb_insert_loan_household_month.sql",
-		"/datasets/mariadb/insert/mariadb_insert_loan_rate_kor.sql",
-		"/datasets/mariadb/insert/mariadb_insert_loan_rate_usa.sql",
+		"/datasets/mariadb/insert/mariadb_insert_date_axis_dd.sql",			// DATE AXIS
+		"/datasets/mariadb/insert/mariadb_insert_kospi_day.sql",			// KOSPI
+//		"/datasets/mariadb/insert/mariadb_insert_loan_corporate_month.sql",	// 기업대출
+//		"/datasets/mariadb/insert/mariadb_insert_loan_household_month.sql",	// 가계대출
+		"/datasets/mariadb/insert/mariadb_insert_loan_rate_kor.sql",		// LOAN_KR
+		"/datasets/mariadb/insert/mariadb_insert_loan_rate_usa.sql",		// LOAN_US
+		"/datasets/mariadb/insert/mariadb_insert_exchange_dollar_day.sql",	// USD
 	}, config = @SqlConfig(dataSource = "dataSource"))
 	void setupSchema(){
+
+	}
+
+	@DisplayName("USD insert")
+	@Test
+	@Sql(scripts = {
+		"/datasets/mariadb/insert/mariadb_insert_exchange_dollar_day.sql",
+	}, config = @SqlConfig(dataSource = "dataSource"))
+	void setupUsd(){
 
 	}
 
