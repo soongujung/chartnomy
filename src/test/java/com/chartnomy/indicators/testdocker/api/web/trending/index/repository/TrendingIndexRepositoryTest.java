@@ -6,6 +6,7 @@ import com.chartnomy.indicators.api.web.trending.index.QTrendingIndexRepository;
 import com.chartnomy.indicators.api.web.trending.index.dto.IndexDateDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.IndexPriceDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.IndexRateDto;
+import com.chartnomy.indicators.api.web.trending.index.dto.IndexValueDto;
 import com.chartnomy.indicators.config.TestSchemaInitConfig;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
@@ -50,6 +51,10 @@ public class TrendingIndexRepositoryTest {
 
 	private JPAQueryFactory queryFactory;
 
+	private String from2020 	= "20200101000000";
+	private String to2020 		= "20201231000000";
+	private TestDateParameter testDateParameter = getDateParameter(from2020, to2020);
+
 	@BeforeAll
 	void setupApplication(){
 		queryFactory = new JPAQueryFactory(entityManager);
@@ -75,37 +80,36 @@ public class TrendingIndexRepositoryTest {
 	@Test
 	@Order(2)
 	void testGetKospiResult(){
-
-		List<IndexPriceDto> kospiResult = trendingRepository.getKospiResult(
-			getDateParameter().getFromDate(),
-			getDateParameter().getToDate()
+		List<IndexValueDto> kospiResult = trendingRepository.getKospiResult(
+			testDateParameter.getFromDate(),
+			testDateParameter.getToDate()
 		);
 	}
 
 	@Test
 	@Order(3)
 	void testGetExchangeRateDollar(){
-		List<IndexPriceDto> exchangeRateDollar = trendingRepository.getExchangeRateDollar(
-			getDateParameter().getFromDate(),
-			getDateParameter().getToDate()
+		List<IndexValueDto> exchangeRateDollar = trendingRepository.getExchangeRateDollar(
+			testDateParameter.getFromDate(),
+			testDateParameter.getToDate()
 		);
 	}
 
 	@Test
 	@Order(4)
 	void testGetLoanRateKr(){
-		List<IndexRateDto> loanKrRate = trendingRepository.getLoanKrRate(
-			getDateParameter().getFromDate(),
-			getDateParameter().getToDate()
+		List<IndexValueDto> loanKrRate = trendingRepository.getLoanKrRate(
+			testDateParameter.getFromDate(),
+			testDateParameter.getToDate()
 		);
 	}
 
 	@Test
 	@Order(5)
 	void testGetLoanRateUs(){
-		List<IndexRateDto> loanUsRate = trendingRepository.getLoanUsRate(
-			getDateParameter().getFromDate(),
-			getDateParameter().getToDate()
+		List<IndexValueDto> loanUsRate = trendingRepository.getLoanUsRate(
+			testDateParameter.getFromDate(),
+			testDateParameter.getToDate()
 		);
 	}
 
@@ -134,28 +138,32 @@ public class TrendingIndexRepositoryTest {
 		assertThat(endDate.getDate()).isEqualTo(toDate);
 	}
 
-	private TestDateParameter getDateParameter(){
-		return null;
+	private LocalDateTime ofDate(String date){
+		String formatter = "yyyyMMddHHmmss";
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(formatter);
+
+		LocalDateTime parsedDate = LocalDateTime.parse(date, dateFormatter);
+		return parsedDate;
+	}
+
+	private TestDateParameter getDateParameter(String from, String to){
+		return new TestDateParameter(ofDate(from), ofDate(to));
 	}
 
 	class TestDateParameter{
 		LocalDateTime fromDate;
 		LocalDateTime toDate;
 
+		TestDateParameter(LocalDateTime fromDate, LocalDateTime toDate){
+			this.fromDate = fromDate;
+			this.toDate = toDate;
+		}
+
 		public LocalDateTime getFromDate() {
 			return fromDate;
 		}
-
-		public void setFromDate(LocalDateTime fromDate) {
-			this.fromDate = fromDate;
-		}
-
 		public LocalDateTime getToDate() {
 			return toDate;
-		}
-
-		public void setToDate(LocalDateTime toDate) {
-			this.toDate = toDate;
 		}
 	}
 }

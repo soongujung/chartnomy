@@ -109,7 +109,7 @@ public class QTrendingIndexRepositoryImpl implements QTrendingIndexRepository {
 			.where(dateAxisDd.date.between(fromDate, toDate))
 		.fetch();
 
-		return null;
+		return result;
 	}
 
 	@Override
