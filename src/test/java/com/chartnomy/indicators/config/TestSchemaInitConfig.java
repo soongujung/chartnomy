@@ -7,6 +7,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 
@@ -15,6 +16,7 @@ import org.springframework.test.context.jdbc.SqlConfig;
  */
 @Component
 @PropertySource(value = {"classpath:test-application.properties"})
+@ActiveProfiles("testdocker")
 public class TestSchemaInitConfig {
 
 	@Autowired
