@@ -3,8 +3,7 @@ package com.chartnomy.indicators.api.web.trending.index;
 import com.chartnomy.indicators.api.common.DataType;
 import com.chartnomy.indicators.api.common.IndicatorType;
 import com.chartnomy.indicators.api.web.trending.index.dto.IndexDateDto;
-import com.chartnomy.indicators.api.web.trending.index.dto.IndexPriceDto;
-import com.chartnomy.indicators.api.web.trending.index.dto.IndexRateDto;
+import com.chartnomy.indicators.api.web.trending.index.dto.IndexValueDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingMonthCollectDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingParameter;
@@ -60,17 +59,17 @@ public class TrendingIndexServiceImpl implements TrendingIndexService{
 	}
 
 	@Override
-	public List<IndexPriceDto> getKospiResult(LocalDateTime fromDate, LocalDateTime toDate) {
+	public List<IndexValueDto> getKospiResult(LocalDateTime fromDate, LocalDateTime toDate) {
 		return qIndexRepository.getKospiResult(fromDate, toDate);
 	}
 
 	@Override
-	public List<IndexPriceDto> getExchangeRate(ExchangeCurrencyType exchangeCurrencyType, LocalDateTime fromDate, LocalDateTime toDate) {
+	public List<IndexValueDto> getExchangeRate(ExchangeCurrencyType exchangeCurrencyType, LocalDateTime fromDate, LocalDateTime toDate) {
 		return exchangeCurrencyType.getExchangeRate(qIndexRepository, fromDate, toDate);
 	}
 
 	@Override
-	public List<IndexRateDto> getLoanRate(LoanType loanType, LocalDateTime fromDate, LocalDateTime toDate) {
+	public List<IndexValueDto> getLoanRate(LoanType loanType, LocalDateTime fromDate, LocalDateTime toDate) {
 		return loanType.getLoanRate(qIndexRepository, fromDate, toDate);
 	}
 

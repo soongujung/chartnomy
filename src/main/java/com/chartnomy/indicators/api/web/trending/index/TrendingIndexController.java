@@ -1,8 +1,7 @@
 package com.chartnomy.indicators.api.web.trending.index;
 
 import com.chartnomy.indicators.api.web.trending.index.dto.IndexDateDto;
-import com.chartnomy.indicators.api.web.trending.index.dto.IndexPriceDto;
-import com.chartnomy.indicators.api.web.trending.index.dto.IndexRateDto;
+import com.chartnomy.indicators.api.web.trending.index.dto.IndexValueDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingDto;
 import com.chartnomy.indicators.domain.exchange.types.ExchangeCurrencyType;
 import com.chartnomy.indicators.domain.loan.types.LoanType;
@@ -46,7 +45,7 @@ public class TrendingIndexController {
 	}
 
 	@GetMapping("/api/web/trending/index/KOSPI")
-	public @ResponseBody List<IndexPriceDto> getKospiResult(
+	public @ResponseBody List<IndexValueDto> getKospiResult(
 							@RequestParam("from") String from,
 							@RequestParam("to") String to){
 		LocalDateTime fromDate = processDateParam(from);
@@ -55,7 +54,7 @@ public class TrendingIndexController {
 	}
 
 	@GetMapping("/api/web/trending/index/exchange/{currencyTypeNm}")
-	public @ResponseBody List<IndexPriceDto> getExchangeRate(
+	public @ResponseBody List<IndexValueDto> getExchangeRate(
 							@PathVariable("currencyTypeNm") String currencyTypeNm,
 							@RequestParam("from") String from,
 							@RequestParam("to") String to ){
@@ -66,7 +65,7 @@ public class TrendingIndexController {
 	}
 
 	@GetMapping("/api/web/trending/index/loan/{loanType}")
-	public @ResponseBody List<IndexRateDto> getLoanRate(
+	public @ResponseBody List<IndexValueDto> getLoanRate(
 							@PathVariable("loanType") String loanTypeNm,
 							@RequestParam("from") String from,
 							@RequestParam("to") String to ){

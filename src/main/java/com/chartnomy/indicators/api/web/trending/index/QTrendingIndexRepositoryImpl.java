@@ -8,12 +8,10 @@ import static com.chartnomy.indicators.domain.loan.entity.QLoanUs.loanUs;
 
 import com.chartnomy.indicators.api.common.IndicatorType;
 import com.chartnomy.indicators.api.web.trending.index.dto.IndexDateDto;
-import com.chartnomy.indicators.api.web.trending.index.dto.IndexPriceDto;
-import com.chartnomy.indicators.api.web.trending.index.dto.IndexRateDto;
+import com.chartnomy.indicators.api.web.trending.index.dto.IndexValueDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.QIndexDateDto;
-import com.chartnomy.indicators.api.web.trending.index.dto.QIndexRateDto;
+import com.chartnomy.indicators.api.web.trending.index.dto.QIndexValueDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.QTrendingDto;
-import com.chartnomy.indicators.api.web.trending.index.dto.QIndexPriceDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingMonthCollectDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingParameter;
@@ -22,8 +20,6 @@ import com.chartnomy.indicators.domain.exchange.entity.QExchangeRateWonDollar;
 import com.chartnomy.indicators.domain.kospi.entity.QKospi;
 import com.chartnomy.indicators.domain.loan.entity.QLoanKr;
 import com.chartnomy.indicators.domain.loan.entity.QLoanUs;
-import com.querydsl.core.types.ExpressionUtils;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -81,11 +77,12 @@ public class QTrendingIndexRepositoryImpl implements QTrendingIndexRepository {
 	}
 
 	@Override
-	public List<IndexPriceDto> getKospiResult(LocalDateTime fromDate, LocalDateTime toDate) {
-			List<IndexPriceDto> result = queryFactory.select(
-				new QIndexPriceDto(
+	public List<IndexValueDto> getKospiResult(LocalDateTime fromDate, LocalDateTime toDate) {
+
+			List<IndexValueDto> result = queryFactory.select(
+				new QIndexValueDto(
 					dateAxisDd.date.as("date"),
-					kospi.price.as("price")
+					kospi.price.as("value")
 				)
 			)
 			.from(dateAxisDd)
@@ -98,12 +95,12 @@ public class QTrendingIndexRepositoryImpl implements QTrendingIndexRepository {
 	}
 
 	@Override
-	public List<IndexPriceDto> getExchangeRateDollar(LocalDateTime fromDate, LocalDateTime toDate) {
+	public List<IndexValueDto> getExchangeRateDollar(LocalDateTime fromDate, LocalDateTime toDate) {
 
-		List<IndexPriceDto> result = queryFactory.select(
-			new QIndexPriceDto(
+		List<IndexValueDto> result = queryFactory.select(
+			new QIndexValueDto(
 				dateAxisDd.date.as("date"),
-				exchangeRateWonDollar.price.as("price")
+				exchangeRateWonDollar.price.as("value")
 			)
 		)
 		.from(dateAxisDd)
@@ -112,16 +109,16 @@ public class QTrendingIndexRepositoryImpl implements QTrendingIndexRepository {
 			.where(dateAxisDd.date.between(fromDate, toDate))
 		.fetch();
 
-		return result;
+		return null;
 	}
 
 	@Override
-	public List<IndexRateDto> getLoanKrRate(LocalDateTime fromDate, LocalDateTime toDate) {
+	public List<IndexValueDto> getLoanKrRate(LocalDateTime fromDate, LocalDateTime toDate) {
 
-		List<IndexRateDto> result = queryFactory.select(
-			new QIndexRateDto(
+		List<IndexValueDto> result = queryFactory.select(
+			new QIndexValueDto(
 				dateAxisDd.date.as("date"),
-				loanKr.price.as("rate")
+				loanKr.price.as("value")
 			)
 		)
 		.from(dateAxisDd)
@@ -134,12 +131,12 @@ public class QTrendingIndexRepositoryImpl implements QTrendingIndexRepository {
 	}
 
 	@Override
-	public List<IndexRateDto> getLoanUsRate(LocalDateTime fromDate, LocalDateTime toDate) {
+	public List<IndexValueDto> getLoanUsRate(LocalDateTime fromDate, LocalDateTime toDate) {
 
-		List<IndexRateDto> result = queryFactory.select(
-			new QIndexRateDto(
+		List<IndexValueDto> result = queryFactory.select(
+			new QIndexValueDto(
 				dateAxisDd.date.as("date"),
-				loanUs.price.as("rate")
+				loanUs.price.as("value")
 			)
 		)
 		.from(dateAxisDd)
