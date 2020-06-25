@@ -29,16 +29,15 @@
           valueAxisWon: null,
           valueAxisUSD: null,
           dateAxis: null,
-          DATE: 'date',
-          // TODO (3)
-          // 지표를 가져오는 DTO를 선언할 때 뭘 어떻게 들고올지 막막해서
-          // price, rate 두가지 종류의 DTO 를 만들었었다.
-          // value, date 이렇게 두개의 필드만을 가져오도록 DTO 수정작업이 필요하다.
-          // Date 의 경우도 하나의 데이터로 취급하여 데이터를 가져오도록 검색조건에 맞는 데이터를 가져오도록 구성할 것
+          DATE: {
+            requestUrl: '/web/trending/index/DATE',
+            valueNm: 'date',
+            valueColumn: 'DATE'
+          },
           USD: {
             requestUrl: '/web/trending/index/exchange/USD',
             color: '#d9480f',
-            valueNm: 'price',
+            valueNm: 'value',
             valueColumn: 'USD',
             tooltipText: '환율 : {valueY.value} (달러/원)',
             legendName: '환율 (달러)',
@@ -48,7 +47,7 @@
           KOSPI: {
             requestUrl: '/web/trending/index/KOSPI',
             color: '#339af0',
-            valueNm: 'price',
+            valueNm: 'value',
             valueColumn: 'KOSPI',
             tooltipText: 'kospi : {valueY.value} (원)',
             legendName: 'KOSPI 지수',
@@ -58,7 +57,7 @@
           LOAN_KR: {
             requestUrl: '/web/trending/index/loan/LOAN_KR',
             color: '#51cf66',
-            valueNm: 'rate',
+            valueNm: 'value',
             valueColumn: 'LOAN_KR',
             tooltipText: '정책 금리(한국) : {valueY.value} (%)',
             legendName: '정책 금리(한국)',
@@ -68,7 +67,7 @@
           LOAN_US: {
             requestUrl: '/web/trending/index/loan/LOAN_US',
             color: '#868e96',
-            valueNm: 'rate',
+            valueNm: 'value',
             valueColumn: 'LOAN_US',
             tooltipText: '정책 금리(미국) : {valueY.value} (%)',
             legendName: '정책 금리(미국)',
@@ -93,17 +92,20 @@
     },
     methods:{
       async getApiResult(){
-        await this.getLoanKr()
-        console.log('getLoanKr >>> ')
+        await this.fetchData(this.chartOptions.DATE.valueColumn)
+        console.log('Date Series')
 
-        await this.getLoanUs()
-        console.log('getLoanUs >>> ')
+        await this.fetchData(this.chartOptions.LOAN_KR.valueColumn)
+        console.log('LOAN_KR')
 
-        await this.getUSD()
-        console.log('getExchangeRateUs >>> ')
+        await this.fetchData(this.chartOptions.LOAN_US.valueColumn)
+        console.log('LOAN_US')
 
-        await this.getKospi()
-        console.log('getKospi >>> ')
+        await this.fetchData(this.chartOptions.USD.valueColumn)
+        console.log('USD')
+
+        await this.fetchData(this.chartOptions.KOSPI.valueColumn)
+        console.log('KOSPI')
       },
       renderSeriesChart(){
         const chartOption = this.chartOptions
@@ -191,13 +193,20 @@
 
         return promise
       },
-      // TODO (5)
-      // date series 를 만드는 함수를 만들어서 따로 모듈로 등록하자.
-      // 실제 서버 쪽의 시간 데이터와 잘 맞아야 하는데 해당 내용이 잘 맞는지는 아직 확신을 할수 없다.
+      getDateSeries(){
+        let requestUrl = this.chartOptions.DATE.requestUrl;
+        let queryString = this.buildDateQueryParam(requestUrl, this.getDefaultDateParameter())
 
-      // TODO (1)
-      // getLoanKr, getLoanUs, getUSD, getKospi 함수들은 공통적인 로직들이 있다.
-      // HOC 개념을 적용해 indexTypeNm 에 따라 다른 API 요청을 하는 로직으로 변환하자.
+        let promise = api.get(queryString)
+        .then(res => {
+          this.bindingResult('DATE', res.data);
+        })
+        .catch(err => {
+          console.log('err >>> ', err);
+        });
+
+        return promise;
+      },
       getLoanKr(){
         let requestUrl = this.chartOptions.LOAN_KR.requestUrl;
         let queryString = this.buildDateQueryParam(requestUrl, this.getDefaultDateParameter())
@@ -205,7 +214,6 @@
         let promise = api.get(queryString)
         .then(res => {
           this.bindingResult('LOAN_KR', res.data);
-          this.bindingResult('DATE', res.data);
         })
         .catch(err => {
           console.log('err >>> ', err);
@@ -355,7 +363,7 @@
 
         let chartOption = this.chartOptions[indexType]
         let valueNm = chartOption.valueNm;
-        let dateColumnNm = this.chartOptions['DATE']
+        let dateColumnNm = this.chartOptions['DATE'].valueNm;
         let color = chartOption.color;
 
         let seriesLine = chart.series.push(new am4charts.LineSeries())
