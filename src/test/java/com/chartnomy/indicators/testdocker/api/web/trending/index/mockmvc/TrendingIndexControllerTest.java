@@ -5,9 +5,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -27,7 +24,7 @@ public class TrendingIndexControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
 
-	@DisplayName("/api/web/trending/index/DATE")
+	@DisplayName("날짜축 API - /api/web/trending/index/DATE")
 	@Test
 	public void test_get_date_series() throws Exception {
 		String from = "20200101000000";
@@ -59,7 +56,87 @@ public class TrendingIndexControllerTest {
 
 	}
 
-	private LocalDateTime processDateParam(String strDate){
-		return LocalDateTime.parse(strDate, DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+	@DisplayName("KOSPI API - /api/web/trending/index/KOSPI")
+	@Test
+	public void test_get_kospi_series() throws Exception {
+		String from = "20200101000000";
+		String to 	= "20201231235959";
+
+		MvcResult mvcResult = mockMvc.perform(
+			get("/api/web/trending/index/KOSPI")
+				.param("from", from)
+				.param("to", to)
+				.accept(MediaType.APPLICATION_JSON)
+		)
+		.andDo(print())
+		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+		.andExpect(status().isOk())
+		.andReturn();
+
+		String responseBody = mvcResult.getResponse().getContentAsString();
+		System.out.println(responseBody);
+	}
+
+	@DisplayName("USD API - /api/web/trending/index/exchange/USD")
+	@Test
+	public void test_usd_series() throws Exception {
+		String from = "20200101000000";
+		String to 	= "20201231235959";
+
+		MvcResult mvcResult = mockMvc.perform(
+			get("/api/web/trending/index/exchange/USD")
+				.param("from", from)
+				.param("to", to)
+				.accept(MediaType.APPLICATION_JSON)
+		)
+		.andDo(print())
+		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+		.andExpect(status().isOk())
+		.andReturn();
+
+		String responseBody = mvcResult.getResponse().getContentAsString();
+		System.out.println(responseBody);
+	}
+
+	@DisplayName("LOAN_KR - /api/web/trending/index/loan/LOAN_KR")
+	@Test
+	public void test_loan_kr_series() throws Exception {
+		String from = "20200101000000";
+		String to 	= "20201231235959";
+
+		MvcResult mvcResult = mockMvc.perform(
+			get("/api/web/trending/index/loan/LOAN_KR")
+				.param("from", from)
+				.param("to", to)
+				.accept(MediaType.APPLICATION_JSON)
+		)
+		.andDo(print())
+		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+		.andExpect(status().isOk())
+		.andReturn();
+
+		String responseBody = mvcResult.getResponse().getContentAsString();
+		System.out.println(responseBody);
+	}
+
+	@DisplayName("LOAN_US - /api/web/trending/index/loan/LOAN_US")
+	@Test
+	public void test_loan_us_series() throws Exception {
+		String from = "20200101000000";
+		String to 	= "20201231235959";
+
+		MvcResult mvcResult = mockMvc.perform(
+			get("/api/web/trending/index/LOAN_US")
+				.param("from", from)
+				.param("to", to)
+				.accept(MediaType.APPLICATION_JSON)
+		)
+		.andDo(print())
+		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+		.andExpect(status().isOk())
+		.andReturn();
+
+		String responseBody = mvcResult.getResponse().getContentAsString();
+		System.out.println(responseBody);
 	}
 }
