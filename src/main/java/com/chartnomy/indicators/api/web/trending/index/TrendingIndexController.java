@@ -1,5 +1,6 @@
 package com.chartnomy.indicators.api.web.trending.index;
 
+import com.chartnomy.indicators.api.common.PeriodType;
 import com.chartnomy.indicators.api.web.trending.index.dto.IndexDateDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.IndexValueDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingDto;
@@ -37,7 +38,8 @@ public class TrendingIndexController {
 	@GetMapping("/api/web/trending/index/DATE")
 	public @ResponseBody List<IndexDateDto> getDateSeries(
 		@RequestParam("from") String from,
-		@RequestParam("to") String to
+		@RequestParam("to") String to,
+		@RequestParam("periodType") String periodType
 	){
 		LocalDateTime fromDate = processDateParam(from);
 		LocalDateTime toDate = processDateParam(to);
@@ -47,7 +49,9 @@ public class TrendingIndexController {
 	@GetMapping("/api/web/trending/index/KOSPI")
 	public @ResponseBody List<IndexValueDto> getKospiResult(
 							@RequestParam("from") String from,
-							@RequestParam("to") String to){
+							@RequestParam("to") String to,
+							@RequestParam("periodType") String periodType
+		){
 		LocalDateTime fromDate = processDateParam(from);
 		LocalDateTime toDate = processDateParam(to);
 		return trendingIndexService.getKospiResult(fromDate, toDate);
@@ -57,7 +61,9 @@ public class TrendingIndexController {
 	public @ResponseBody List<IndexValueDto> getExchangeRate(
 							@PathVariable("currencyTypeNm") String currencyTypeNm,
 							@RequestParam("from") String from,
-							@RequestParam("to") String to ){
+							@RequestParam("to") String to,
+							@RequestParam("periodType") String periodType
+		){
 		ExchangeCurrencyType exchangeCurrencyType = ExchangeCurrencyType.valueOf(currencyTypeNm);
 		LocalDateTime fromDate = processDateParam(from);
 		LocalDateTime toDate = processDateParam(to);
@@ -68,7 +74,9 @@ public class TrendingIndexController {
 	public @ResponseBody List<IndexValueDto> getLoanRate(
 							@PathVariable("loanType") String loanTypeNm,
 							@RequestParam("from") String from,
-							@RequestParam("to") String to ){
+							@RequestParam("to") String to,
+							@RequestParam("periodType") String periodType
+		){
 		LoanType loanType = LoanType.valueOf(loanTypeNm);
 		LocalDateTime fromDate = processDateParam(from);
 		LocalDateTime toDate = processDateParam(to);
@@ -77,5 +85,9 @@ public class TrendingIndexController {
 
 	private LocalDateTime processDateParam(String strDate){
 		return LocalDateTime.parse(strDate, DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+	}
+
+	private PeriodType processPeriodType(String periodType){
+		return PeriodType.valueOf(periodType);
 	}
 }
