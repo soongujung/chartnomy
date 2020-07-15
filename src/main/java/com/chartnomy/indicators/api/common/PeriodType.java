@@ -1,13 +1,14 @@
 package com.chartnomy.indicators.api.common;
 
 public enum PeriodType {
-	DATE(1, "DATE"){
+
+	DATE(1, "DD"){
 
 	},
-	MONTH(2, "MONTH"){
+	MONTH(2, "MM"){
 
 	},
-	YEAR(3, "YEAR"){
+	YEAR(3, "YY"){
 
 	};
 

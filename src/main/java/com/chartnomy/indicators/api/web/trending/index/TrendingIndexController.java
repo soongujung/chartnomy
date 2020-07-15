@@ -37,9 +37,9 @@ public class TrendingIndexController {
 
 	@GetMapping("/api/web/trending/index/DATE")
 	public @ResponseBody List<IndexDateDto> getDateSeries(
-		@RequestParam("from") String from,
-		@RequestParam("to") String to,
-		@RequestParam("periodType") String periodType
+							@RequestParam("from") String from,
+							@RequestParam("to") String to,
+							@RequestParam(value = "periodType", required = false) String periodType
 	){
 		LocalDateTime fromDate = processDateParam(from);
 		LocalDateTime toDate = processDateParam(to);
@@ -50,7 +50,7 @@ public class TrendingIndexController {
 	public @ResponseBody List<IndexValueDto> getKospiResult(
 							@RequestParam("from") String from,
 							@RequestParam("to") String to,
-							@RequestParam("periodType") String periodType
+							@RequestParam(value = "periodType", required = false) String periodType
 		){
 		LocalDateTime fromDate = processDateParam(from);
 		LocalDateTime toDate = processDateParam(to);
@@ -62,7 +62,7 @@ public class TrendingIndexController {
 							@PathVariable("currencyTypeNm") String currencyTypeNm,
 							@RequestParam("from") String from,
 							@RequestParam("to") String to,
-							@RequestParam("periodType") String periodType
+							@RequestParam(value = "periodType", required = false) String periodType
 		){
 		ExchangeCurrencyType exchangeCurrencyType = ExchangeCurrencyType.valueOf(currencyTypeNm);
 		LocalDateTime fromDate = processDateParam(from);
@@ -75,7 +75,7 @@ public class TrendingIndexController {
 							@PathVariable("loanType") String loanTypeNm,
 							@RequestParam("from") String from,
 							@RequestParam("to") String to,
-							@RequestParam("periodType") String periodType
+							@RequestParam(value = "periodType", required = false) String periodType
 		){
 		LoanType loanType = LoanType.valueOf(loanTypeNm);
 		LocalDateTime fromDate = processDateParam(from);
@@ -88,6 +88,11 @@ public class TrendingIndexController {
 	}
 
 	private PeriodType processPeriodType(String periodType){
-		return PeriodType.valueOf(periodType);
+		if(periodType != null){
+			return PeriodType.valueOf(periodType);
+		}
+		else{
+			return PeriodType.DATE;
+		}
 	}
 }
