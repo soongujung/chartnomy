@@ -2,10 +2,9 @@ package com.chartnomy.indicators.testdocker.api.web.trending.index.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.chartnomy.indicators.api.common.PeriodType;
 import com.chartnomy.indicators.api.web.trending.index.QTrendingIndexRepository;
 import com.chartnomy.indicators.api.web.trending.index.dto.IndexDateDto;
-import com.chartnomy.indicators.api.web.trending.index.dto.IndexPriceDto;
-import com.chartnomy.indicators.api.web.trending.index.dto.IndexRateDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.IndexValueDto;
 import com.chartnomy.indicators.config.TestSchemaInitConfig;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -23,14 +22,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @Import(TestSchemaInitConfig.class)
 @SpringBootTest
@@ -92,7 +89,8 @@ public class TrendingIndexRepositoryTest {
 	void testGetKospiResult(){
 		List<IndexValueDto> kospiResult = trendingRepository.getKospiResult(
 			testDateParameter.getFromDate(),
-			testDateParameter.getToDate()
+			testDateParameter.getToDate(),
+			PeriodType.DATE
 		);
 	}
 
@@ -101,7 +99,8 @@ public class TrendingIndexRepositoryTest {
 	void testGetExchangeRateDollar(){
 		List<IndexValueDto> exchangeRateDollar = trendingRepository.getExchangeRateDollar(
 			testDateParameter.getFromDate(),
-			testDateParameter.getToDate()
+			testDateParameter.getToDate(),
+			PeriodType.DATE
 		);
 	}
 
@@ -110,7 +109,8 @@ public class TrendingIndexRepositoryTest {
 	void testGetLoanRateKr(){
 		List<IndexValueDto> loanKrRate = trendingRepository.getLoanKrRate(
 			testDateParameter.getFromDate(),
-			testDateParameter.getToDate()
+			testDateParameter.getToDate(),
+			PeriodType.DATE
 		);
 	}
 
@@ -119,7 +119,8 @@ public class TrendingIndexRepositoryTest {
 	void testGetLoanRateUs(){
 		List<IndexValueDto> loanUsRate = trendingRepository.getLoanUsRate(
 			testDateParameter.getFromDate(),
-			testDateParameter.getToDate()
+			testDateParameter.getToDate(),
+			PeriodType.DATE
 		);
 	}
 
@@ -136,7 +137,7 @@ public class TrendingIndexRepositoryTest {
 		LocalDateTime fromDate = LocalDateTime.parse(fromStr, dateFormatter);
 		LocalDateTime toDate = LocalDateTime.parse(toStr, dateFormatter);
 
-		List<IndexDateDto> dateResult = trendingRepository.getDateSeries(fromDate, toDate);
+		List<IndexDateDto> dateResult = trendingRepository.getDateSeries(fromDate, toDate, PeriodType.DATE);
 
 		int dateResultSize = dateResult.size();
 		assertThat(dateResultSize).isEqualTo(366); // 2020년은 윤년 이기 때문에 366일
