@@ -7,6 +7,7 @@ import static com.chartnomy.indicators.domain.loan.entity.QLoanKr.loanKr;
 import static com.chartnomy.indicators.domain.loan.entity.QLoanUs.loanUs;
 
 import com.chartnomy.indicators.api.common.IndicatorType;
+import com.chartnomy.indicators.api.common.PeriodType;
 import com.chartnomy.indicators.api.web.trending.index.dto.IndexDateDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.IndexValueDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.QIndexDateDto;
@@ -77,7 +78,8 @@ public class QTrendingIndexRepositoryImpl implements QTrendingIndexRepository {
 	}
 
 	@Override
-	public List<IndexValueDto> getKospiResult(LocalDateTime fromDate, LocalDateTime toDate) {
+	public List<IndexValueDto> getKospiResult(LocalDateTime fromDate, LocalDateTime toDate,
+												PeriodType periodType) {
 
 			List<IndexValueDto> result = queryFactory.select(
 				new QIndexValueDto(
@@ -95,7 +97,8 @@ public class QTrendingIndexRepositoryImpl implements QTrendingIndexRepository {
 	}
 
 	@Override
-	public List<IndexValueDto> getExchangeRateDollar(LocalDateTime fromDate, LocalDateTime toDate) {
+	public List<IndexValueDto> getExchangeRateDollar(LocalDateTime fromDate, LocalDateTime toDate,
+													 PeriodType periodType) {
 
 		List<IndexValueDto> result = queryFactory.select(
 			new QIndexValueDto(
@@ -113,7 +116,8 @@ public class QTrendingIndexRepositoryImpl implements QTrendingIndexRepository {
 	}
 
 	@Override
-	public List<IndexValueDto> getLoanKrRate(LocalDateTime fromDate, LocalDateTime toDate) {
+	public List<IndexValueDto> getLoanKrRate(LocalDateTime fromDate, LocalDateTime toDate,
+											 PeriodType periodType) {
 
 		List<IndexValueDto> result = queryFactory.select(
 			new QIndexValueDto(
@@ -131,7 +135,8 @@ public class QTrendingIndexRepositoryImpl implements QTrendingIndexRepository {
 	}
 
 	@Override
-	public List<IndexValueDto> getLoanUsRate(LocalDateTime fromDate, LocalDateTime toDate) {
+	public List<IndexValueDto> getLoanUsRate(LocalDateTime fromDate, LocalDateTime toDate,
+												PeriodType periodType) {
 
 		List<IndexValueDto> result = queryFactory.select(
 			new QIndexValueDto(
@@ -149,7 +154,8 @@ public class QTrendingIndexRepositoryImpl implements QTrendingIndexRepository {
 	}
 
 	@Override
-	public List<IndexDateDto> getDateSeries(LocalDateTime fromDate, LocalDateTime toDate) {
+	public List<IndexDateDto> getDateSeries( LocalDateTime fromDate, LocalDateTime toDate,
+											 PeriodType periodType) {
 
 		List<IndexDateDto> dateList = queryFactory.select(
 			new QIndexDateDto(

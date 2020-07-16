@@ -2,6 +2,7 @@ package com.chartnomy.indicators.api.web.trending.index;
 
 import com.chartnomy.indicators.api.common.DataType;
 import com.chartnomy.indicators.api.common.IndicatorType;
+import com.chartnomy.indicators.api.common.PeriodType;
 import com.chartnomy.indicators.api.web.trending.index.dto.IndexDateDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.IndexValueDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingDto;
@@ -54,28 +55,33 @@ public class TrendingIndexServiceImpl implements TrendingIndexService{
 	 */
 	@Override
 	public List<TrendingMonthCollectDto> getTrendingMonthCollectResult(IndicatorType indicatorType, TrendingParameter parameter) {
-
 		return null;
 	}
 
 	@Override
-	public List<IndexValueDto> getKospiResult(LocalDateTime fromDate, LocalDateTime toDate) {
-		return qIndexRepository.getKospiResult(fromDate, toDate);
+	public List<IndexValueDto> getKospiResult(LocalDateTime fromDate, LocalDateTime toDate,
+												PeriodType periodType) {
+		return qIndexRepository.getKospiResult(fromDate, toDate, periodType);
 	}
 
 	@Override
-	public List<IndexValueDto> getExchangeRate(ExchangeCurrencyType exchangeCurrencyType, LocalDateTime fromDate, LocalDateTime toDate) {
-		return exchangeCurrencyType.getExchangeRate(qIndexRepository, fromDate, toDate);
+	public List<IndexValueDto> getExchangeRate( ExchangeCurrencyType exchangeCurrencyType,
+												LocalDateTime fromDate, LocalDateTime toDate,
+												PeriodType periodType) {
+		return exchangeCurrencyType.getExchangeRate(qIndexRepository, fromDate, toDate, periodType);
 	}
 
 	@Override
-	public List<IndexValueDto> getLoanRate(LoanType loanType, LocalDateTime fromDate, LocalDateTime toDate) {
-		return loanType.getLoanRate(qIndexRepository, fromDate, toDate);
+	public List<IndexValueDto> getLoanRate( LoanType loanType,
+											LocalDateTime fromDate, LocalDateTime toDate,
+											PeriodType periodType) {
+		return loanType.getLoanRate(qIndexRepository, fromDate, toDate, periodType);
 	}
 
 	@Override
-	public List<IndexDateDto> getDateSeries(LocalDateTime fromDate, LocalDateTime toDate) {
-		return qIndexRepository.getDateSeries(fromDate, toDate);
+	public List<IndexDateDto> getDateSeries( LocalDateTime fromDate, LocalDateTime toDate,
+											 PeriodType periodType) {
+		return qIndexRepository.getDateSeries(fromDate, toDate, periodType);
 	}
 
 }

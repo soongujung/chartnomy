@@ -1,6 +1,7 @@
 package com.chartnomy.indicators.api.web.trending.index;
 
 import com.chartnomy.indicators.api.common.IndicatorType;
+import com.chartnomy.indicators.api.common.PeriodType;
 import com.chartnomy.indicators.api.web.trending.index.dto.IndexDateDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.IndexValueDto;
 import com.chartnomy.indicators.api.web.trending.index.dto.TrendingDto;
@@ -20,11 +21,13 @@ public interface TrendingIndexService {
 
 	List<TrendingMonthCollectDto> getTrendingMonthCollectResult(IndicatorType indicatorType, TrendingParameter parameter);
 
-	List<IndexValueDto> getKospiResult(LocalDateTime fromDate, LocalDateTime toDate);
+	List<IndexValueDto> getKospiResult(LocalDateTime fromDate, LocalDateTime toDate, PeriodType periodType);
 
-	List<IndexValueDto> getExchangeRate(ExchangeCurrencyType exchangeCurrencyType, LocalDateTime fromDate, LocalDateTime toDate);
+	List<IndexValueDto> getExchangeRate(ExchangeCurrencyType exchangeCurrencyType,
+		LocalDateTime fromDate, LocalDateTime toDate,
+		PeriodType periodType);
 
-	List<IndexValueDto> getLoanRate(LoanType loanType, LocalDateTime fromDate, LocalDateTime toDate);
+	List<IndexValueDto> getLoanRate(LoanType loanType, LocalDateTime fromDate, LocalDateTime toDate, PeriodType periodType);
 
-	List<IndexDateDto> getDateSeries(LocalDateTime fromDate, LocalDateTime toDate);
+	List<IndexDateDto> getDateSeries(LocalDateTime fromDate, LocalDateTime toDate, PeriodType periodType);
 }

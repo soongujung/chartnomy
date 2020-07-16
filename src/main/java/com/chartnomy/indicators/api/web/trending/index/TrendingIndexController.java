@@ -43,7 +43,7 @@ public class TrendingIndexController {
 	){
 		LocalDateTime fromDate = processDateParam(from);
 		LocalDateTime toDate = processDateParam(to);
-		return trendingIndexService.getDateSeries(fromDate, toDate);
+		return trendingIndexService.getDateSeries(fromDate, toDate, processPeriodType(periodType));
 	}
 
 	@GetMapping("/api/web/trending/index/KOSPI")
@@ -54,7 +54,7 @@ public class TrendingIndexController {
 		){
 		LocalDateTime fromDate = processDateParam(from);
 		LocalDateTime toDate = processDateParam(to);
-		return trendingIndexService.getKospiResult(fromDate, toDate);
+		return trendingIndexService.getKospiResult(fromDate, toDate, processPeriodType(periodType));
 	}
 
 	@GetMapping("/api/web/trending/index/exchange/{currencyTypeNm}")
@@ -67,7 +67,7 @@ public class TrendingIndexController {
 		ExchangeCurrencyType exchangeCurrencyType = ExchangeCurrencyType.valueOf(currencyTypeNm);
 		LocalDateTime fromDate = processDateParam(from);
 		LocalDateTime toDate = processDateParam(to);
-		return trendingIndexService.getExchangeRate(exchangeCurrencyType, fromDate, toDate);
+		return trendingIndexService.getExchangeRate(exchangeCurrencyType, fromDate, toDate, processPeriodType(periodType));
 	}
 
 	@GetMapping("/api/web/trending/index/loan/{loanType}")
@@ -80,7 +80,8 @@ public class TrendingIndexController {
 		LoanType loanType = LoanType.valueOf(loanTypeNm);
 		LocalDateTime fromDate = processDateParam(from);
 		LocalDateTime toDate = processDateParam(to);
-		return trendingIndexService.getLoanRate(loanType, fromDate, toDate);
+		PeriodType period = processPeriodType(periodType);
+		return trendingIndexService.getLoanRate(loanType, fromDate, toDate, );
 	}
 
 	private LocalDateTime processDateParam(String strDate){
